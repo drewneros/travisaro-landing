@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Travisaro — Visa Tracker for Digital Nomads | Never Overstay Again</title>
+  <meta name="description" content="Travisaro is the #1 visa tracking app for digital nomads. Track Schengen days, multiple passports, and every visa deadline automatically. Free to start." />
+  <meta name="keywords" content="visa tracker, schengen day tracker, digital nomad visa app, overstay prevention, visa expiry tracker, 90/180 rule calculator" />
+  <link rel="icon" href="logo.png" />
+
+  <!-- AI SEO: Structured data for AI models (ChatGPT, Claude, Perplexity) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Travisaro",
+    "applicationCategory": "TravelApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "description": "Travisaro is a visa tracking app for digital nomads that automatically calculates Schengen days, tracks multiple visas and passports, and sends expiry alerts before deadlines.",
+    "url": "https://travisaro.app",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Free",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "Track 1 visa with 1 AI Smart Scan — free forever"
+      },
+      {
+        "@type": "Offer",
+        "name": "Traveler",
+        "price": "11.99",
+        "priceCurrency": "USD",
+        "description": "Unlimited visas, unlimited AI scans, multiple passports, expiry reminders, passport comparison — $11.99/month or $99/year"
+      },
+      {
+        "@type": "Offer",
+        "name": "Pro",
+        "price": "19.99",
+        "priceCurrency": "USD",
+        "description": "Everything in Traveler plus tax-residency day counter and tax calendar — $19.99/month or $179/year"
+      }
+    ],
+    "featureList": [
+      "Schengen 90/180 day calculator",
+      "AI Smart Scan for visa stamps",
+      "Multiple passport support",
+      "Visa expiry alerts",
+      "Trip validation before booking",
+      "Calendar view with risk indicators",
+      "Tax Days tracker — 183-day threshold per country"
+    ],
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "Digital nomads, long-term travellers, expats, people with multiple passports"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the Schengen 90/180 rule?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Schengen 90/180 rule means you can stay in the Schengen Area for a maximum of 90 days within any 180-day rolling period. If you overstay, you can face a ban of up to 2 years and be flagged in the EU Entry/Exit System. Travisaro automatically calculates your remaining Schengen days based on your travel history."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens if I overstay my visa in Europe?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Overstaying a Schengen visa can result in a re-entry ban of up to 2 years, deportation, fines, and a permanent record in the EU Entry/Exit System (EES). The EES began full rollout in 2024, making overstays automatically detectable at every border crossing."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I track my Schengen days?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Travisaro tracks your Schengen days automatically. Add your entry and exit dates for each trip, and Travisaro calculates your 90/180-day usage in real time and shows how many days you have left. You can also validate future trips before booking to make sure you won't overstay."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the best visa tracking app for digital nomads?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Travisaro is designed specifically for digital nomads. It tracks Schengen days, multiple visas across different passports, sends expiry alerts, and includes an AI Smart Scan that reads visa stamps from photos. It is free to start, with a Traveler plan at $11.99/month ($99/year) and a Pro plan at $19.99/month ($179/year)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do digital nomads track visa expiry dates?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most digital nomads track visa expiry dates manually in spreadsheets or their phone calendar — which is error-prone and easy to forget. Travisaro automates this entirely: add your visa once, and the app calculates your remaining days, sends alerts at 30, 14, and 7 days before expiry, and validates future trips against your current visa status."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I track multiple passports in Travisaro?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Travisaro's paid plans (Traveler and Pro) support multiple passports. If you hold dual citizenship, you can track visas separately for each passport and see your full travel history across all of them."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Travisaro track tax residency days?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Travisaro includes a Tax Days tracker that shows how many days you have spent in each country this calendar year, measured against the 183-day tax residency threshold. Countries are colour-coded green, amber, orange, or red. This helps digital nomads and expats avoid accidentally triggering tax residency."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    @font-face {
+      font-family: 'Neue Montreal';
+      src: url('fonts/NeueMontreal-Light.otf') format('opentype');
+      font-weight: 300;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Neue Montreal';
+      src: url('fonts/NeueMontreal-Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Neue Montreal';
+      src: url('fonts/NeueMontreal-Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Neue Montreal';
+      src: url('fonts/NeueMontreal-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('fonts/Satoshi-Light.otf') format('opentype');
+      font-weight: 300;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('fonts/Satoshi-Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('fonts/Satoshi-Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('fonts/Satoshi-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-deep: #0a0f1e;
+      --bg-surface: #0d1526;
+      --card-bg: #111827;
+      --card-border: rgba(100,140,255,0.15);
+      --primary: #4f8ef7;
+      --purple: #7B2FBE;
+      --success: #1ed28c;
+      --warning: #ef9f27;
+      --danger: #e84545;
+      --text-primary: #e8edf5;
+      --text-secondary: #8899aa;
+      --text-muted: rgba(180,200,255,0.5);
+      --divider: rgba(255,255,255,0.07);
+      --gradient: linear-gradient(135deg, #4f8ef7, #7B2FBE);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Satoshi', system-ui, sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6,
+    .section-title, .hero h1, .pain-number,
+    .stat-num, .bento-card-title, .pricing-price {
+      font-family: 'Neue Montreal', system-ui, sans-serif;
+    }
+
+    /* ── CANVAS STARS ── */
+    #stars-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    /* ── AMBIENT GLOWS ── */
+    .glow-1 {
+      position: fixed;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(79,142,247,0.13) 0%, transparent 70%);
+      border-radius: 50%;
+      top: -250px; left: -150px;
+      pointer-events: none; z-index: 0;
+      animation: driftA 18s ease-in-out infinite alternate;
+    }
+    .glow-2 {
+      position: fixed;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(123,47,190,0.11) 0%, transparent 70%);
+      border-radius: 50%;
+      bottom: 0; right: -150px;
+      pointer-events: none; z-index: 0;
+      animation: driftB 22s ease-in-out infinite alternate;
+    }
+    @keyframes driftA {
+      from { transform: translate(0,0); }
+      to   { transform: translate(60px, 80px); }
+    }
+    @keyframes driftB {
+      from { transform: translate(0,0); }
+      to   { transform: translate(-60px, -60px); }
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1),
+                  transform 0.7s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(10,15,30,0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 0.5px solid var(--divider);
+      padding: 0 48px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.3s;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo img {
+      width: 46px; height: 46px;
+      border-radius: 12px;
+    }
+    .nav-logo span {
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-cta {
+      background: var(--gradient);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 22px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+      box-shadow: 0 0 0 rgba(79,142,247,0);
+    }
+    .nav-cta:hover {
+      opacity: 0.92;
+      transform: scale(0.98);
+      box-shadow: 0 0 24px rgba(79,142,247,0.35);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 110px 6% 80px;
+      max-width: 1400px;
+      margin: 0 auto;
+      gap: 48px;
+    }
+    .hero-left {
+      flex: 0 0 44%;
+      max-width: 540px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(30,210,140,0.10);
+      border: 0.5px solid rgba(30,210,140,0.3);
+      color: var(--success);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 32px;
+      animation: fadeSlideDown 0.8s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .hero-badge .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(30,210,140,0.4); }
+      50% { opacity: 0.7; transform: scale(1.3); box-shadow: 0 0 0 5px rgba(30,210,140,0); }
+    }
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero h1 {
+      font-size: clamp(40px, 5vw, 62px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      color: var(--text-primary);
+      margin-bottom: 22px;
+      animation: fadeSlideUp 0.9s 0.1s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .hero h1 .gradient-text {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-sub {
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 44px;
+      max-width: 480px;
+      animation: fadeSlideUp 0.9s 0.2s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .hero-ctas {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      animation: fadeSlideUp 0.9s 0.3s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .store-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .store-btn {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 13px 22px;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: transform 0.15s, opacity 0.2s, box-shadow 0.2s;
+      position: relative;
+      cursor: pointer;
+    }
+    .store-btn:hover { transform: scale(0.97); }
+    .store-btn.apple {
+      background: #000;
+      color: #fff;
+      border: 0.5px solid rgba(255,255,255,0.12);
+    }
+    .store-btn.apple:hover { box-shadow: 0 0 28px rgba(0,0,0,0.5); }
+    .store-btn.google {
+      background: rgba(255,255,255,0.07);
+      border: 0.5px solid rgba(255,255,255,0.14);
+      color: var(--text-primary);
+    }
+    .store-btn.google:hover { box-shadow: 0 0 24px rgba(79,142,247,0.2); }
+    .store-btn .store-icon { font-size: 24px; line-height: 1; }
+    .store-btn .store-text { display: flex; flex-direction: column; }
+    .store-btn .store-label { font-size: 10px; font-weight: 400; opacity: 0.65; }
+    .store-btn .store-name { font-size: 15px; font-weight: 500; }
+    .coming-soon-tag {
+      position: absolute;
+      top: -9px; right: -9px;
+      background: var(--warning);
+      color: #000;
+      font-size: 9px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+    .hero-note {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ── HERO MOCKUPS ── */
+    .hero-right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: visible;
+      animation: fadeSlideUp 1s 0.15s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .mockup-stack {
+      position: relative;
+      width: 600px;
+      height: 680px;
+    }
+    .mockup-stack .m1 {
+      position: absolute;
+      width: 460px;
+      left: 0; top: 0;
+      filter: drop-shadow(0 48px 100px rgba(79,142,247,0.40));
+      z-index: 2;
+      animation: floatA 6s ease-in-out infinite;
+    }
+    .mockup-stack .m2 {
+      position: absolute;
+      width: 420px;
+      right: 0; top: 100px;
+      filter: drop-shadow(0 48px 100px rgba(123,47,190,0.35));
+      z-index: 1;
+      animation: floatB 7s ease-in-out infinite;
+    }
+    @keyframes floatA {
+      0%, 100% { transform: translateY(0px) rotate(-1deg); }
+      50%       { transform: translateY(-18px) rotate(-1deg); }
+    }
+    @keyframes floatB {
+      0%, 100% { transform: translateY(0px) rotate(1.5deg); }
+      50%       { transform: translateY(-12px) rotate(1.5deg); }
+    }
+
+    /* ── STATS BAND ── */
+    .stats-band {
+      position: relative; z-index: 1;
+      border-top: 0.5px solid var(--divider);
+      border-bottom: 0.5px solid var(--divider);
+      background: rgba(255,255,255,0.015);
+      padding: 36px 48px;
+      overflow: hidden;
+    }
+    .stats-band::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(79,142,247,0.04), transparent);
+      animation: shimmerBand 4s ease-in-out infinite;
+    }
+    @keyframes shimmerBand {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .stats-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-size: 32px;
+      font-weight: 500;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      letter-spacing: -0.5px;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 5px;
+    }
+    .stat-divider {
+      width: 0.5px; height: 44px;
+      background: var(--divider);
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 110px 48px;
+    }
+    .section-inner { max-width: 1280px; margin: 0 auto; }
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--primary);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: clamp(30px, 3.5vw, 46px);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.8px;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 500px;
+      line-height: 1.75;
+    }
+
+    /* ── PAIN SECTION ── */
+    .pain-section {
+      position: relative; z-index: 1;
+      background: linear-gradient(135deg, rgba(232,69,69,0.05), rgba(239,159,39,0.03));
+      border-top: 0.5px solid rgba(232,69,69,0.12);
+      border-bottom: 0.5px solid rgba(232,69,69,0.08);
+      padding: 72px 48px;
+    }
+    .pain-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 80px;
+      flex-wrap: wrap;
+    }
+    .pain-left { flex: 1; min-width: 220px; }
+    .pain-number {
+      font-size: 80px;
+      font-weight: 500;
+      color: var(--danger);
+      line-height: 1;
+      margin-bottom: 12px;
+      letter-spacing: -2px;
+    }
+    .pain-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.7; max-width: 300px; }
+    .pain-right { flex: 2; min-width: 280px; display: flex; flex-direction: column; gap: 14px; }
+    .pain-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px 22px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 0.5px solid rgba(255,255,255,0.07);
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .pain-item:hover {
+      border-color: rgba(232,69,69,0.2);
+      background: rgba(232,69,69,0.04);
+    }
+    .pain-icon {
+      width: 38px; height: 38px;
+      border-radius: 11px;
+      background: rgba(232,69,69,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; flex-shrink: 0;
+    }
+    .pain-text strong { display: block; font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; }
+    .pain-text span { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+    /* ── BENTO FEATURES ── */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto;
+      gap: 14px;
+      margin-top: 64px;
+    }
+    .bento-card {
+      background: rgba(255,255,255,0.04);
+      border: 0.5px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 32px 30px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.35s, box-shadow 0.35s;
+    }
+    .bento-card:hover {
+      border-color: rgba(79,142,247,0.28);
+      box-shadow: 0 0 60px rgba(79,142,247,0.08);
+    }
+    .bento-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(79,142,247,0.05) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.35s;
+      border-radius: 22px;
+    }
+    .bento-card:hover::after { opacity: 1; }
+    /* grid placement */
+    .bento-1 { grid-column: span 7; }
+    .bento-2 { grid-column: span 5; }
+    .bento-3 { grid-column: span 4; }
+    .bento-4 { grid-column: span 4; }
+    .bento-5 { grid-column: span 4; }
+    .bento-6 { grid-column: span 12; }
+    .bento-7 { grid-column: span 12; }
+    .bento-card .b-icon {
+      font-size: 32px; margin-bottom: 20px; display: block;
+    }
+    .bento-card h3 {
+      font-size: 20px; font-weight: 600; color: var(--text-primary);
+      margin-bottom: 10px; letter-spacing: -0.3px;
+    }
+    .bento-card p {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+    }
+    /* Schengen visualizer inside bento-1 */
+    .schengen-viz {
+      margin-top: 28px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .schengen-bar-wrap {
+      display: flex; gap: 3px; flex-wrap: wrap;
+    }
+    .schengen-day {
+      width: 14px; height: 14px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .schengen-day.used   { background: rgba(79,142,247,0.7); }
+    .schengen-day.warn   { background: rgba(239,159,39,0.8); }
+    .schengen-day.danger { background: rgba(232,69,69,0.85); }
+    .schengen-day.empty  { background: rgba(255,255,255,0.06); }
+    .schengen-labels {
+      display: flex; justify-content: space-between;
+      font-size: 12px; color: var(--text-secondary);
+    }
+    .schengen-counter {
+      display: flex; gap: 20px; margin-top: 4px;
+    }
+    .sc-stat { display: flex; align-items: center; gap: 7px; font-size: 13px; }
+    .sc-dot { width: 10px; height: 10px; border-radius: 2px; }
+    /* scan card visual */
+    .scan-preview {
+      margin-top: 20px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 14px;
+      border: 0.5px solid rgba(255,255,255,0.06);
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .scan-row {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .scan-label { font-size: 11px; color: var(--text-secondary); }
+    .scan-value { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .scan-badge {
+      font-size: 10px; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px;
+      background: rgba(30,210,140,0.15);
+      color: var(--success);
+    }
+    /* calendar mini */
+    .mini-cal {
+      margin-top: 20px;
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;
+    }
+    .cal-day {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      font-size: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary);
+    }
+    .cal-day.safe   { background: rgba(30,210,140,0.18); color: var(--success); font-weight: 500; }
+    .cal-day.warn   { background: rgba(239,159,39,0.18); color: var(--warning); font-weight: 500; }
+    .cal-day.out    { background: rgba(255,255,255,0.04); }
+    @media (max-width: 860px) {
+      .bento-1, .bento-2, .bento-3, .bento-4, .bento-5, .bento-6, .bento-7 { grid-column: span 12; }
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-section {
+      position: relative; z-index: 1;
+      padding: 64px 0;
+      overflow: hidden;
+      border-top: 0.5px solid var(--divider);
+      border-bottom: 0.5px solid var(--divider);
+    }
+    .marquee-label {
+      text-align: center;
+      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--text-secondary); margin-bottom: 36px;
+    }
+    .marquee-track {
+      display: flex; gap: 16px;
+      animation: marqueeScroll 35s linear infinite;
+      width: max-content;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marqueeScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-item {
+      flex-shrink: 0;
+      width: 320px;
+      background: rgba(255,255,255,0.04);
+      border: 0.5px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 22px 24px;
+    }
+    .marquee-stars { color: #f59e0b; font-size: 13px; margin-bottom: 10px; letter-spacing: 2px; }
+    .marquee-text { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 14px; }
+    .marquee-author { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .marquee-role { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+    /* ── HOW IT WORKS ── */
+    .how-section { background: rgba(255,255,255,0.008); }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0;
+      margin-top: 64px;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 44px; left: 18%; right: 18%;
+      height: 0.5px;
+      background: linear-gradient(90deg, transparent, var(--primary), var(--purple), transparent);
+      opacity: 0.35;
+    }
+    .step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 28px; }
+    .step-num {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(79,142,247,0.12), rgba(123,47,190,0.12));
+      border: 0.5px solid rgba(100,140,255,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; font-weight: 500; color: var(--primary);
+      margin-bottom: 28px;
+      position: relative; z-index: 1;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .step:hover .step-num {
+      transform: scale(1.08);
+      box-shadow: 0 0 32px rgba(79,142,247,0.25);
+    }
+    .step h3 { font-size: 16px; font-weight: 500; color: var(--text-primary); margin-bottom: 10px; }
+    .step p   { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
+
+    /* ── SCREENSHOTS ── */
+    .screenshots-section { overflow: visible; }
+    .screenshots-wrapper {
+      margin-top: 64px;
+      display: flex;
+      gap: 60px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: nowrap;
+      overflow: visible;
+    }
+    .screenshot-frame {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      flex: 0 0 auto;
+    }
+    .screenshot-frame img {
+      width: 680px;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 48px 96px rgba(0,0,0,0.65));
+      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), filter 0.4s;
+      animation: floatA 7s ease-in-out infinite;
+    }
+    .screenshot-frame.featured img {
+      width: 720px;
+      filter: drop-shadow(0 56px 112px rgba(79,142,247,0.45));
+      animation: floatB 8s ease-in-out infinite;
+    }
+    .screenshot-frame:hover img {
+      transform: translateY(-14px) scale(1.02);
+      filter: drop-shadow(0 56px 110px rgba(79,142,247,0.5));
+    }
+    .screenshot-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    /* ── PRICING ── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 64px;
+      max-width: 1040px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .pricing-card {
+      padding: 36px 30px;
+      border-radius: 24px;
+      position: relative;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .pricing-card:hover { transform: translateY(-4px); }
+    .pricing-card.free {
+      background: rgba(255,255,255,0.04);
+      border: 0.5px solid rgba(255,255,255,0.09);
+    }
+    .pricing-card.premium {
+      background: linear-gradient(135deg, rgba(79,142,247,0.10), rgba(123,47,190,0.10));
+      border: 0.5px solid rgba(100,140,255,0.3);
+      box-shadow: 0 0 60px rgba(79,142,247,0.10);
+    }
+    .pricing-card.premium:hover { box-shadow: 0 20px 80px rgba(79,142,247,0.18); }
+    .pricing-badge {
+      position: absolute;
+      top: -13px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--gradient);
+      color: white;
+      font-size: 11px; font-weight: 500;
+      padding: 4px 18px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .pricing-tier { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
+    .pricing-price { font-size: 44px; font-weight: 500; color: var(--text-primary); margin-bottom: 6px; letter-spacing: -1.5px; }
+    .pricing-price sup { font-size: 20px; vertical-align: super; }
+    .pricing-price span { font-size: 14px; color: var(--text-secondary); font-weight: 400; }
+    .pricing-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 28px; }
+    .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 13px; margin-bottom: 34px; }
+    .pricing-features li { display: flex; align-items: center; gap: 11px; font-size: 14px; color: var(--text-primary); }
+    .pricing-features li .check {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(30,210,140,0.15); color: var(--success);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; flex-shrink: 0;
+    }
+    .pricing-features li .cross {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(136,153,170,0.08); color: var(--text-secondary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; flex-shrink: 0;
+    }
+    .pricing-btn {
+      display: block; width: 100%;
+      padding: 15px;
+      border-radius: 14px;
+      text-align: center;
+      font-size: 15px; font-weight: 500;
+      text-decoration: none;
+      cursor: pointer; border: none;
+      transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+    }
+    .pricing-btn:hover { opacity: 0.88; transform: scale(0.98); }
+    .pricing-btn.gradient {
+      background: var(--gradient);
+      color: white;
+    }
+    .pricing-btn.gradient:hover { box-shadow: 0 0 28px rgba(79,142,247,0.4); }
+    .pricing-btn.outline {
+      background: rgba(255,255,255,0.06);
+      border: 0.5px solid rgba(255,255,255,0.12);
+      color: var(--text-primary);
+    }
+
+    /* ── CTA SECTION ── */
+    .cta-section { text-align: center; padding: 110px 48px; }
+    .cta-card {
+      max-width: 660px;
+      margin: 0 auto;
+      padding: 68px 52px;
+      background: linear-gradient(135deg, rgba(79,142,247,0.09), rgba(123,47,190,0.09));
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 0.5px solid rgba(100,140,255,0.22);
+      border-radius: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-card::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: conic-gradient(from 0deg, transparent 60%, rgba(79,142,247,0.06) 70%, transparent 80%);
+      animation: rotateCta 12s linear infinite;
+    }
+    @keyframes rotateCta {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .cta-card > * { position: relative; z-index: 1; }
+    .cta-card h2 { font-size: 34px; font-weight: 500; letter-spacing: -0.6px; color: var(--text-primary); margin-bottom: 14px; }
+    .cta-card p  { font-size: 15px; color: var(--text-secondary); margin-bottom: 38px; line-height: 1.75; }
+    .cta-store-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
+    .cta-note { font-size: 12px; color: var(--text-muted); }
+
+    /* ── WAITLIST FORM ── */
+    .waitlist-form {
+      display: flex;
+      gap: 10px;
+      max-width: 440px;
+      margin: 0 auto 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .waitlist-input {
+      flex: 1;
+      min-width: 220px;
+      background: rgba(255,255,255,0.07);
+      border: 0.5px solid rgba(255,255,255,0.15);
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 15px;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .waitlist-input::placeholder { color: var(--text-secondary); }
+    .waitlist-input:focus {
+      border-color: rgba(79,142,247,0.5);
+      box-shadow: 0 0 0 3px rgba(79,142,247,0.12);
+    }
+    .waitlist-btn {
+      background: var(--gradient);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+    .waitlist-btn:hover {
+      opacity: 0.88;
+      transform: scale(0.97);
+      box-shadow: 0 0 24px rgba(79,142,247,0.4);
+    }
+    .waitlist-success {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 15px;
+      color: var(--success);
+      margin-bottom: 18px;
+    }
+    .waitlist-success .s-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(30,210,140,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 0.5px solid var(--divider);
+      padding: 44px 48px;
+    }
+    .footer-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .footer-logo img { width: 28px; height: 28px; border-radius: 7px; }
+    .footer-logo span { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+    .footer-copy { font-size: 13px; color: var(--text-secondary); }
+    .footer-links { display: flex; gap: 28px; }
+    .footer-links a { font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--primary); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero { flex-direction: column; padding: 90px 20px 60px; text-align: center; align-items: center; gap: 48px; }
+      .hero-left { max-width: 100%; }
+      .hero-sub { max-width: 100%; }
+      .store-buttons { justify-content: center; }
+      .hero-right { width: 100%; }
+      .mockup-stack { width: 340px; height: 460px; margin: 0 auto; }
+      .mockup-stack .m1 { width: 280px; }
+      .mockup-stack .m2 { width: 260px; }
+      section { padding: 72px 20px; }
+      .pain-section { padding: 56px 20px; }
+      .stats-band { padding: 28px 20px; }
+      .stat-divider { display: none; }
+      .steps::before { display: none; }
+      .cta-card { padding: 44px 24px; }
+      footer { padding: 36px 20px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .screenshots-wrapper { flex-direction: column; align-items: center; }
+      .screenshot-frame img,
+      .screenshot-frame.featured img { width: 320px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- STAR CANVAS -->
+  <canvas id="stars-canvas"></canvas>
+  <div class="glow-1"></div>
+  <div class="glow-2"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <img src="logo.png" alt="Travisaro" />
+      <span>Travisaro</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+    </ul>
+    <a href="https://online.travisaro.app/login" style="font-size:14px; color:var(--text-secondary); margin-right:12px; text-decoration:none;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color=''">Log in</a>
+    <a href="https://online.travisaro.app/signup" class="nav-cta">Sign Up Free</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        43M+ digital nomads. Most track days in their head.
+      </div>
+      <h1>
+        One overstay.<br />
+        <span class="gradient-text">Two-year ban.</span>
+      </h1>
+      <p class="hero-sub">
+        Travisaro tracks every visa, every Schengen day, every deadline — so you always know exactly where you stand before you book, before you board, before you cross.
+      </p>
+      <div class="hero-ctas">
+        <div class="store-buttons">
+          <a href="#" class="store-btn apple">
+            <span class="store-icon">🍎</span>
+            <span class="store-text">
+              <span class="store-label">Download on the</span>
+              <span class="store-name">App Store</span>
+            </span>
+            <span class="coming-soon-tag">Soon</span>
+          </a>
+          <a href="#" class="store-btn google">
+            <span class="store-icon">▶</span>
+            <span class="store-text">
+              <span class="store-label">Get it on</span>
+              <span class="store-name">Google Play</span>
+            </span>
+            <span class="coming-soon-tag">Soon</span>
+          </a>
+        </div>
+        <a href="https://online.travisaro.app/signup" class="hero-note" style="display:inline-flex;align-items:center;gap:8px;margin-top:4px;padding:10px 20px;background:linear-gradient(135deg,#4F8EF7,#7B3FBE);color:#fff;font-weight:600;font-size:13px;border-radius:10px;text-decoration:none;transition:opacity 0.2s;align-self:flex-start;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Start tracking free →</a>
+        <a href="#newsletter" class="hero-note" style="color:var(--text-muted);text-decoration:none;">Get visa tips & travel news ↓</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="mockup-stack">
+        <img class="m1" src="mockup1.png" alt="Add visa screen" />
+        <img class="m2" src="mockup2.png" alt="Trip validation screen" />
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-band">
+    <div class="stats-inner">
+      <div class="stat-item reveal">
+        <span class="stat-num" data-target="43" data-suffix="M+">43M+</span>
+        <div class="stat-label">Digital nomads worldwide in 2026</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item reveal reveal-delay-1">
+        <span class="stat-num" data-target="4000" data-suffix="+">4,000+</span>
+        <div class="stat-label">EU overstays flagged by EES in 4 months</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item reveal reveal-delay-2">
+        <span class="stat-num">90/180</span>
+        <div class="stat-label">Schengen days — the rule that trips people up</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item reveal reveal-delay-3">
+        <span class="stat-num">€0</span>
+        <div class="stat-label">Cost of knowing exactly when to leave</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAIN POINTS -->
+  <div class="pain-section">
+    <div class="pain-inner">
+      <div class="pain-left reveal">
+        <div class="pain-number">2 years</div>
+        <p class="pain-desc">
+          The Schengen ban you get for overstaying. No appeals. No exceptions. Your entire European base — gone.
+        </p>
+      </div>
+      <div class="pain-right">
+        <div class="pain-item reveal reveal-delay-1">
+          <div class="pain-icon">📋</div>
+          <div class="pain-text">
+            <strong>You're doing mental math at every border</strong>
+            <span>Notes app. Spreadsheet. Calendar. None of it accounts for rolling windows, re-entries, or multi-country stacking. One wrong count and you're flagged.</span>
+          </div>
+        </div>
+        <div class="pain-item reveal reveal-delay-2">
+          <div class="pain-icon">🇪🇺</div>
+          <div class="pain-text">
+            <strong>EES changed everything in 2025</strong>
+            <span>The EU Entry/Exit System now digitally logs every crossing. There's no more "they didn't notice." Every overstay is on record.</span>
+          </div>
+        </div>
+        <div class="pain-item reveal reveal-delay-3">
+          <div class="pain-icon">🛂</div>
+          <div class="pain-text">
+            <strong>You don't know if your trip is legal until it's too late</strong>
+            <span>Most nomads book flights first, check visa math second. Travisaro flips that — validate before you commit.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES BENTO -->
+  <section id="features">
+    <div class="section-inner">
+      <div class="section-label reveal">Features</div>
+      <h2 class="section-title reveal reveal-delay-1">How do digital nomads avoid visa overstays?</h2>
+      <p class="section-sub reveal reveal-delay-2">Travisaro automatically calculates your remaining days, alerts you before every deadline, and validates trips before you book — so you never have to guess.</p>
+
+      <div class="bento-grid">
+
+        <!-- CARD 1: Schengen tracker big -->
+        <div class="bento-card bento-1 reveal">
+          <span class="b-icon">🗺️</span>
+          <h3>Schengen day tracker</h3>
+          <p>The 90/180 rule visualised. See exactly which days are used, how many you have left, and when your window resets.</p>
+          <div class="schengen-viz">
+            <div class="schengen-bar-wrap" id="schengen-bar"></div>
+            <div class="schengen-labels">
+              <span>180-day rolling window</span>
+              <span id="schengen-left" style="color:var(--success);font-weight:500;"></span>
+            </div>
+            <div class="schengen-counter">
+              <div class="sc-stat"><div class="sc-dot" style="background:rgba(79,142,247,0.7)"></div><span style="color:var(--text-secondary)">Days used</span></div>
+              <div class="sc-stat"><div class="sc-dot" style="background:rgba(239,159,39,0.8)"></div><span style="color:var(--text-secondary)">Approaching limit</span></div>
+              <div class="sc-stat"><div class="sc-dot" style="background:rgba(255,255,255,0.06)"></div><span style="color:var(--text-secondary)">Available</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: AI scan -->
+        <div class="bento-card bento-2 reveal reveal-delay-1">
+          <span class="b-icon">📷</span>
+          <h3>Smart scan</h3>
+          <p>Point your camera at any visa or entry stamp. AI extracts everything in seconds.</p>
+          <div class="scan-preview">
+            <div class="scan-row">
+              <span class="scan-label">COUNTRY</span>
+              <span class="scan-value">🇵🇹 Portugal</span>
+            </div>
+            <div class="scan-row">
+              <span class="scan-label">ENTRY DATE</span>
+              <span class="scan-value">14 Apr 2026</span>
+            </div>
+            <div class="scan-row">
+              <span class="scan-label">DURATION</span>
+              <span class="scan-value">90 days</span>
+            </div>
+            <div class="scan-row">
+              <span class="scan-label">STATUS</span>
+              <span class="scan-badge">✓ Extracted</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: AI trip validator -->
+        <div class="bento-card bento-3 reveal">
+          <span class="b-icon">✈️</span>
+          <h3>AI trip validator</h3>
+          <p>Enter your planned dates before you book. Get an instant legal/safe/risky verdict for your visa rules.</p>
+        </div>
+
+        <!-- CARD 4: Calendar -->
+        <div class="bento-card bento-4 reveal reveal-delay-1">
+          <span class="b-icon">📅</span>
+          <h3>Calendar view</h3>
+          <p>Your trips, colour-coded by risk level. Green, yellow, red — at a glance.</p>
+          <div class="mini-cal" id="mini-cal"></div>
+        </div>
+
+        <!-- CARD 5: Multi-passport -->
+        <div class="bento-card bento-5 reveal reveal-delay-2">
+          <span class="b-icon">🛂</span>
+          <h3>Multiple passports</h3>
+          <p>Hold dual citizenship? Track visas across every passport — separately and in sync.</p>
+        </div>
+
+        <!-- CARD 6: Tax Days -->
+        <div class="bento-card bento-6 reveal reveal-delay-3">
+          <span class="b-icon">🏦</span>
+          <h3>Tax Days — real legal data, per country</h3>
+          <p>Not every country uses 183 days. Switzerland triggers at 90 days. Thailand at 180. The UK counts from 6 April, not January. Travisaro uses the legally correct threshold and tax year for each country — sourced from official tax authority data, covering 45 countries.</p>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;color:rgba(255,255,255,0.5);">
+                <span>🇨🇭 Switzerland</span><span style="color:#1ed28c;font-weight:600;">44 / 90d ✓</span>
+              </div>
+              <div style="height:5px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
+                <div style="width:49%;height:100%;background:#1ed28c;border-radius:99px;"></div>
+              </div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">90-day threshold — Swiss Federal Tax Admin</div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;color:rgba(255,255,255,0.5);">
+                <span>🇹🇭 Thailand</span><span style="color:#F97316;font-weight:600;">165 / 180d</span>
+              </div>
+              <div style="height:5px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
+                <div style="width:92%;height:100%;background:#F97316;border-radius:99px;"></div>
+              </div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">180-day threshold — Thai Revenue Code §41</div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;color:rgba(255,255,255,0.5);">
+                <span>🇬🇧 United Kingdom</span><span style="color:#EF4444;font-weight:600;">183 / 183d ⚠</span>
+              </div>
+              <div style="height:5px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
+                <div style="width:100%;height:100%;background:#EF4444;border-radius:99px;"></div>
+              </div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">Counted Apr 6 – Apr 5 — UK Finance Act 2013 (SRT)</div>
+            </div>
+          </div>
+          <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:14px;font-style:italic;">45 countries. Sources: official tax authority data. Not legal advice — always consult a qualified tax professional for your specific situation.</p>
+        </div>
+
+        <!-- CARD 7: Explore — Passport Intelligence Hub -->
+        <div class="bento-card bento-7 reveal reveal-delay-1">
+          <span class="b-icon">🌍</span>
+          <h3>Explore — your world, mapped</h3>
+          <p>Tag countries <em>and cities</em> you've visited, lived in, or want to go. Drop photo memories on city pins. Get your own <strong>@username</strong> profile link — share it so friends can follow you and compare maps. Compare all 199 passports by global mobility rank.</p>
+          <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;">
+            <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.5);"><span style="width:10px;height:10px;border-radius:3px;background:#22D3A0;"></span>Visited</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.5);"><span style="width:10px;height:10px;border-radius:3px;background:#4F8EF7;"></span>Lived</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.5);"><span style="width:10px;height:10px;border-radius:3px;background:#F59E0B;"></span>Want to go</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.5);"><span style="width:10px;height:10px;border-radius:3px;background:#38BDF8;"></span>City pins</span>
+          </div>
+          <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:14px;font-style:italic;">@username profiles • Follow friends • City-level pins • Passport rankings — free to start.</p>
+        </div>
+
+        <!-- CARD 8: Flight Globe -->
+        <div class="bento-card bento-2 reveal reveal-delay-2" style="position:relative;overflow:hidden;">
+          <span class="b-icon">✈️</span>
+          <h3>My Flights globe</h3>
+          <p>Every trip you log draws a glowing arc on an interactive 3D globe. Spin it, zoom in, toggle to 2D — your travel footprint visualised in one view.</p>
+          <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:rgba(255,255,255,0.55);">
+              <span style="width:32px;height:2px;background:linear-gradient(90deg,rgba(56,189,248,0.2),#7DD3FC);border-radius:2px;box-shadow:0 0 6px #38BDF8;"></span>
+              Glowing flight path
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:rgba(255,255,255,0.55);">
+              <span style="width:10px;height:10px;border-radius:50%;background:#38BDF8;box-shadow:0 0 8px #38BDF8;flex-shrink:0;"></span>
+              Pulsing destination dot
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:rgba(255,255,255,0.55);">
+              <span style="width:10px;height:10px;border-radius:50%;background:#FBBF24;box-shadow:0 0 6px #FBBF24;flex-shrink:0;"></span>
+              Home airport
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 9: Scan boarding pass → auto trip -->
+        <div class="bento-card bento-3 reveal">
+          <span class="b-icon">🎫</span>
+          <h3>Scan your boarding pass</h3>
+          <p>Snap a photo of any boarding pass or e-ticket. AI reads the destination and dates and adds the trip for you — feeding straight into your visa days and tax tracker.</p>
+          <div class="scan-preview" style="margin-top:14px;">
+            <div class="scan-row">
+              <span class="scan-label">DESTINATION</span>
+              <span class="scan-value">🇯🇵 Japan</span>
+            </div>
+            <div class="scan-row">
+              <span class="scan-label">DATES</span>
+              <span class="scan-value">12 Jul – 2 Aug</span>
+            </div>
+            <div class="scan-row">
+              <span class="scan-label">STATUS</span>
+              <span class="scan-badge">✓ Trip added</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 10: Travel Wrapped + memories -->
+        <div class="bento-card bento-3 reveal reveal-delay-1">
+          <span class="b-icon">✨</span>
+          <h3>Travel Wrapped & photo memories</h3>
+          <p>Every year, get a shareable Spotify-style recap — countries, days abroad, longest trip, your travel persona. Pin photos to the cities you've been for a map of memories worth sharing.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE TESTIMONIALS -->
+  <div class="marquee-section">
+    <p class="marquee-label">What travellers are saying</p>
+    <div style="overflow:hidden; mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);">
+      <div class="marquee-track" id="marquee-track"></div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="how-section">
+    <div class="section-inner">
+      <div class="section-label reveal">How it works</div>
+      <h2 class="section-title reveal reveal-delay-1">How do I start tracking my visa in Travisaro?</h2>
+      <p class="section-sub reveal reveal-delay-2">Add your visa once — Travisaro handles all calculations automatically from that point on. No spreadsheets. No mental math. Setup takes under 2 minutes.</p>
+      <div class="steps">
+        <div class="step reveal reveal-delay-1">
+          <div class="step-num">1</div>
+          <h3>Add your visas</h3>
+          <p>Enter visa details manually or use Smart Scan to extract everything from a photo in seconds.</p>
+        </div>
+        <div class="step reveal reveal-delay-2">
+          <div class="step-num">2</div>
+          <h3>Log your trips</h3>
+          <p>Add entry and exit dates. Travisaro automatically calculates your days used across all visas.</p>
+        </div>
+        <div class="step reveal reveal-delay-3">
+          <div class="step-num">3</div>
+          <h3>Travel with confidence</h3>
+          <p>Check your dashboard before any border crossing. Know exactly where you stand — always.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREENSHOTS -->
+  <section class="screenshots-section">
+    <div class="section-inner">
+      <div class="section-label reveal">The app</div>
+      <h2 class="section-title reveal reveal-delay-1">See it in action.</h2>
+      <div class="screenshots-wrapper">
+        <div class="screenshot-frame reveal reveal-delay-1">
+          <img src="mockup1.png" alt="Add new visa screen" />
+          <div class="screenshot-label">Add a visa in seconds</div>
+        </div>
+        <div class="screenshot-frame featured reveal reveal-delay-2">
+          <img src="mockup2.png" alt="Trip validation screen" />
+          <div class="screenshot-label">Validate your trip before you go</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="section-inner">
+      <div class="section-label reveal">Pricing</div>
+      <h2 class="section-title reveal reveal-delay-1">How much does Travisaro cost?</h2>
+      <p class="section-sub reveal reveal-delay-2">Travisaro is free to start. Go Traveler ($11.99/mo or $99/yr) for unlimited visas, multiple passports, reminders and flight tracking — or Pro ($19.99/mo or $179/yr) to add the tax-residency tracker.</p>
+
+      <!-- Billing toggle -->
+      <div style="display:flex;align-items:center;gap:14px;margin-top:32px;margin-bottom:-32px;justify-content:center;" class="reveal reveal-delay-3">
+        <span id="toggle-monthly-label" style="font-size:14px;color:var(--text-primary);font-weight:500;">Monthly</span>
+        <div id="billing-toggle" onclick="toggleBilling()" style="width:44px;height:24px;border-radius:12px;background:var(--gradient);cursor:pointer;position:relative;transition:opacity 0.2s;">
+          <div id="billing-knob" style="position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform 0.25s;"></div>
+        </div>
+        <span id="toggle-annual-label" style="font-size:14px;color:var(--text-secondary);">Annual <span style="background:rgba(30,210,140,0.15);color:var(--success);font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;margin-left:4px;">Save up to 31%</span></span>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="pricing-card free reveal reveal-delay-1">
+          <div class="pricing-tier">Free</div>
+          <div class="pricing-price"><sup>$</sup>0 <span>/ forever</span></div>
+          <p class="pricing-desc">Everything you need to get started.</p>
+          <ul class="pricing-features">
+            <li><span class="check">✓</span> 1 visa tracked</li>
+            <li><span class="check">✓</span> 1 AI Smart Scan</li>
+            <li><span class="check">✓</span> Manual trip entry</li>
+            <li><span class="check">✓</span> Trip validation</li>
+            <li><span class="check">✓</span> Passport ranking &amp; world map</li>
+            <li><span class="cross">–</span> Multiple passports</li>
+            <li><span class="cross">–</span> Expiry reminders</li>
+            <li><span class="cross">–</span> Tax tracker</li>
+          </ul>
+          <a href="https://online.travisaro.app/signup" class="pricing-btn outline">Get started free</a>
+        </div>
+        <div class="pricing-card premium reveal reveal-delay-2">
+          <div class="pricing-badge">Most popular</div>
+          <div class="pricing-tier">Traveler</div>
+          <div class="pricing-price"><sup>$</sup><em id="premium-price" style="font-style:normal;">11.99</em> <span id="premium-period">/ month</span></div>
+          <p class="pricing-desc" id="premium-desc">Everything a frequent traveler needs.</p>
+          <ul class="pricing-features">
+            <li><span class="check">✓</span> Unlimited visas</li>
+            <li><span class="check">✓</span> Unlimited AI smart scans</li>
+            <li><span class="check">✓</span> Multiple passports</li>
+            <li><span class="check">✓</span> Visa expiry reminders</li>
+            <li><span class="check">✓</span> Flight tracker + globe map</li>
+            <li><span class="check">✓</span> Passport comparison</li>
+            <li><span class="check">✓</span> Visa policy news</li>
+            <li><span class="check">✓</span> Priority AI features</li>
+            <li><span class="check">✓</span> Email support</li>
+          </ul>
+          <a href="https://online.travisaro.app/signup?plan=monthly" id="premium-cta" class="pricing-btn gradient">Choose Traveler</a>
+        </div>
+        <div class="pricing-card free reveal reveal-delay-3">
+          <div class="pricing-tier">Pro</div>
+          <div class="pricing-price"><sup>$</sup><em id="pro-price" style="font-style:normal;">19.99</em> <span id="pro-period">/ month</span></div>
+          <p class="pricing-desc" id="pro-desc">For nomads, expats &amp; power travelers.</p>
+          <ul class="pricing-features">
+            <li><span class="check">✓</span> Everything in Traveler</li>
+            <li><span class="check">✓</span> Tax-residency day counter</li>
+            <li><span class="check">✓</span> Tax calendar with thresholds</li>
+            <li><span class="check">✓</span> Full visa history</li>
+            <li><span class="cross">–</span> Export travel history <span style="font-size:11px;opacity:0.5;">(coming soon)</span></li>
+          </ul>
+          <a href="https://online.travisaro.app/signup?plan=monthly" id="pro-cta" class="pricing-btn outline">Choose Pro</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON TABLE (AI SEO: comparisons as tables) -->
+  <section style="padding: 80px 0; background: rgba(255,255,255,0.02);">
+    <div class="section-inner">
+      <div class="section-label reveal">Travisaro vs. the alternatives</div>
+      <h2 class="section-title reveal reveal-delay-1">Is Travisaro better than tracking visas manually?</h2>
+      <p class="section-sub reveal reveal-delay-2">Travisaro replaces error-prone spreadsheets and calendar reminders with automatic calculations, real-time alerts, and AI-powered scanning.</p>
+      <div class="reveal reveal-delay-3" style="overflow-x:auto; margin-top: 40px;">
+        <table style="width:100%;border-collapse:collapse;font-size:14px;color:var(--text-primary);">
+          <thead>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.10);">
+              <th style="text-align:left;padding:14px 20px;color:var(--text-muted);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;">Feature</th>
+              <th style="text-align:center;padding:14px 20px;color:var(--text-muted);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;">Spreadsheet</th>
+              <th style="text-align:center;padding:14px 20px;color:var(--text-muted);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;">Calendar reminders</th>
+              <th style="text-align:center;padding:14px 20px;background:rgba(99,102,241,0.10);border-radius:12px 12px 0 0;color:var(--text-primary);font-weight:600;font-size:13px;">Travisaro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+              <td style="padding:14px 20px;color:var(--text-secondary);">Schengen 90/180 auto-calculation</td>
+              <td style="text-align:center;padding:14px 20px;">❌</td>
+              <td style="text-align:center;padding:14px 20px;">❌</td>
+              <td style="text-align:center;padding:14px 20px;background:rgba(99,102,241,0.05);">✅</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+              <td style="padding:14px 20px;color:var(--text-secondary);">Alerts before expiry (30d, 14d, 7d)</td>
+              <td style="text-align:center;padding:14px 20px;">❌</td>
+              <td style="text-align:center;padding:14px 20px;">⚠️ Manual</td>
+              <td style="text-align:center;padding:14px 20px;background:rgba(99,102,241,0.05);">✅ Automatic</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+              <td style="padding:14px 20px;color:var(--text-secondary);">AI scan from visa photo</td>
+              <td style="text-align:center;padding:14px 20px;">❌</td>
+              <td style="text-align:center;padding:14px 20px;">❌</td>
+              <td style="text-align:center;padding:14px 20px;background:rgba(99,102,241,0.05);">✅</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+              <td style="padding:14px 20px;color:var(--text-secondary);">Trip validation before booking</td>
+              <td style="text-align:center;padding:14px 20px;">❌</td>
+              <td style="text-align:center;padding:14px 20px;">❌</td>
+              <td style="text-align:center;padding:14px 20px;background:rgba(99,102,241,0.05);">✅</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+              <td style="padding:14px 20px;color:var(--text-secondary);">Multiple passports</td>
+              <td style="text-align:center;padding:14px 20px;">⚠️ Complex</td>
+              <td style="text-align:center;padding:14px 20px;">❌</td>
+              <td style="text-align:center;padding:14px 20px;background:rgba(99,102,241,0.05);">✅ Traveler+</td>
+            </tr>
+            <tr>
+              <td style="padding:14px 20px;color:var(--text-secondary);">Setup time</td>
+              <td style="text-align:center;padding:14px 20px;color:var(--text-muted);">1–2 hours</td>
+              <td style="text-align:center;padding:14px 20px;color:var(--text-muted);">30 min</td>
+              <td style="text-align:center;padding:14px 20px;background:rgba(99,102,241,0.05);border-radius:0 0 12px 12px;color:#1ed28c;font-weight:600;">Under 2 min</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION (AI SEO: exact questions people ask) -->
+  <section style="padding: 80px 0;">
+    <div class="section-inner">
+      <div class="section-label reveal">FAQ</div>
+      <h2 class="section-title reveal reveal-delay-1">Common questions about visa tracking</h2>
+      <div style="margin-top:40px;max-width:720px;margin-left:auto;margin-right:auto;" class="reveal reveal-delay-2">
+
+        <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;" open>
+          <summary style="font-weight:600;font-size:16px;color:var(--text-primary);list-style:none;display:flex;justify-content:space-between;align-items:center;">
+            What is the Schengen 90/180 rule?
+            <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
+          </summary>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">The Schengen 90/180 rule means you can stay in the Schengen Area for a maximum of 90 days within any rolling 180-day window. It's not a fixed 6-month period — it moves every day. Overstaying can result in a 2-year re-entry ban and a permanent record in the EU's Entry/Exit System (EES).</p>
+        </details>
+
+        <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
+          <summary style="font-weight:600;font-size:16px;color:var(--text-primary);list-style:none;display:flex;justify-content:space-between;align-items:center;">
+            What happens if I overstay my visa in Europe?
+            <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
+          </summary>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Overstaying a Schengen visa can result in a re-entry ban of up to 2 years, fines, deportation, and a flag in the EU Entry/Exit System. The EES makes overstays automatically detectable at every Schengen border — there's nowhere to hide. One overstay can shut you out of 27 European countries.</p>
+        </details>
+
+        <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
+          <summary style="font-weight:600;font-size:16px;color:var(--text-primary);list-style:none;display:flex;justify-content:space-between;align-items:center;">
+            How do I track my Schengen days automatically?
+            <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
+          </summary>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Travisaro tracks your Schengen days automatically. Add your entry and exit dates for each trip, and Travisaro calculates your 90/180-day usage in real time — and shows exactly how many days you have left. You can also validate future trips before booking to confirm you won't overstay.</p>
+        </details>
+
+        <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
+          <summary style="font-weight:600;font-size:16px;color:var(--text-primary);list-style:none;display:flex;justify-content:space-between;align-items:center;">
+            Is there an app to track visa expiry dates?
+            <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
+          </summary>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes — Travisaro tracks all your visa expiry dates in one place. It sends automated alerts 30, 14, and 7 days before any visa expires. The AI Smart Scan feature lets you photograph any visa stamp or sticker and extract the details automatically, so you don't have to type anything manually.</p>
+        </details>
+
+        <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
+          <summary style="font-weight:600;font-size:16px;color:var(--text-primary);list-style:none;display:flex;justify-content:space-between;align-items:center;">
+            Can I track multiple passports and visas?
+            <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
+          </summary>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes. Travisaro's paid plans (Traveler and Pro) support multiple passports. If you hold dual citizenship, you can add each passport separately and track all your visas across both. The app keeps your travel history separate per passport and calculates remaining days for each one independently.</p>
+        </details>
+
+        <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
+          <summary style="font-weight:600;font-size:16px;color:var(--text-primary);list-style:none;display:flex;justify-content:space-between;align-items:center;">
+            Does Travisaro track tax residency days?
+            <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
+          </summary>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes. Travisaro's Tax Days feature tracks how many days you've spent in each country this calendar year and shows it against the 183-day tax residency threshold. Cards turn green (safe), amber (watch out), orange (getting close), or red (183+ days — you may be a tax resident). This helps digital nomads avoid accidentally triggering tax residency in a country.</p>
+        </details>
+
+        <details style="padding:20px 0;cursor:pointer;">
+          <summary style="font-weight:600;font-size:16px;color:var(--text-primary);list-style:none;display:flex;justify-content:space-between;align-items:center;">
+            How much does Travisaro cost?
+            <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
+          </summary>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Travisaro is free to start — you can track 1 visa with 1 AI Smart Scan at no cost. Traveler is $11.99/month or $99/year and unlocks unlimited visas, unlimited AI scans, multiple passports, expiry reminders and passport comparison. Pro is $19.99/month or $179/year and adds the tax-residency day counter, tax calendar and travel-history export.</p>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="cta-section" id="newsletter">
+    <div class="cta-card reveal">
+      <h2>Travel smarter. Stay legal.</h2>
+      <p>Visa rule changes, border tips, and nomad news — straight to your inbox. No fluff.</p>
+      <form class="waitlist-form" id="newsletter-form" onsubmit="handleNewsletter(event)">
+        <input
+          class="waitlist-input"
+          type="email"
+          placeholder="your@email.com"
+          required
+          id="newsletter-email"
+          autocomplete="email"
+        />
+        <button class="waitlist-btn" type="submit">Subscribe</button>
+      </form>
+      <div class="waitlist-success" id="newsletter-success">
+        <span class="s-icon">✓</span>
+        You're subscribed — first issue coming soon.
+      </div>
+      <p class="cta-note">No spam. Unsubscribe anytime.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <a href="#" class="footer-logo">
+        <img src="logo.png" alt="Travisaro" />
+        <span>Travisaro</span>
+      </a>
+      <span class="footer-copy">© 2026 Travisaro. All rights reserved.</span>
+      <div class="footer-links">
+        <a href="https://online.travisaro.app/privacy">Privacy</a>
+        <a href="https://online.travisaro.app/terms">Terms</a>
+        <a href="mailto:hello@travisaro.app">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ── STAR FIELD ── */
+    const canvas = document.getElementById('stars-canvas');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    function initStars() {
+      stars = [];
+      for (let i = 0; i < 160; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.2 + 0.2,
+          alpha: Math.random() * 0.6 + 0.1,
+          speed: Math.random() * 0.3 + 0.05,
+          twinkle: Math.random() * Math.PI * 2,
+          twinkleSpeed: Math.random() * 0.02 + 0.005,
+        });
+      }
+    }
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(s => {
+        s.twinkle += s.twinkleSpeed;
+        const a = s.alpha * (0.6 + 0.4 * Math.sin(s.twinkle));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(180, 210, 255, ${a})`;
+        ctx.fill();
+        // Subtle drift
+        s.y += s.speed * 0.1;
+        if (s.y > canvas.height) { s.y = 0; s.x = Math.random() * canvas.width; }
+      });
+      requestAnimationFrame(drawStars);
+    }
+    resize(); initStars(); drawStars();
+    window.addEventListener('resize', () => { resize(); initStars(); });
+
+    /* ── SCROLL REVEAL ── */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* ── MOUSE PARALLAX ON HERO MOCKUPS ── */
+    const stack = document.querySelector('.mockup-stack');
+    if (stack) {
+      document.addEventListener('mousemove', e => {
+        const mx = (e.clientX / window.innerWidth  - 0.5) * 12;
+        const my = (e.clientY / window.innerHeight - 0.5) * 8;
+        stack.style.transform = `perspective(1000px) rotateY(${mx}deg) rotateX(${-my}deg)`;
+      });
+    }
+
+    /* ── NAV SCROLL TINT ── */
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 40) {
+        nav.style.background = 'rgba(10,15,30,0.92)';
+      } else {
+        nav.style.background = 'rgba(10,15,30,0.75)';
+      }
+    });
+
+    /* ── SCHENGEN VISUALIZER ── */
+    (function() {
+      const bar = document.getElementById('schengen-bar');
+      const label = document.getElementById('schengen-left');
+      if (!bar) return;
+      const used = 58, warn = 14, total = 180;
+      for (let i = 0; i < total; i++) {
+        const d = document.createElement('div');
+        d.className = 'schengen-day ' +
+          (i < used ? 'used' : i < used + warn ? 'warn' : 'empty');
+        bar.appendChild(d);
+      }
+      label.textContent = (90 - used - warn) + ' days remaining';
+    })();
+
+    /* ── MINI CALENDAR ── */
+    (function() {
+      const cal = document.getElementById('mini-cal');
+      if (!cal) return;
+      const types = ['out','out','safe','safe','safe','warn','warn',
+                     'safe','safe','safe','safe','out','out','safe',
+                     'safe','safe','warn','warn','out','out','safe'];
+      types.forEach((t, i) => {
+        const d = document.createElement('div');
+        d.className = 'cal-day ' + t;
+        d.textContent = i + 1;
+        cal.appendChild(d);
+      });
+    })();
+
+    /* ── MARQUEE ── */
+    (function() {
+      const track = document.getElementById('marquee-track');
+      if (!track) return;
+      const reviews = [
+        { text: "Finally understand the Schengen 90/180 rule without a spreadsheet. This app just makes it obvious.", name: "Marco B.", role: "Digital nomad · Italy 🇮🇹" },
+        { text: "I've been living between Thailand and Europe for 2 years. Travisaro is the first app that actually handles my situation.", name: "Yuki T.", role: "Remote designer · Japan 🇯🇵" },
+        { text: "The smart scan feature alone is worth it. I photographed my stamps and it built my whole history automatically.", name: "Alex P.", role: "Freelance dev · UK 🇬🇧" },
+        { text: "Saved me from what would have been a 2-year Schengen ban. I was 4 days away from overstaying.", name: "Sofia R.", role: "Entrepreneur · Brazil 🇧🇷" },
+        { text: "I hold 2 passports and track visas across 6 countries. Nothing else handles this. Travisaro does.", name: "David K.", role: "Consultant · USA 🇺🇸" },
+        { text: "The calendar view is genuinely beautiful. Colour coding by risk makes it instantly readable.", name: "Nour A.", role: "UX designer · UAE 🇦🇪" },
+      ];
+      // Duplicate for seamless loop
+      [...reviews, ...reviews].forEach(r => {
+        const item = document.createElement('div');
+        item.className = 'marquee-item';
+        item.innerHTML = `
+          <div class="marquee-stars">★★★★★</div>
+          <p class="marquee-text">"${r.text}"</p>
+          <div class="marquee-author">${r.name}</div>
+          <div class="marquee-role">${r.role}</div>`;
+        track.appendChild(item);
+      });
+    })();
+
+    /* ── COUNTER ANIMATION ── */
+    function animateCount(el, target, suffix) {
+      let start = 0;
+      const dur = 1800;
+      const step = timestamp => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(ease * target).toLocaleString() + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+    const counterObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const el = e.target;
+          animateCount(el, parseInt(el.dataset.target), el.dataset.suffix || '');
+          counterObs.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('[data-target]').forEach(el => counterObs.observe(el));
+
+    /* ── BILLING TOGGLE ── */
+    let isAnnual = false;
+    function toggleBilling() {
+      isAnnual = !isAnnual;
+      const knob = document.getElementById('billing-knob');
+      const priceEl = document.getElementById('premium-price');
+      const periodEl = document.getElementById('premium-period');
+      const descEl = document.getElementById('premium-desc');
+      const proPriceEl = document.getElementById('pro-price');
+      const proPeriodEl = document.getElementById('pro-period');
+      const proDescEl = document.getElementById('pro-desc');
+      const monthlyLabel = document.getElementById('toggle-monthly-label');
+      const annualLabel = document.getElementById('toggle-annual-label');
+      const cta = document.getElementById('premium-cta');
+      const proCta = document.getElementById('pro-cta');
+
+      knob.style.transform = isAnnual ? 'translateX(20px)' : 'translateX(0)';
+      if (isAnnual) {
+        priceEl.textContent = '99';
+        periodEl.textContent = '/ year';
+        descEl.textContent = 'Just $8.25/mo billed yearly — save 31%.';
+        proPriceEl.textContent = '179';
+        proPeriodEl.textContent = '/ year';
+        proDescEl.textContent = 'Just $14.92/mo billed yearly — save 25%.';
+        monthlyLabel.style.color = 'var(--text-secondary)';
+        monthlyLabel.style.fontWeight = '400';
+        annualLabel.style.color = 'var(--text-primary)';
+        annualLabel.style.fontWeight = '500';
+        cta.href = 'https://online.travisaro.app/signup?plan=annual';
+        proCta.href = 'https://online.travisaro.app/signup?plan=annual';
+      } else {
+        priceEl.textContent = '11.99';
+        periodEl.textContent = '/ month';
+        descEl.textContent = 'Everything a frequent traveler needs.';
+        proPriceEl.textContent = '19.99';
+        proPeriodEl.textContent = '/ month';
+        proDescEl.textContent = 'For nomads, expats & power travelers.';
+        monthlyLabel.style.color = 'var(--text-primary)';
+        monthlyLabel.style.fontWeight = '500';
+        annualLabel.style.color = 'var(--text-secondary)';
+        annualLabel.style.fontWeight = '400';
+        cta.href = 'https://online.travisaro.app/signup?plan=monthly';
+        proCta.href = 'https://online.travisaro.app/signup?plan=monthly';
+      }
+    }
+
+    /* ── NEWSLETTER FORM ── */
+    function handleNewsletter(e) {
+      e.preventDefault();
+      const email = document.getElementById('newsletter-email').value;
+      const existing = JSON.parse(localStorage.getItem('travisaro_newsletter') || '[]');
+      if (!existing.includes(email)) existing.push(email);
+      localStorage.setItem('travisaro_newsletter', JSON.stringify(existing));
+
+      document.getElementById('newsletter-form').style.display = 'none';
+      const success = document.getElementById('newsletter-success');
+      success.style.display = 'flex';
+    }
+
+  </script>
+
+</body>
+</html>
