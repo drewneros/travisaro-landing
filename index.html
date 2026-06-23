@@ -1064,6 +1064,11 @@
       .mockup-stack .m2 { width: 260px; }
       section { padding: 72px 20px; }
       .pain-section { padding: 56px 20px; }
+      .pain-inner { flex-direction: column; gap: 36px; }
+      .pain-left { min-width: unset; width: 100%; text-align: center; }
+      .pain-desc { max-width: 100%; }
+      .pain-right { min-width: unset; width: 100%; }
+      .pain-number { font-size: 56px; }
       .stats-band { padding: 28px 20px; }
       .stat-divider { display: none; }
       .steps::before { display: none; }
@@ -1073,6 +1078,32 @@
       .screenshots-wrapper { flex-direction: column; align-items: center; }
       .screenshot-frame img,
       .screenshot-frame.featured img { width: 320px; }
+      .pricing-grid { gap: 16px; }
+      .pricing-card { padding: 28px 22px; }
+      .marquee-item { width: 280px; }
+    }
+
+    @media (max-width: 480px) {
+      nav { padding: 0 14px; }
+      nav a[href*="/login"] { display: none; }
+      .nav-cta { padding: 9px 16px !important; font-size: 13px !important; white-space: nowrap; }
+      .hero { padding: 80px 16px 48px; gap: 36px; }
+      .mockup-stack { width: 280px; height: 380px; }
+      .mockup-stack .m1 { width: 230px; }
+      .mockup-stack .m2 { width: 210px; }
+      .pain-number { font-size: 44px; }
+      .stat-num { font-size: 32px !important; }
+      .stats-band { padding: 20px 16px; gap: 16px; }
+      section { padding: 56px 16px; }
+      .pain-section { padding: 40px 16px; }
+      .cta-card { padding: 32px 16px; border-radius: 20px; }
+      .pricing-grid { gap: 12px; }
+      .pricing-card { padding: 24px 18px; border-radius: 18px; }
+      .pricing-price { font-size: 38px !important; }
+      .marquee-item { width: 260px; padding: 18px 18px; }
+      .bento-card { padding: 24px 18px; }
+      footer { padding: 28px 16px; }
+      .footer-links { flex-wrap: wrap; gap: 12px; }
     }
   </style>
 </head>
