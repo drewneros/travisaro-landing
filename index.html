@@ -1020,6 +1020,22 @@
       color: var(--success);
       margin-bottom: 18px;
     }
+    /* Kit embed form loses its own layout CSS when simplified — restore inline row */
+    #newsletter .formkit-fields {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 440px;
+      margin: 0 auto 18px;
+    }
+    #newsletter .formkit-field {
+      flex: 1;
+      min-width: 220px;
+      margin: 0;
+    }
+    #newsletter .formkit-input { width: 100%; }
+    #newsletter .formkit-submit { margin: 0; }
     .waitlist-success .s-icon {
       width: 28px; height: 28px;
       border-radius: 50%;
