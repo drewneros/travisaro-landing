@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://travisaro.app/sitemap.xml
