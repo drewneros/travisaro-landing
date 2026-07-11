@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Travisaro — Visa Tracker for Digital Nomads | Never Overstay Again</title>
+  <title>Travisaro: Visa Tracker for Digital Nomads. Never Overstay Again</title>
   <meta name="description" content="Travisaro is the #1 visa tracking app for digital nomads. Track Schengen days, multiple passports, and every visa deadline automatically. Free to start." />
   <meta name="keywords" content="visa tracker, schengen day tracker, digital nomad visa app, overstay prevention, visa expiry tracker, 90/180 rule calculator, schengen calculator" />
   <link rel="canonical" href="https://travisaro.app/" />
@@ -14,7 +14,7 @@
   <!-- Open Graph (Facebook, LinkedIn, WhatsApp link previews) -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Travisaro" />
-  <meta property="og:title" content="Travisaro — Visa Tracker for Digital Nomads | Never Overstay Again" />
+  <meta property="og:title" content="Travisaro: Visa Tracker for Digital Nomads. Never Overstay Again" />
   <meta property="og:description" content="Track Schengen 90/180 days, multiple passports, and every visa deadline automatically. Free Schengen calculator, no signup needed. Start free." />
   <meta property="og:url" content="https://travisaro.app/" />
   <meta property="og:image" content="https://travisaro.app/mockup1.png" />
@@ -22,7 +22,7 @@
 
   <!-- Twitter / X card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Travisaro — Visa Tracker for Digital Nomads" />
+  <meta name="twitter:title" content="Travisaro: Visa Tracker for Digital Nomads" />
   <meta name="twitter:description" content="Track Schengen days, passports, and visa deadlines automatically. Free 90/180 calculator, no signup." />
   <meta name="twitter:image" content="https://travisaro.app/mockup1.png" />
 
@@ -44,28 +44,28 @@
         "name": "Free",
         "price": "0",
         "priceCurrency": "USD",
-        "description": "Track 1 visa with 1 AI Smart Scan — free forever"
+        "description": "Track 1 visa with 1 AI Smart Scan, free forever"
       },
       {
         "@type": "Offer",
         "name": "Traveler",
         "price": "11.99",
         "priceCurrency": "USD",
-        "description": "Unlimited visas, unlimited AI scans, multiple passports, expiry reminders, passport comparison — $11.99/month or $99/year"
+        "description": "Unlimited visas, unlimited AI scans, multiple passports, expiry reminders, passport comparison. $11.99/month or $99/year"
       },
       {
         "@type": "Offer",
         "name": "Pro",
         "price": "19.99",
         "priceCurrency": "USD",
-        "description": "Everything in Traveler plus tax-residency day counter and tax calendar — $19.99/month or $179/year"
+        "description": "Everything in Traveler plus tax-residency day counter and tax calendar. $19.99/month or $179/year"
       },
       {
         "@type": "Offer",
         "name": "Lifetime Deal",
         "price": "149",
         "priceCurrency": "USD",
-        "description": "Founder's Lifetime Deal — full Pro access forever, one-time payment of $149. Limited to first 100 users."
+        "description": "Founder's Lifetime Deal: full Pro access forever, one-time payment of $149. Limited to first 100 users."
       }
     ],
     "featureList": [
@@ -77,7 +77,7 @@
       "Flight tracker with globe map",
       "Passport rankings and world map",
       "Year-in-Review Travel Wrapped",
-      "Tax Days tracker — 183-day threshold per country",
+      "Tax Days tracker: 183-day threshold per country",
       "City-level travel tracking with photo memories"
     ],
     "audience": {
@@ -129,7 +129,7 @@
         "name": "How do digital nomads track visa expiry dates?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Most digital nomads track visa expiry dates manually in spreadsheets or their phone calendar — which is error-prone and easy to forget. Travisaro automates this entirely: add your visa once, and the app calculates your remaining days, sends alerts at 30, 14, and 7 days before expiry, and validates future trips against your current visa status."
+          "text": "Most digital nomads track visa expiry dates manually in spreadsheets or their phone calendar. That is error-prone and easy to forget. Travisaro automates this entirely: add your visa once, and the app calculates your remaining days, sends alerts at 30, 14, and 7 days before expiry, and validates future trips against your current visa status."
         }
       },
       {
@@ -348,6 +348,29 @@
       opacity: 0.92;
       transform: scale(0.98);
       box-shadow: 0 0 24px rgba(79,142,247,0.35);
+    }
+
+    /* ── MOBILE STICKY CTA ── */
+    .mobile-sticky-cta { display: none; }
+    @media (max-width: 860px) {
+      .mobile-sticky-cta {
+        display: block;
+        position: fixed;
+        left: 0; right: 0; bottom: 0;
+        z-index: 500;
+        padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+        background: rgba(10,15,30,0.92);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid var(--divider);
+      }
+      .mobile-sticky-cta .nav-cta {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 13px 22px;
+      }
+      body { padding-bottom: 70px; }
     }
 
     /* ── HERO ── */
@@ -1040,7 +1063,7 @@
       color: var(--success);
       margin-bottom: 18px;
     }
-    /* Kit embed form loses its own layout CSS when simplified — restore inline row */
+    /* Kit embed form loses its own layout CSS when simplified, restore inline row */
     #newsletter .formkit-fields {
       display: flex;
       gap: 10px;
@@ -1248,7 +1271,7 @@
         <span class="gradient-text">Two-year ban.</span>
       </h1>
       <p class="hero-sub">
-        Travisaro tracks every visa, every Schengen day, every deadline — so you always know exactly where you stand before you book, before you board, before you cross.
+        Travisaro tracks every visa, every Schengen day, every deadline, so you always know exactly where you stand before you book, before you board, before you cross.
       </p>
       <div class="hero-ctas">
         <div class="store-buttons">
@@ -1270,7 +1293,7 @@
           </a>
         </div>
         <a href="https://online.travisaro.app/signup" class="hero-note" style="display:inline-flex;align-items:center;gap:8px;margin-top:4px;padding:10px 20px;background:linear-gradient(135deg,#4F8EF7,#7B3FBE);color:#fff;font-weight:600;font-size:13px;border-radius:10px;text-decoration:none;transition:opacity 0.2s;align-self:flex-start;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Start tracking free →</a>
-        <a href="https://online.travisaro.app/schengen-calculator" class="hero-note" style="display:inline-flex;align-items:center;gap:6px;color:#4F8EF7;font-weight:500;font-size:13px;text-decoration:none;align-self:flex-start;">Or try the free Schengen calculator — no signup →</a>
+        <a href="https://online.travisaro.app/schengen-calculator" class="hero-note" style="display:inline-flex;align-items:center;gap:6px;color:#4F8EF7;font-weight:500;font-size:13px;text-decoration:none;align-self:flex-start;">Or try the free Schengen calculator, no signup →</a>
         <a href="#newsletter" class="hero-note" style="color:var(--text-muted);text-decoration:none;">Get visa tips & travel news ↓</a>
       </div>
     </div>
@@ -1297,7 +1320,7 @@
       <div class="stat-divider"></div>
       <div class="stat-item reveal reveal-delay-2">
         <span class="stat-num">90/180</span>
-        <div class="stat-label">Schengen days — the rule that trips people up</div>
+        <div class="stat-label">Schengen days: the rule that trips people up</div>
       </div>
       <div class="stat-divider"></div>
       <div class="stat-item reveal reveal-delay-3">
@@ -1313,7 +1336,7 @@
       <div class="pain-left reveal">
         <div class="pain-number">2 years</div>
         <p class="pain-desc">
-          The Schengen ban you get for overstaying. No appeals. No exceptions. Your entire European base — gone.
+          The Schengen ban you get for overstaying. No appeals. No exceptions. Your entire European base, gone.
         </p>
       </div>
       <div class="pain-right">
@@ -1335,7 +1358,7 @@
           <div class="pain-icon">🛂</div>
           <div class="pain-text">
             <strong>You don't know if your trip is legal until it's too late</strong>
-            <span>Most nomads book flights first, check visa math second. Travisaro flips that — validate before you commit.</span>
+            <span>Most nomads book flights first, check visa math second. Travisaro flips that: validate before you commit.</span>
           </div>
         </div>
       </div>
@@ -1347,7 +1370,7 @@
     <div class="section-inner">
       <div class="section-label reveal">Features</div>
       <h2 class="section-title reveal reveal-delay-1">How do digital nomads avoid visa overstays?</h2>
-      <p class="section-sub reveal reveal-delay-2">Travisaro automatically calculates your remaining days, alerts you before every deadline, and validates trips before you book — so you never have to guess.</p>
+      <p class="section-sub reveal reveal-delay-2">Travisaro automatically calculates your remaining days, alerts you before every deadline, and validates trips before you book, so you never have to guess.</p>
 
       <div class="bento-grid">
 
@@ -1406,7 +1429,7 @@
         <div class="bento-card bento-4 reveal reveal-delay-1">
           <span class="b-icon">📅</span>
           <h3>Calendar view</h3>
-          <p>Your trips, colour-coded by risk level. Green, yellow, red — at a glance.</p>
+          <p>Your trips, colour-coded by risk level. Green, yellow, red, at a glance.</p>
           <div class="mini-cal" id="mini-cal"></div>
         </div>
 
@@ -1414,14 +1437,14 @@
         <div class="bento-card bento-5 reveal reveal-delay-2">
           <span class="b-icon">🛂</span>
           <h3>Multiple passports</h3>
-          <p>Hold dual citizenship? Track visas across every passport — separately and in sync.</p>
+          <p>Hold dual citizenship? Track visas across every passport, separately and in sync.</p>
         </div>
 
         <!-- CARD 6: Tax Days -->
         <div class="bento-card bento-6 reveal reveal-delay-3">
           <span class="b-icon">🏦</span>
-          <h3>Tax Days — real legal data, per country</h3>
-          <p>Not every country uses 183 days. Switzerland triggers at 90 days. Thailand at 180. The UK counts from 6 April, not January. Travisaro uses the legally correct threshold and tax year for each country — sourced from official tax authority data, covering 45 countries.</p>
+          <h3>Tax Days: real legal data, per country</h3>
+          <p>Not every country uses 183 days. Switzerland triggers at 90 days. Thailand at 180. The UK counts from 6 April, not January. Travisaro uses the legally correct threshold and tax year for each country, sourced from official tax authority data, covering 45 countries.</p>
           <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;">
             <div>
               <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;color:rgba(255,255,255,0.5);">
@@ -1430,7 +1453,7 @@
               <div style="height:5px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
                 <div style="width:49%;height:100%;background:#1ed28c;border-radius:99px;"></div>
               </div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">90-day threshold — Swiss Federal Tax Admin</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">90-day threshold, Swiss Federal Tax Admin</div>
             </div>
             <div>
               <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;color:rgba(255,255,255,0.5);">
@@ -1439,7 +1462,7 @@
               <div style="height:5px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
                 <div style="width:92%;height:100%;background:#F97316;border-radius:99px;"></div>
               </div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">180-day threshold — Thai Revenue Code §41</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">180-day threshold, Thai Revenue Code §41</div>
             </div>
             <div>
               <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;color:rgba(255,255,255,0.5);">
@@ -1448,31 +1471,31 @@
               <div style="height:5px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
                 <div style="width:100%;height:100%;background:#EF4444;border-radius:99px;"></div>
               </div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">Counted Apr 6 – Apr 5 — UK Finance Act 2013 (SRT)</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">Counted Apr 6 to Apr 5, UK Finance Act 2013 (SRT)</div>
             </div>
           </div>
-          <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:14px;font-style:italic;">45 countries. Sources: official tax authority data. Not legal advice — always consult a qualified tax professional for your specific situation.</p>
+          <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:14px;font-style:italic;">45 countries. Sources: official tax authority data. Not legal advice. Always consult a qualified tax professional for your specific situation.</p>
         </div>
 
-        <!-- CARD 7: Explore — Passport Intelligence Hub -->
+        <!-- CARD 7: Explore, Passport Intelligence Hub -->
         <div class="bento-card bento-7 reveal reveal-delay-1">
           <span class="b-icon">🌍</span>
-          <h3>Explore — your world, mapped</h3>
-          <p>Tag countries <em>and cities</em> you've visited, lived in, or want to go. Drop photo memories on city pins. Get your own <strong>@username</strong> profile link — share it so friends can follow you and compare maps. Compare all 199 passports by global mobility rank.</p>
+          <h3>Explore: your world, mapped</h3>
+          <p>Tag countries <em>and cities</em> you've visited, lived in, or want to go. Drop photo memories on city pins. Get your own <strong>@username</strong> profile link, share it so friends can follow you and compare maps. Compare all 199 passports by global mobility rank.</p>
           <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;">
             <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.5);"><span style="width:10px;height:10px;border-radius:3px;background:#22D3A0;"></span>Visited</span>
             <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.5);"><span style="width:10px;height:10px;border-radius:3px;background:#4F8EF7;"></span>Lived</span>
             <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.5);"><span style="width:10px;height:10px;border-radius:3px;background:#F59E0B;"></span>Want to go</span>
             <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.5);"><span style="width:10px;height:10px;border-radius:3px;background:#38BDF8;"></span>City pins</span>
           </div>
-          <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:14px;font-style:italic;">@username profiles • Follow friends • City-level pins • Passport rankings — free to start.</p>
+          <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:14px;font-style:italic;">@username profiles • Follow friends • City-level pins • Passport rankings, free to start.</p>
         </div>
 
         <!-- CARD 8: Flight Globe -->
         <div class="bento-card bento-2 reveal reveal-delay-2" style="position:relative;overflow:hidden;">
           <span class="b-icon">✈️</span>
           <h3>My Flights globe</h3>
-          <p>Every trip you log draws a glowing arc on an interactive 3D globe. Spin it, zoom in, toggle to 2D — your travel footprint visualised in one view.</p>
+          <p>Every trip you log draws a glowing arc on an interactive 3D globe. Spin it, zoom in, toggle to 2D. Your travel footprint visualised in one view.</p>
           <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
             <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:rgba(255,255,255,0.55);">
               <span style="width:32px;height:2px;background:linear-gradient(90deg,rgba(56,189,248,0.2),#7DD3FC);border-radius:2px;box-shadow:0 0 6px #38BDF8;"></span>
@@ -1493,7 +1516,7 @@
         <div class="bento-card bento-3 reveal">
           <span class="b-icon">🎫</span>
           <h3>Scan your boarding pass</h3>
-          <p>Snap a photo of any boarding pass or e-ticket. AI reads the destination and dates and adds the trip for you — feeding straight into your visa days and tax tracker.</p>
+          <p>Snap a photo of any boarding pass or e-ticket. AI reads the destination and dates and adds the trip for you, feeding straight into your visa days and tax tracker.</p>
           <div class="scan-preview" style="margin-top:14px;">
             <div class="scan-row">
               <span class="scan-label">DESTINATION</span>
@@ -1514,7 +1537,7 @@
         <div class="bento-card bento-3 reveal reveal-delay-1">
           <span class="b-icon">✨</span>
           <h3>Travel Wrapped & photo memories</h3>
-          <p>Every year, get a shareable Spotify-style recap — countries, days abroad, longest trip, your travel persona. Pin photos to the cities you've been for a map of memories worth sharing.</p>
+          <p>Every year, get a shareable Spotify-style recap: countries, days abroad, longest trip, your travel persona. Pin photos to the cities you've been for a map of memories worth sharing.</p>
         </div>
 
       </div>
@@ -1534,7 +1557,7 @@
     <div class="section-inner">
       <div class="section-label reveal">How it works</div>
       <h2 class="section-title reveal reveal-delay-1">How do I start tracking my visa in Travisaro?</h2>
-      <p class="section-sub reveal reveal-delay-2">Add your visa once — Travisaro handles all calculations automatically from that point on. No spreadsheets. No mental math. Setup takes under 2 minutes.</p>
+      <p class="section-sub reveal reveal-delay-2">Add your visa once. Travisaro handles all calculations automatically from that point on. No spreadsheets, no mental math. Setup takes under 2 minutes.</p>
       <div class="steps">
         <div class="step reveal reveal-delay-1">
           <div class="step-num">1</div>
@@ -1549,7 +1572,7 @@
         <div class="step reveal reveal-delay-3">
           <div class="step-num">3</div>
           <h3>Travel with confidence</h3>
-          <p>Check your dashboard before any border crossing. Know exactly where you stand — always.</p>
+          <p>Check your dashboard before any border crossing. Know exactly where you stand, always.</p>
         </div>
       </div>
     </div>
@@ -1578,7 +1601,7 @@
     <div class="section-inner">
       <div class="section-label reveal">Pricing</div>
       <h2 class="section-title reveal reveal-delay-1">How much does Travisaro cost?</h2>
-      <p class="section-sub reveal reveal-delay-2">Travisaro is free to start. Go Traveler ($11.99/mo or $99/yr) for unlimited visas, multiple passports, reminders and flight tracking — or Pro ($19.99/mo or $179/yr) to add the tax-residency tracker. <strong style="color:#ffc832;">⚡ Founder's Lifetime Deal — $149 once, Pro forever. First 100 only.</strong></p>
+      <p class="section-sub reveal reveal-delay-2">Travisaro is free to start. Go Traveler ($11.99/mo or $99/yr) for unlimited visas, multiple passports, reminders and flight tracking, or Pro ($19.99/mo or $179/yr) to add the tax-residency tracker. <strong style="color:#ffc832;">⚡ Founder's Lifetime Deal: $149 once, Pro forever. First 100 only.</strong></p>
 
       <!-- Billing toggle -->
       <div style="display:flex;align-items:center;gap:14px;margin-top:32px;margin-bottom:-32px;justify-content:center;" class="reveal reveal-delay-3">
@@ -1646,7 +1669,7 @@
             <span style="font-size:1.4rem;">⚡</span>
             <div style="flex:1;">
               <p style="font-size:14px;font-weight:700;color:#ffc832;margin:0;">Founder's Lifetime Deal</p>
-              <p style="font-size:12px;color:var(--text-secondary);margin:2px 0 0;">Limited to first 100 users — never expires</p>
+              <p style="font-size:12px;color:var(--text-secondary);margin:2px 0 0;">Limited to first 100 users, never expires</p>
             </div>
             <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(255,200,50,0.15);color:#ffc832;white-space:nowrap;">Save $1,800+</span>
           </div>
@@ -1655,9 +1678,9 @@
           <ul style="list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:10px;">
             <li style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-primary);"><span style="color:#ffc832;font-weight:700;">✓</span> Everything in Pro</li>
             <li style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-primary);"><span style="color:#ffc832;font-weight:700;">✓</span> All future features included</li>
-            <li style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-primary);"><span style="color:#ffc832;font-weight:700;">✓</span> Pay once — never pay again</li>
+            <li style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-primary);"><span style="color:#ffc832;font-weight:700;">✓</span> Pay once, never pay again</li>
           </ul>
-          <a href="https://online.travisaro.app/premium" style="display:block;text-align:center;padding:14px;border-radius:12px;background:linear-gradient(135deg,#ffc832,#ff8c00);color:#000;font-size:15px;font-weight:700;text-decoration:none;transition:opacity 0.2s;">Get Lifetime Access — $149</a>
+          <a href="https://online.travisaro.app/premium" style="display:block;text-align:center;padding:14px;border-radius:12px;background:linear-gradient(135deg,#ffc832,#ff8c00);color:#000;font-size:15px;font-weight:700;text-decoration:none;transition:opacity 0.2s;">Get Lifetime Access: $149</a>
         </div>
       </div>
     </div>
@@ -1734,7 +1757,7 @@
             What is the Schengen 90/180 rule?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">The Schengen 90/180 rule means you can stay in the Schengen Area for a maximum of 90 days within any rolling 180-day window. It's not a fixed 6-month period — it moves every day. Overstaying can result in a 2-year re-entry ban and a permanent record in the EU's Entry/Exit System (EES).</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">The Schengen 90/180 rule means you can stay in the Schengen Area for a maximum of 90 days within any rolling 180-day window. It's not a fixed 6-month period. It moves every day. Overstaying can result in a 2-year re-entry ban and a permanent record in the EU's Entry/Exit System (EES).</p>
         </details>
 
         <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
@@ -1742,7 +1765,7 @@
             What happens if I overstay my visa in Europe?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Overstaying a Schengen visa can result in a re-entry ban of up to 2 years, fines, deportation, and a flag in the EU Entry/Exit System. The EES makes overstays automatically detectable at every Schengen border — there's nowhere to hide. One overstay can shut you out of 27 European countries.</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Overstaying a Schengen visa can result in a re-entry ban of up to 2 years, fines, deportation, and a flag in the EU Entry/Exit System. The EES makes overstays automatically detectable at every Schengen border. There's nowhere to hide. One overstay can shut you out of 27 European countries.</p>
         </details>
 
         <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
@@ -1750,7 +1773,7 @@
             How do I track my Schengen days automatically?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Travisaro tracks your Schengen days automatically. Add your entry and exit dates for each trip, and Travisaro calculates your 90/180-day usage in real time — and shows exactly how many days you have left. You can also validate future trips before booking to confirm you won't overstay.</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Travisaro tracks your Schengen days automatically. Add your entry and exit dates for each trip, and Travisaro calculates your 90/180-day usage in real time, showing exactly how many days you have left. You can also validate future trips before booking to confirm you won't overstay.</p>
         </details>
 
         <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
@@ -1758,7 +1781,7 @@
             Is there an app to track visa expiry dates?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes — Travisaro tracks all your visa expiry dates in one place. It sends automated alerts 30, 14, and 7 days before any visa expires. The AI Smart Scan feature lets you photograph any visa stamp or sticker and extract the details automatically, so you don't have to type anything manually.</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes. Travisaro tracks all your visa expiry dates in one place. It sends automated alerts 30, 14, and 7 days before any visa expires. The AI Smart Scan feature lets you photograph any visa stamp or sticker and extract the details automatically, so you don't have to type anything manually.</p>
         </details>
 
         <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
@@ -1774,7 +1797,7 @@
             Does Travisaro track tax residency days?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes. Travisaro's Tax Days feature tracks how many days you've spent in each country this calendar year and shows it against the 183-day tax residency threshold. Cards turn green (safe), amber (watch out), orange (getting close), or red (183+ days — you may be a tax resident). This helps digital nomads avoid accidentally triggering tax residency in a country.</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes. Travisaro's Tax Days feature tracks how many days you've spent in each country this calendar year and shows it against the 183-day tax residency threshold. Cards turn green (safe), amber (watch out), orange (getting close), or red (183+ days, you may be a tax resident). This helps digital nomads avoid accidentally triggering tax residency in a country.</p>
         </details>
 
         <details style="padding:20px 0;cursor:pointer;">
@@ -1782,7 +1805,7 @@
             How much does Travisaro cost?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Travisaro is free to start — you can track 1 visa with 1 AI Smart Scan at no cost. Traveler is $11.99/month or $99/year and unlocks unlimited visas, unlimited AI scans, multiple passports, expiry reminders and passport comparison. Pro is $19.99/month or $179/year and adds the tax-residency day counter, tax calendar and travel-history export. There is also a Founder's Lifetime Deal at $149 one-time — full Pro access forever, limited to the first 100 users.</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Travisaro is free to start. You can track 1 visa with 1 AI Smart Scan at no cost. Traveler is $11.99/month or $99/year and unlocks unlimited visas, unlimited AI scans, multiple passports, expiry reminders and passport comparison. Pro is $19.99/month or $179/year and adds the tax-residency day counter, tax calendar and travel-history export. There is also a Founder's Lifetime Deal at $149 one-time: full Pro access forever, limited to the first 100 users.</p>
         </details>
 
       </div>
@@ -1848,7 +1871,7 @@
           <p style="font-size:12px;color:var(--text-secondary,#a0a8b8);margin-top:12px;">Reviews are displayed publicly. We don't edit them.</p>
         </div>
         <div class="rv-success" id="rv-success">
-          <h3>Review submitted — thank you!</h3>
+          <h3>Review submitted, thank you!</h3>
           <p>It'll appear here shortly once approved.</p>
         </div>
       </div>
@@ -1859,7 +1882,7 @@
   <section class="cta-section" id="newsletter">
     <div class="cta-card reveal">
       <h2>Travel smarter. Stay legal.</h2>
-      <p>Visa rule changes, border tips, and nomad news — straight to your inbox. No fluff.</p>
+      <p>Visa rule changes, border tips, and nomad news, straight to your inbox. No fluff.</p>
       <script src="https://f.convertkit.com/ckjs/ck.5.js"></script>
       <form action="https://app.kit.com/forms/9637075/subscriptions" class="seva-form formkit-form waitlist-form" method="post" data-sv-form="9637075" data-uid="def334723e" data-format="inline" data-version="5" data-options="{&quot;settings&quot;:{&quot;after_subscribe&quot;:{&quot;action&quot;:&quot;message&quot;,&quot;success_message&quot;:&quot;Success! Now check your email to confirm your subscription.&quot;,&quot;redirect_url&quot;:&quot;&quot;},&quot;analytics&quot;:{&quot;google&quot;:null,&quot;fathom&quot;:null,&quot;facebook&quot;:null,&quot;segment&quot;:null,&quot;pinterest&quot;:null,&quot;sparkloop&quot;:null,&quot;googletagmanager&quot;:null},&quot;modal&quot;:{&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15},&quot;powered_by&quot;:{&quot;show&quot;:true,&quot;url&quot;:&quot;https://kit.com/features/forms?utm_campaign=poweredby&amp;utm_content=form&amp;utm_medium=referral&amp;utm_source=dynamic&quot;},&quot;recaptcha&quot;:{&quot;enabled&quot;:false},&quot;return_visitor&quot;:{&quot;action&quot;:&quot;show&quot;,&quot;custom_content&quot;:&quot;&quot;},&quot;slide_in&quot;:{&quot;display_in&quot;:&quot;bottom_right&quot;,&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15},&quot;sticky_bar&quot;:{&quot;display_in&quot;:&quot;top&quot;,&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15}},&quot;version&quot;:&quot;5&quot;}" min-width="400 500 600 700 800">
         <div data-style="clean">
@@ -2068,10 +2091,10 @@
       if (isAnnual) {
         priceEl.textContent = '99';
         periodEl.textContent = '/ year';
-        descEl.textContent = 'Just $8.25/mo billed yearly — save 31%.';
+        descEl.textContent = 'Just $8.25/mo billed yearly, save 31%.';
         proPriceEl.textContent = '179';
         proPeriodEl.textContent = '/ year';
-        proDescEl.textContent = 'Just $14.92/mo billed yearly — save 25%.';
+        proDescEl.textContent = 'Just $14.92/mo billed yearly, save 25%.';
         monthlyLabel.style.color = 'var(--text-secondary)';
         monthlyLabel.style.fontWeight = '400';
         annualLabel.style.color = 'var(--text-primary)';
@@ -2122,11 +2145,16 @@
           alert(data.error || 'Something went wrong, try again.');
         }
       } catch (e) {
-        alert('Could not submit — please try again.');
+        alert('Could not submit, please try again.');
       }
     }
 
   </script>
+
+  <!-- MOBILE STICKY CTA -->
+  <div class="mobile-sticky-cta">
+    <a href="https://online.travisaro.app/signup" class="nav-cta">Start tracking free →</a>
+  </div>
 
 </body>
 </html>
