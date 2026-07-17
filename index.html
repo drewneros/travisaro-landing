@@ -1113,10 +1113,13 @@
     @media (max-width: 900px) {
       nav { padding: 0 20px; }
       .nav-links { display: none; }
-      .hero { flex-direction: column; padding: 90px 20px 60px; text-align: center; align-items: center; gap: 48px; }
+      .hero { flex-direction: column; min-height: auto; padding: 90px 20px 60px; text-align: center; align-items: center; gap: 48px; }
       .hero-left { max-width: 100%; }
       .hero-sub { max-width: 100%; }
+      .hero-ctas { align-items: center; }
+      .hero-ctas .hero-note { align-self: center !important; }
       .store-buttons { justify-content: center; }
+      .hero-cta-signup { display: none !important; }
       .hero-right { width: 100%; }
       .mockup-stack { width: 340px; height: 460px; margin: 0 auto; }
       .mockup-stack .m1 { width: 280px; }
@@ -1292,8 +1295,8 @@
             <span class="coming-soon-tag">Soon</span>
           </a>
         </div>
-        <a href="https://online.travisaro.app/signup" class="hero-note" style="display:inline-flex;align-items:center;gap:8px;margin-top:4px;padding:10px 20px;background:linear-gradient(135deg,#4F8EF7,#7B3FBE);color:#fff;font-weight:600;font-size:13px;border-radius:10px;text-decoration:none;transition:opacity 0.2s;align-self:flex-start;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Start tracking free →</a>
-        <a href="https://online.travisaro.app/schengen-calculator" class="hero-note" style="display:inline-flex;align-items:center;gap:6px;color:#4F8EF7;font-weight:500;font-size:13px;text-decoration:none;align-self:flex-start;">Or try the free Schengen calculator, no signup →</a>
+        <a href="https://online.travisaro.app/signup" class="hero-note hero-cta-signup" style="display:inline-flex;align-items:center;gap:8px;margin-top:4px;padding:10px 20px;background:linear-gradient(135deg,#4F8EF7,#7B3FBE);color:#fff;font-weight:600;font-size:13px;border-radius:10px;text-decoration:none;transition:opacity 0.2s;align-self:flex-start;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Start tracking free →</a>
+        <a href="https://online.travisaro.app/schengen-calculator" class="hero-note" style="display:inline-flex;align-items:center;gap:6px;color:#4F8EF7;font-weight:500;font-size:13px;text-decoration:none;align-self:flex-start;">Or try the free Schengen calculator, no signup</a>
         <a href="#newsletter" class="hero-note" style="color:var(--text-muted);text-decoration:none;">Get visa tips & travel news ↓</a>
       </div>
     </div>
@@ -2153,7 +2156,7 @@
 
   <!-- MOBILE STICKY CTA -->
   <div class="mobile-sticky-cta">
-    <a href="https://online.travisaro.app/signup" class="nav-cta">Start tracking free →</a>
+    <a href="https://online.travisaro.app/signup" class="nav-cta">Start tracking free</a>
   </div>
 
 </body>
