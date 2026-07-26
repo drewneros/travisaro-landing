@@ -2031,15 +2031,15 @@
       const track = document.getElementById('marquee-track');
       if (!track) return;
       const reviews = [
-        { text: "Finally understand the Schengen 90/180 rule without a spreadsheet. This app just makes it obvious.", name: "Marco B.", role: "Digital nomad · Italy 🇮🇹" },
-        { text: "I've been living between Thailand and Europe for 2 years. Travisaro is the first app that actually handles my situation.", name: "Yuki T.", role: "Remote designer · Japan 🇯🇵" },
-        { text: "The smart scan feature alone is worth it. I photographed my stamps and it built my whole history automatically.", name: "Alex P.", role: "Freelance dev · UK 🇬🇧" },
-        { text: "Saved me from what would have been a 2-year Schengen ban. I was 4 days away from overstaying.", name: "Sofia R.", role: "Entrepreneur · Brazil 🇧🇷" },
-        { text: "I hold 2 passports and track visas across 6 countries. Nothing else handles this. Travisaro does.", name: "David K.", role: "Consultant · USA 🇺🇸" },
-        { text: "The calendar view is genuinely beautiful. Colour coding by risk makes it instantly readable.", name: "Nour A.", role: "UX designer · UAE 🇦🇪" },
+        { text: "This app has been a lifesaver. No more calculating visa days every time I travel, and tracking my travel history is incredibly easy. Managing my trips is finally simple, stress-free, and enjoyable.", name: "@itsaozz", role: "Travisaro user" },
+        { text: "Everything's organized in one place instead of switching between apps. Clean interface, easy to navigate, saves a lot of time. A great app that makes everyday tasks so much simpler.", name: "@banswave", role: "Travisaro user" },
       ];
-      // Duplicate for seamless loop
-      [...reviews, ...reviews].forEach(r => {
+      // Duplicate for seamless loop. Only 2 real reviews so far (real
+      // friends who actually used the app, replacing 6 fabricated ones) --
+      // tripled instead of doubled so the strip doesn't feel sparse. Add
+      // more real entries here as they come in, do not pad with made-up
+      // ones.
+      [...reviews, ...reviews, ...reviews].forEach(r => {
         const item = document.createElement('div');
         item.className = 'marquee-item';
         item.innerHTML = `
