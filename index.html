@@ -2154,6 +2154,28 @@
       }
     }
 
+    /* ── IG IN-APP BROWSER: real store links get silently swallowed, show manual escape instead ── */
+    function isInstagramBrowser() {
+      return /Instagram/i.test(navigator.userAgent);
+    }
+    document.querySelectorAll('.store-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        const target = btn.getAttribute('href');
+        if (!isInstagramBrowser() || !target || target === '#') return;
+        e.preventDefault();
+        showIgEscapeTip();
+      });
+    });
+    function showIgEscapeTip() {
+      if (document.getElementById('ig-escape-tip')) return;
+      const tip = document.createElement('div');
+      tip.id = 'ig-escape-tip';
+      tip.textContent = 'Instagram blocks store links inside its app. Tap ⋯ top right, then "Open in browser" to download.';
+      tip.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);max-width:320px;background:#1c1f2b;color:#e8edf5;font-size:13px;line-height:1.4;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.15);box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:9999;';
+      document.body.appendChild(tip);
+      setTimeout(function () { tip.remove(); }, 6000);
+    }
+
   </script>
 
   <!-- MOBILE STICKY CTA -->
