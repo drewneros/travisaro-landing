@@ -1234,6 +1234,52 @@
         box-shadow: none;
       }
     }
+
+    /* The page had ten infinite animations and no way to turn any of them off:
+       two drifting full-viewport glows, a 35s testimonial marquee, floating
+       mockups, shimmer sweeps and a rotating gradient. Slow looping motion at
+       this scale is what makes motion-sensitive people ill, and none of it
+       carries information, so all of it stops here.
+
+       The marquee is the one that cannot simply freeze: its track is wider than
+       the screen and the section clips the overflow, so a stopped animation
+       would hide most of the testimonials permanently. It becomes a normal
+       horizontal scroller instead, which lets the reader move through them at
+       their own pace. */
+    @media (prefers-reduced-motion: reduce) {
+      .glow-1, .glow-2,
+      .hero-badge .dot,
+      .mockup-stack .m1, .mockup-stack .m2,
+      .stats-band::before,
+      .screenshot-frame img, .screenshot-frame.featured img,
+      .cta-card::before {
+        animation: none !important;
+      }
+
+      .marquee-track {
+        animation: none !important;
+        transform: none !important;
+      }
+      /* The element that actually clips is the unclassed wrapper inside the
+         section, and it carries overflow:hidden as an inline style, so this has
+         to be specific enough and marked important to beat it. Targeting
+         .marquee-section instead looks right and does nothing, because the
+         section is not the scroll container. The edge mask goes too: it exists
+         to fade content sliding past, and with manual scrolling it would just
+         grey out the first and last testimonial. */
+      .marquee-section > div[style] {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        mask-image: none !important;
+        -webkit-mask-image: none !important;
+      }
+
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
   </style>
 
   <style>
