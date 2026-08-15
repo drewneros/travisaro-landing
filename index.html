@@ -847,7 +847,12 @@
       animation: marqueeScroll 35s linear infinite;
       width: max-content;
     }
-    .marquee-track:hover { animation-play-state: paused; }
+    /* Pause so the strip can actually be read. :hover covers pointers,
+       .is-held covers touch (which has no hover), :focus-within keeps it
+       stopped if a focusable element is ever added to a card. */
+    .marquee-track:hover,
+    .marquee-track:focus-within,
+    .marquee-track.is-held { animation-play-state: paused; }
     @keyframes marqueeScroll {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
@@ -2197,6 +2202,16 @@
           <div class="marquee-role">${r.role}</div>`;
         track.appendChild(item);
       });
+
+      // Hold to read. Touch fires no hover, so without this the strip cannot
+      // be stopped on a phone. Bound on the clipping wrapper so a finger
+      // anywhere over the strip counts, and released on cancel/leave too so it
+      // can never stick paused.
+      const wrap = track.parentElement;
+      const hold = (on) => track.classList.toggle('is-held', on);
+      wrap.addEventListener('pointerdown', () => hold(true));
+      ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) =>
+        wrap.addEventListener(ev, () => hold(false)));
     })();
 
     /* ── COUNTER ANIMATION ── */
