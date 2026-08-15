@@ -111,7 +111,7 @@
         "name": "What is the Schengen 90/180 rule?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The Schengen 90/180 rule means you can stay in the Schengen Area for a maximum of 90 days within any 180-day rolling period. If you overstay, you can face a ban of up to 2 years and be flagged in the EU Entry/Exit System. Travisaro automatically calculates your remaining Schengen days based on your travel history."
+          "text": "You get 90 days inside the Schengen Area in any 180 day stretch. The 180 days are not a fixed half year, they roll forward with today's date, so a week you spent in Lisbon in March can move back inside the window in September and change what you are allowed. Travisaro recalculates that window every day from your travel history."
         }
       },
       {
@@ -119,7 +119,7 @@
         "name": "What happens if I overstay my visa in Europe?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Overstaying a Schengen visa can result in a re-entry ban of up to 2 years, deportation, fines, and a permanent record in the EU Entry/Exit System (EES). The EES rolled out from October 2025 and covers the full Schengen external border as of April 2026, making overstays automatically detectable at every crossing."
+          "text": "Depending on the member state, overstaying can mean a fine, deportation, a re-entry ban of up to two years, and a flag against your name in the EU Entry/Exit System (EES). The EES rolled out from October 2025 and covers the full Schengen external border as of April 2026, so detection is automatic at every crossing. One overstay can close all 27 Schengen countries at once."
         }
       },
       {
@@ -127,7 +127,7 @@
         "name": "How do I track my Schengen days?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Travisaro tracks your Schengen days automatically. Add your entry and exit dates for each trip, and Travisaro calculates your 90/180-day usage in real time and shows how many days you have left. You can also validate future trips before booking to make sure you won't overstay."
+          "text": "Add each trip's entry and exit dates once. Travisaro then recalculates the rolling 90/180 window every day, so the number you see is today's number rather than one you worked out last month. Before booking, enter the dates and it tells you whether the trip is legal while the ticket is still refundable."
         }
       },
       {
@@ -159,7 +159,7 @@
         "name": "Does Travisaro track tax residency days?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. Travisaro includes a Tax Days tracker that shows how many days you have spent in each country this calendar year, measured against the 183-day tax residency threshold. Countries are colour-coded green, amber, orange, or red. This helps digital nomads and expats avoid accidentally triggering tax residency."
+          "text": "Yes. Travisaro includes a Tax Days tracker that shows how many days you have spent in each country this calendar year, measured against the real threshold and tax year for each of 45 countries, not a flat 183 days. Switzerland can trigger at 90 days, Thailand at 180, and the UK counts from 6 April. Countries are colour-coded as you approach the limit. This helps digital nomads and expats avoid accidentally triggering tax residency."
         }
       }
     ]
@@ -1805,7 +1805,7 @@
     <div class="section-inner">
       <div class="section-label reveal">Travisaro vs. the alternatives</div>
       <h2 class="section-title reveal reveal-delay-1">Is Travisaro better than tracking visas manually?</h2>
-      <p class="section-sub reveal reveal-delay-2">Travisaro replaces error-prone spreadsheets and calendar reminders with automatic calculations, real-time alerts, and AI-powered scanning.</p>
+      <p class="section-sub reveal reveal-delay-2">A spreadsheet does exactly what you tell it, which is the problem. It does not know the window moved overnight, and it will not stop you booking the flight.</p>
       <div class="reveal reveal-delay-3" style="overflow-x:auto; margin-top: 40px;">
         <table style="width:100%;border-collapse:collapse;font-size:14px;color:var(--text-primary);">
           <thead>
@@ -1871,7 +1871,7 @@
             What is the Schengen 90/180 rule?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">The Schengen 90/180 rule means you can stay in the Schengen Area for a maximum of 90 days within any rolling 180-day window. It's not a fixed 6-month period. It moves every day. Overstaying can result in a 2-year re-entry ban and a permanent record in the EU's Entry/Exit System (EES).</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">You get 90 days inside the Schengen Area in any 180 day stretch. The word doing the damage is rolling: the 180 days are not a fixed half year, they slide forward with today's date. A week you spent in Lisbon in March can move back inside the window in September and change what you are allowed. Counting once is never enough, and that is the part that catches people.</p>
         </details>
 
         <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
@@ -1879,7 +1879,7 @@
             What happens if I overstay my visa in Europe?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Overstaying a Schengen visa can result in a re-entry ban of up to 2 years, fines, deportation, and a flag in the EU Entry/Exit System. The EES makes overstays automatically detectable at every Schengen border. There's nowhere to hide. One overstay can shut you out of 27 European countries.</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Depending on the member state it can mean a fine, deportation, a re-entry ban of up to two years, and a flag against your name in the Entry/Exit System. Since EES went live, detection is not a judgement call at the desk, it is arithmetic the system has already done. One overstay can close all 27 Schengen countries at once.</p>
         </details>
 
         <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
@@ -1887,7 +1887,7 @@
             How do I track my Schengen days automatically?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Travisaro tracks your Schengen days automatically. Add your entry and exit dates for each trip, and Travisaro calculates your 90/180-day usage in real time, showing exactly how many days you have left. You can also validate future trips before booking to confirm you won't overstay.</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Add each trip's entry and exit dates once. After that Travisaro recalculates the rolling window every day, so the number on your screen is today's number rather than the one you worked out last month. Before you book, put the dates in and it tells you whether the trip is legal while the ticket is still refundable.</p>
         </details>
 
         <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
@@ -1895,7 +1895,7 @@
             Is there an app to track visa expiry dates?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes. Travisaro tracks all your visa expiry dates in one place. It sends automated alerts 30, 14, and 7 days before any visa expires. The AI Smart Scan feature lets you photograph any visa stamp or sticker and extract the details automatically, so you don't have to type anything manually.</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes. Travisaro holds every visa expiry in one place and warns you 30, 14 and 7 days out, so the deadline reaches you before it reaches a border guard. Smart Scan reads a stamp or sticker straight from a photo, so adding a visa is a camera shot rather than a form.</p>
         </details>
 
         <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
@@ -1903,7 +1903,7 @@
             Can I track multiple passports and visas?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes. Travisaro's paid plans (Traveler and Pro) support multiple passports. If you hold dual citizenship, you can add each passport separately and track all your visas across both. The app keeps your travel history separate per passport and calculates remaining days for each one independently.</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes, on Traveler and Pro. If you hold two passports the days do not pool. Each passport gets its own history and its own remaining count, so you can see which one to travel on rather than guessing.</p>
         </details>
 
         <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
@@ -1911,7 +1911,7 @@
             Does Travisaro track tax residency days?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes. Travisaro's Tax Days feature tracks how many days you've spent in each country this calendar year and shows it against the 183-day tax residency threshold. Cards turn green (safe), amber (watch out), orange (getting close), or red (183+ days, you may be a tax resident). This helps digital nomads avoid accidentally triggering tax residency in a country.</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes, and not against a flat 183 days, because that number is not universal. Switzerland can trigger at 90 days, Thailand at 180, and the UK counts its year from 6 April rather than 1 January. Travisaro uses the real threshold and the real tax year for each of 45 countries, sourced from the tax authorities, and colours each one as you get closer. It is a day count, not tax advice. Take it to someone qualified before you act on it.</p>
         </details>
 
         <details style="padding:20px 0;cursor:pointer;">
@@ -1919,7 +1919,7 @@
             How much does Travisaro cost?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Travisaro is free to start. You can track 1 visa with 1 AI Smart Scan at no cost. Traveler is $11.99/month or $99/year and unlocks unlimited visas, unlimited AI scans, multiple passports, expiry reminders and passport comparison. Pro is $19.99/month or $179/year and adds the tax-residency day counter, tax calendar and travel-history export. There is also a Founder's Lifetime Deal at $149 one-time: full Pro access forever, limited to the first 100 users.</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Free to start: 1 visa and 1 Smart Scan. Traveler is $11.99/month or $99/year for unlimited visas and scans, multiple passports, expiry reminders and passport comparison. Pro is $19.99/month or $179/year and adds the tax residency counter, tax calendar and history export. There is also a Founder's Lifetime Deal, $149 once for full Pro forever, limited to the first 100 people.</p>
         </details>
 
       </div>
