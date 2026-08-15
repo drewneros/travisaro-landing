@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-08-15T16:30:59.017Z",
+        "reason": "Drew confirmed Inter is intentional; shared brand face across the app and this landing page"
+      }
+    ]
+  }
+}
