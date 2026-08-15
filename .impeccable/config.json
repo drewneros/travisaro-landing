@@ -8,6 +8,15 @@
         "value": "inter",
         "createdAt": "2026-08-15T16:30:59.017Z",
         "reason": "Drew confirmed Inter is intentional; shared brand face across the app and this landing page"
+      },
+      {
+        "rule": "marquee",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-08-15T17:04:14.745Z",
+        "reason": "Drew chose to keep the testimonial marquee and directed the mitigation: hold-to-pause for touch, pause on hover for pointers, focus-within, and a manual horizontal scroller under prefers-reduced-motion (498760a)"
       }
     ]
   }
