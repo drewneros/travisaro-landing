@@ -464,7 +464,9 @@
       font-size: clamp(40px, 5vw, 62px);
       font-weight: 500;
       line-height: 1.1;
-      letter-spacing: -1.5px;
+      /* em, not px: the size is fluid, so fixed tracking is only correct at one
+         end of the clamp. -1.5px read as -0.0375em on a 40px phone headline. */
+      letter-spacing: -0.024em;
       color: var(--text-primary);
       margin-bottom: 22px;
       animation: fadeSlideUp 0.9s 0.1s cubic-bezier(0.22,1,0.36,1) both;
@@ -1288,6 +1290,30 @@
         transition-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
       }
+    }
+
+    /* ── PRESS FEEDBACK AND TOUCH HOVER ── */
+
+    /* Feedback belongs on pointer-down. Touch has no hover at all, so without
+       this the primary actions gave no response until the page navigated. */
+    .nav-cta:active,
+    .hero-cta-signup:active,
+    .store-btn:active,
+    .pricing-btn:active {
+      transform: scale(0.97);
+      transition: transform 100ms ease-out;
+    }
+
+    /* A tap fires a hover that then sticks until the next tap elsewhere, which
+       would leave these frozen mid-transform. Motion-bearing hover is for real
+       pointers; colour and opacity changes are fine to keep either way. */
+    @media (hover: none), (pointer: coarse) {
+      .nav-cta:hover,
+      .store-btn:hover,
+      .pricing-card:hover,
+      .pricing-btn:hover,
+      .review-card:hover { transform: none; }
+      .nav-cta:hover { box-shadow: 0 0 0 rgba(79,142,247,0); }
     }
   </style>
 
