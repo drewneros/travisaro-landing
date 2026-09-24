@@ -1400,6 +1400,211 @@
       #pricing .ltd-card { grid-template-columns: 1fr; padding: 28px 24px !important; }
       #pricing .ltd-card > * { grid-column: 1 !important; grid-row: auto !important; }
     }
+    /* MOBILE PASS (24 Sep). The comparison table needed 477px, so on phones the
+       Travisaro column sat off-screen behind a sideways scroll. Below 560px it
+       drops the Calendar reminders column and tightens so all of it fits. */
+    @media (max-width: 560px) {
+      .compare-table th, .compare-table td { padding: 12px 8px !important; font-size: 13px !important; }
+      .compare-table th:nth-child(3), .compare-table td:nth-child(3) { display: none; }
+      .compare-table th { letter-spacing: 0.04em !important; font-size: 11px !important; }
+      .compare-table th:last-child { font-size: 12px !important; }
+    }
+    @media (max-width: 767px) {
+      /* The desktop FX padding left phones a 238px text column. */
+      #features .bento-grid { gap: 14px; margin-top: 48px; }
+      #features .bento-card { padding: 28px 22px; min-height: 0; border-radius: 22px; }
+      #features .bento-card h3 { font-size: 21px; }
+      #features .bento-card p { font-size: 15px; }
+      #features .bento-card .b-icon { width: 52px; height: 52px; border-radius: 16px; margin-bottom: 20px; }
+      #features .scan-preview { padding: 16px; }
+      /* Text links get a 44px-tall hit area without changing how they look. */
+      .hero a:not(.store-btn):not([style*="height:50px"]), footer a { display: inline-block; padding-block: 12px; }
+      #how .steps { gap: 36px; }
+    }
+    /* MOBILE PHONE FX: when the 3D phone is off (phones), the flat screenshots
+       still move. --t runs -1..1 as the shot crosses the viewport (from JS):
+       it tilts in 3D with the scroll, a light sweep crosses the glass, and the
+       whole thing floats. Reduced motion keeps it still. */
+    .phone-story:not(.is-3d) .ps-shot { perspective: 900px; position: relative; }
+    .phone-story:not(.is-3d) .ps-shot .psfx {
+      --t: 0; position: relative; display: block; width: min(280px, 100%);
+      transform: rotateX(calc(var(--t) * 10deg)) rotateY(calc(var(--t) * -14deg)) translateY(calc(var(--t) * 18px));
+      transform-style: preserve-3d; will-change: transform;
+      filter: drop-shadow(0 30px 40px rgba(6,10,24,0.6)) drop-shadow(0 0 40px rgba(99,102,241,0.18));
+    }
+    .phone-story:not(.is-3d) .ps-shot .psfx > img { width: 100%; animation: psFloat 5s ease-in-out infinite; display: block; }
+    .phone-story:not(.is-3d) .ps-shot .psfx::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: 40px;
+      background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.16) 45%, transparent 60%);
+      background-size: 250% 100%;
+      background-position: calc(50% + var(--t) * 120%) 0;
+      mix-blend-mode: screen;
+    }
+    .phone-story:not(.is-3d) .ps-shot.psfx-in .psfx { animation: psRise 0.9s cubic-bezier(.2,.9,.25,1) both; }
+    /* Silver iPhone body around the flat shot (matches the 3D phone's finish):
+       brushed silver rim, black bezel, volume + action buttons on the left
+       (::before) and the side button on the right (.psfx-btn). */
+    .phone-story:not(.is-3d) .ps-shot .psfx {
+      padding: 7px; border-radius: 50px;
+      background: linear-gradient(145deg, #f2f3f5 0%, #a9abb0 22%, #e4e5e8 48%, #8f9196 76%, #d9dadd 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6), inset 0 0 0 3px rgba(0,0,0,0.35);
+    }
+    .phone-story:not(.is-3d) .ps-shot .psfx > img {
+      border-radius: 43px; border: 5px solid #06070a; box-shadow: none;
+    }
+    .phone-story:not(.is-3d) .ps-shot .psfx::before {
+      content: ''; position: absolute; left: -3px; top: 17%; width: 4px; height: 26px; border-radius: 3px 0 0 3px;
+      background: linear-gradient(90deg, #8f9196, #d9dadd);
+      box-shadow: 0 46px 0 0 #b7b9bd, 0 46px 0 0 #b7b9bd, 0 100px 0 0 #b7b9bd;
+    }
+    .phone-story:not(.is-3d) .ps-shot .psfx::before { height: 26px; }
+    .phone-story:not(.is-3d) .ps-shot .psfx-btn {
+      position: absolute; right: -3px; top: 27%; width: 4px; height: 72px; border-radius: 0 3px 3px 0;
+      background: linear-gradient(270deg, #8f9196, #d9dadd);
+    }
+    .phone-story.is-3d .ps-shot .psfx-btn { display: none; }
+    .phone-story:not(.is-3d) .ps-shot .psfx::after { border-radius: 50px; }
+    @keyframes psFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @keyframes psRise { from { opacity: 0; filter: blur(10px); } to { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) {
+      .phone-story:not(.is-3d) .ps-shot .psfx { transform: none; }
+      .phone-story:not(.is-3d) .ps-shot .psfx > img { animation: none; }
+    }
+    /* MOBILE: the ten feature cards were a very long stack. On phones they
+       become one swipeable row with the next card peeking in, plus dots. */
+    @media (max-width: 767px) {
+      #features .bento-grid {
+        display: flex; gap: 12px; align-items: flex-start;
+        overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
+        transition: height 0.6s cubic-bezier(.22,1,.36,1);
+        scroll-snap-type: x mandatory; scrollbar-width: none;
+        margin-inline: calc(-1 * clamp(20px, 4vw, 40px));
+        padding: 4px clamp(20px, 4vw, 40px) 8px;
+        scroll-padding-inline: clamp(20px, 4vw, 40px);
+        perspective: none;
+      }
+      #features .bento-grid::-webkit-scrollbar { display: none; }
+      #features .bento-grid > * {
+        flex: 0 0 84%; max-width: 340px; scroll-snap-align: start;
+        grid-column: auto !important;
+      }
+      #features .bento-card.reveal { filter: none; transform: none; opacity: 1; }
+      #features .bento-card { padding: 24px 20px; }
+      #features .bento-card h3 { font-size: 19px; margin-bottom: 8px; }
+      #features .bento-card p { font-size: 14px; line-height: 1.6; }
+      #features .bento-card .b-icon { width: 46px; height: 46px; border-radius: 14px; margin-bottom: 16px; }
+      #features .bento-card .b-icon svg { width: 24px; height: 24px; }
+      #features .schengen-viz { margin-top: 18px; }
+      #features .schengen-bar-wrap { gap: 2px; }
+      #features .schengen-day { width: 9px; height: 9px; border-radius: 2px; }
+      #features .schengen-counter { flex-wrap: wrap; gap: 8px 14px; }
+      .fx-dots { display: flex; justify-content: center; gap: 6px; margin-top: 18px; }
+      .fx-dots i { width: 6px; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.18); transition: width 0.3s, background 0.3s; }
+      .fx-dots i.on { width: 20px; background: linear-gradient(90deg, #4f8ef7, #a78bfa); }
+    }
+    @media (min-width: 768px) { .fx-dots { display: none; } }
+    /* MOBILE REVIEWS: the auto-scrolling strip slid text away mid-sentence
+       and repeated every review three times. On phones it becomes a swipe
+       row of the four real reviews, one at a time, with dots. */
+    @media (max-width: 767px) {
+      .marquee-section { padding: 48px 0 40px; }
+      .marquee-label { font-size: 12px; margin-bottom: 22px; }
+      .review-viewport {
+        overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+        mask-image: none; -webkit-mask-image: none;
+        scroll-padding-inline: 20px;
+      }
+      .review-viewport::-webkit-scrollbar { display: none; }
+      .review-track { animation: none; gap: 12px; padding: 4px 20px; }
+      .review-track > .review-card:nth-child(n+5) { display: none; }
+      .review-track .review-card, .review-track .review-card.wide { width: min(84vw, 340px); scroll-snap-align: start; padding: 22px 20px 18px; }
+      .review-text { font-size: 14.5px; }
+      .rv-dots { display: flex; justify-content: center; gap: 6px; margin-top: 18px; }
+      .rv-dots i { width: 6px; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.18); transition: width 0.3s, background 0.3s; }
+      .rv-dots i.on { width: 20px; background: linear-gradient(90deg, #4f8ef7, #a78bfa); }
+    }
+    @media (min-width: 768px) { .rv-dots { display: none; } }
+    /* MOBILE PRICING: three tall plan cards stacked were ~1,700px of scroll.
+       On phones they become a swipe row that opens on the recommended plan,
+       with the others peeking either side, plus dots. */
+    @media (max-width: 767px) {
+      #pricing .pricing-grid {
+        display: flex; flex-wrap: nowrap; justify-content: flex-start; align-items: stretch;
+        gap: 12px; overflow-x: auto; overflow-y: visible; scroll-snap-type: x mandatory; scrollbar-width: none;
+        margin-inline: calc(-1 * clamp(20px, 4vw, 40px)); max-width: none;
+        padding: 18px calc((100vw - min(80vw, 320px)) / 2) 8px;
+        margin-top: 44px;
+      }
+      #pricing .pricing-grid::-webkit-scrollbar { display: none; }
+      #pricing .pricing-card { flex: 0 0 min(80vw, 320px); max-width: none; scroll-snap-align: center; transform: none; }
+      .pr-dots { display: flex; justify-content: center; gap: 6px; margin-top: 16px; }
+      .pr-dots i { width: 6px; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.18); transition: width 0.3s, background 0.3s; }
+      .pr-dots i.on { width: 20px; background: linear-gradient(90deg, #4f8ef7, #a78bfa); }
+    }
+    @media (min-width: 768px) { .pr-dots { display: none; } }
+    /* MOBILE BUTTONS, sized to Apple's HIG instead of desktop scale:
+       compact nav pill like the App Store "Get" button (34px), prominent
+       actions at 44px, 15px semibold labels, and the sticky CTA as a floating
+       pill instead of a full-width bar. Every hit area stays >= 44px. */
+    @media (max-width: 767px) {
+      nav .nav-cta { padding: 0 14px !important; height: 34px; line-height: 34px; font-size: 13px !important; position: relative; }
+      nav .nav-cta::after { content: ''; position: absolute; inset: -5px -2px; }
+      .mobile-sticky-cta {
+        left: 50% !important; right: auto !important; bottom: calc(14px + env(safe-area-inset-bottom)) !important;
+        transform: translateX(-50%); width: auto;
+        padding: 0 !important; background: none !important; border: 0 !important; box-shadow: none !important;
+        backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+      }
+      .mobile-sticky-cta .nav-cta {
+        display: inline-flex !important; align-items: center; justify-content: center; width: auto !important;
+        height: 44px; padding: 0 24px !important;
+        font-size: 15px !important; font-weight: 600; white-space: nowrap;
+        box-shadow: 0 10px 30px -6px rgba(99,102,241,0.55), inset 0 1px 0 rgba(255,255,255,0.25);
+      }
+      .store-btn { height: 44px; padding: 0 14px !important; }
+      .store-btn .store-icon { width: 20px; height: 20px; }
+      .store-btn .store-label { font-size: 9.5px; }
+      .store-btn .store-name { font-size: 15px; }
+      .pricing-btn { height: 44px; padding: 0 16px !important; display: flex !important; align-items: center; justify-content: center; font-size: 15px !important; }
+      .ltd-card a { padding: 0 16px !important; height: 44px; display: flex !important; align-items: center; justify-content: center; font-size: 15px !important; }
+      .rv-submit-btn { height: 44px; padding: 0 20px !important; font-size: 15px !important; }
+    }
+    /* MOBILE RHYTHM: one side gutter (20px) and one vertical beat for every
+       section. Before, content started 20, 36 or 48px from the edge depending
+       on the section, and section padding jumped between 48 and 110px. */
+    @media (max-width: 767px) {
+      body > section, body > .stats-band, body > .pain-section, footer { padding-left: 0 !important; padding-right: 0 !important; }
+      body > section { padding-top: 56px !important; padding-bottom: 56px !important; }
+      body > .hero, body > .stats-band, body > .pain-section, #phone-story, #newsletter { padding-left: 20px !important; padding-right: 20px !important; }
+      #phone-story > *, .pain-section > * { padding-left: 0; padding-right: 0; }
+
+      /* Newsletter card: full gutter width, tighter padding, one-row form. */
+      #newsletter { padding-top: 48px !important; padding-bottom: 96px !important; }
+      #newsletter .cta-card { padding: 32px 22px !important; border-radius: 22px !important; }
+      #newsletter .cta-card h2 { font-size: 26px; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 10px; }
+      #newsletter .cta-card p { font-size: 15px; line-height: 1.6; margin-bottom: 24px; }
+      #newsletter .waitlist-form { flex-wrap: nowrap; gap: 8px; margin-bottom: 14px; }
+      #newsletter .waitlist-input { min-width: 0; height: 44px; padding: 0 14px; font-size: 16px; }
+      #newsletter .waitlist-btn, #newsletter .formkit-submit { height: 44px; padding: 0 16px !important; font-size: 15px !important; flex: 0 0 auto; }
+      #newsletter .cta-card > p:last-of-type { margin-bottom: 0; font-size: 13px; }
+
+      #newsletter form, #newsletter form > div, #newsletter .formkit-fields, #newsletter .formkit-field > input { width: 100% !important; max-width: none !important; }
+      #newsletter .formkit-fields { flex-direction: column; gap: 10px; align-items: stretch; }
+      #newsletter .formkit-field, #newsletter .formkit-submit { width: 100%; }
+      footer .footer-inner { padding-left: 20px; padding-right: 20px; }
+      /* Other cards on the same scale. */
+      .review-form-section { padding: 26px 20px !important; }
+      .review-form-section input, .review-form-section textarea { font-size: 16px !important; }
+      .compare-table { font-size: 13px; }
+    }
+    @media (max-width: 767px) {
+      /* A long, eased fade (several stops approximate an ease-out curve) so
+         the edge has no visible line where it starts. */
+      #features .bento-card.is-cut {
+        -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 calc(var(--cut) - 170px), rgba(0,0,0,0.8) calc(var(--cut) - 120px), rgba(0,0,0,0.45) calc(var(--cut) - 70px), rgba(0,0,0,0.15) calc(var(--cut) - 30px), transparent var(--cut));
+        mask-image: linear-gradient(to bottom, #000 0, #000 calc(var(--cut) - 170px), rgba(0,0,0,0.8) calc(var(--cut) - 120px), rgba(0,0,0,0.45) calc(var(--cut) - 70px), rgba(0,0,0,0.15) calc(var(--cut) - 30px), transparent var(--cut));
+      }
+    }
     /* FEATURES-FX END */
 
     /* PHONE-STORY START */
@@ -1450,6 +1655,7 @@
     }
     .phone-story.is-3d .ps-shot { visibility: hidden; height: min(70vh, 720px); }
     .phone-story.is-3d .ps-shot img { width: auto; height: 100%; }
+    .phone-story.is-3d .ps-shot .psfx { height: 100%; }
 
     /* Above every section, below the nav (100). Never takes a click. */
     .phone-canvas {
@@ -2336,7 +2542,7 @@
               <div style="height:5px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
                 <div style="width:49%;height:100%;background:#1ed28c;border-radius:99px;"></div>
               </div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">90-day threshold, Swiss Federal Tax Admin</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;">90-day threshold, Swiss Federal Tax Admin</div>
             </div>
             <div>
               <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;color:rgba(255,255,255,0.5);">
@@ -2345,7 +2551,7 @@
               <div style="height:5px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
                 <div style="width:92%;height:100%;background:#F97316;border-radius:99px;"></div>
               </div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">180-day threshold, Thai Revenue Code §41</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;">180-day threshold, Thai Revenue Code §41</div>
             </div>
             <div>
               <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;color:rgba(255,255,255,0.5);">
@@ -2354,7 +2560,7 @@
               <div style="height:5px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
                 <div style="width:100%;height:100%;background:#EF4444;border-radius:99px;"></div>
               </div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:3px;">Counted Apr 6 to Apr 5, UK Finance Act 2013 (SRT)</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;">Counted Apr 6 to Apr 5, UK Finance Act 2013 (SRT)</div>
             </div>
           </div>
           <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:14px;font-style:italic;">45 countries. Sources: official tax authority data. Not legal advice. Always consult a qualified tax professional for your specific situation.</p>
@@ -2596,7 +2802,7 @@
       <h2 class="section-title reveal reveal-delay-1">Is Travisaro better than tracking visas manually?</h2>
       <p class="section-sub reveal reveal-delay-2">A spreadsheet does exactly what you tell it, which is the problem. It does not know the window moved overnight, and it will not stop you booking the flight.</p>
       <div class="reveal reveal-delay-3" style="overflow-x:auto; margin-top: 40px;">
-        <table style="width:100%;border-collapse:collapse;font-size:14px;color:var(--text-primary);">
+        <table class="compare-table" style="width:100%;border-collapse:collapse;font-size:14px;color:var(--text-primary);">
           <thead>
             <tr style="border-bottom:1px solid rgba(255,255,255,0.10);">
               <th style="text-align:left;padding:14px 20px;color:var(--text-muted);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;">Feature</th>
@@ -4156,6 +4362,138 @@
         if (e.isIntersecting) { e.target.classList.add('fx-on'); io.unobserve(e.target); }
       }), { threshold: 0.35 });
       [bar, rows].forEach((el) => el && io.observe(el));
+    })();
+  </script>
+  <script>
+    /* MOBILE PHONE FX: wrap each flat shot and feed it its scroll position. */
+    (function () {
+      const section = document.getElementById('phone-story');
+      if (!section || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const shots = [...section.querySelectorAll('.ps-shot')];
+      shots.forEach((s) => {
+        const img = s.querySelector('img');
+        if (!img || img.parentElement.classList.contains('psfx')) return;
+        const w = document.createElement('div'); w.className = 'psfx';
+        img.replaceWith(w); w.appendChild(img);
+        const btn = document.createElement('i'); btn.className = 'psfx-btn'; w.appendChild(btn);
+      });
+      const io = new IntersectionObserver((es) => es.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('psfx-in'); io.unobserve(e.target); }
+      }), { threshold: 0.2 });
+      shots.forEach((s) => io.observe(s));
+      let queued = false;
+      const update = () => {
+        queued = false;
+        if (section.classList.contains('is-3d')) return;
+        const vh = innerHeight;
+        shots.forEach((s) => {
+          const r = s.getBoundingClientRect();
+          if (r.bottom < 0 || r.top > vh) return;
+          const t = Math.max(-1, Math.min(1, ((r.top + r.height / 2) - vh / 2) / (vh / 2)));
+          s.firstElementChild.style.setProperty('--t', t.toFixed(3));
+        });
+      };
+      addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+      addEventListener('resize', update);
+      update();
+    })();
+  </script>
+  <script>
+    /* Dots for the mobile feature carousel. */
+    (function () {
+      const grid = document.querySelector('#features .bento-grid');
+      if (!grid) return;
+      const cards = [...grid.children];
+      const dots = document.createElement('div'); dots.className = 'fx-dots'; dots.setAttribute('aria-hidden', 'true');
+      cards.forEach(() => dots.appendChild(document.createElement('i')));
+      grid.after(dots);
+      let q = false;
+      const current = () => {
+        const x = grid.scrollLeft + 1, max = grid.scrollWidth - grid.clientWidth;
+        let i = cards.findIndex((c) => c.offsetLeft - grid.offsetLeft - 24 >= x) - 1;
+        if (i < 0) i = cards.length - 1;
+        if (x <= 2) i = 0; else if (x >= max - 2) i = cards.length - 1;
+        return i;
+      };
+      const markDots = () => {
+        q = false;
+        const i = current();
+        [...dots.children].forEach((d, j) => d.classList.toggle('on', j === i));
+      };
+      const mark = () => {
+        q = false;
+        const x = grid.scrollLeft + 1, max = grid.scrollWidth - grid.clientWidth;
+        let i = cards.findIndex((c) => c.offsetLeft - grid.offsetLeft - 24 >= x) - 1;
+        if (i < 0) i = cards.length - 1;
+        if (x <= 2) i = 0; else if (x >= max - 2) i = cards.length - 1;
+        [...dots.children].forEach((d, j) => d.classList.toggle('on', j === i));
+        // Row follows the card in view, so a short card has no empty band under it.
+        const mobile = matchMedia('(max-width: 767px)').matches;
+        const h = cards[i].offsetHeight;
+        grid.style.height = mobile ? (h + 12) + 'px' : '';
+        // Neighbours taller than the row fade out at the row's edge instead of
+        // being sliced, so a cut card reads as "more below", not broken.
+        cards.forEach((c) => {
+          const cut = mobile && c.offsetHeight > h + 4;
+          c.classList.toggle('is-cut', cut);
+          c.style.setProperty('--cut', h + 'px');
+        });
+      };
+      // Dots follow the finger live; the height and fades wait until the swipe
+      // settles, so the row does not bounce in height mid-gesture.
+      let settle;
+      grid.addEventListener('scroll', () => {
+        clearTimeout(settle);
+        settle = setTimeout(() => requestAnimationFrame(mark), 140);
+        if (!q) { q = true; requestAnimationFrame(markDots); }
+      }, { passive: true });
+      addEventListener('resize', mark);
+      mark();
+    })();
+  </script>
+  <script>
+    /* Dots for the mobile review swipe row (first 4 cards are the real set). */
+    (function () {
+      const vp = document.querySelector('.review-viewport');
+      if (!vp) return;
+      const n = 4;
+      const dots = document.createElement('div'); dots.className = 'rv-dots'; dots.setAttribute('aria-hidden', 'true');
+      for (let i = 0; i < n; i++) dots.appendChild(document.createElement('i'));
+      vp.after(dots);
+      const mark = () => {
+        const cards = vp.querySelectorAll('.review-card');
+        const step = cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : 1;
+        let i = Math.round(vp.scrollLeft / step);
+        if (vp.scrollLeft >= vp.scrollWidth - vp.clientWidth - 2) i = n - 1;
+        [...dots.children].forEach((d, j) => d.classList.toggle('on', j === Math.min(i, n - 1)));
+      };
+      vp.addEventListener('scroll', () => requestAnimationFrame(mark), { passive: true });
+      setTimeout(mark, 300);
+    })();
+  </script>
+  <script>
+    /* Mobile pricing row: open on the recommended plan, dots follow the swipe. */
+    (function () {
+      const grid = document.querySelector('#pricing .pricing-grid');
+      if (!grid) return;
+      const cards = [...grid.querySelectorAll('.pricing-card')];
+      const dots = document.createElement('div'); dots.className = 'pr-dots'; dots.setAttribute('aria-hidden', 'true');
+      cards.forEach(() => dots.appendChild(document.createElement('i')));
+      grid.after(dots);
+      const centreOf = (c) => c.offsetLeft - grid.offsetLeft + c.offsetWidth / 2 - grid.clientWidth / 2;
+      const mark = () => {
+        let best = 0, d = Infinity;
+        cards.forEach((c, i) => { const x = Math.abs(centreOf(c) - grid.scrollLeft); if (x < d) { d = x; best = i; } });
+        [...dots.children].forEach((el, j) => el.classList.toggle('on', j === best));
+      };
+      grid.addEventListener('scroll', () => requestAnimationFrame(mark), { passive: true });
+      const start = () => {
+        if (!matchMedia('(max-width: 767px)').matches) return;
+        const pick = cards.findIndex((c) => /most popular/i.test(c.textContent));
+        grid.scrollLeft = centreOf(cards[pick < 0 ? 1 : pick]);
+        mark();
+      };
+      if (document.readyState === 'complete') start(); else addEventListener('load', start);
     })();
   </script>
 </body>
