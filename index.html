@@ -2287,9 +2287,12 @@
       let interacting = false;
       let lastInteraction = 0;
       carousel.addEventListener('pointerdown', () => { interacting = true; });
-      window.addEventListener('pointerup', () => {
+      const endInteraction = () => {
         if (interacting) { interacting = false; lastInteraction = Date.now(); }
-      });
+      };
+      window.addEventListener('pointerup', endInteraction);
+      window.addEventListener('pointercancel', endInteraction);
+      window.addEventListener('blur', endInteraction);
       async function waitUnlessInteracting(ms) {
         const start = Date.now();
         while (Date.now() - start < ms) await wait(Math.min(250, ms - (Date.now() - start)) || 1);
@@ -2437,7 +2440,7 @@
 
         let autoRotate = true;
         setInterval(() => {
-          if (!autoRotate) return;
+          if (!autoRotate || !running || !slides[2].classList.contains('pos-center')) return;
           chart.set('rotationX', (chart.get('rotationX') || 0) + 0.15);
         }, 60);
         chart.events.on('pointerdown', () => { autoRotate = false; });
