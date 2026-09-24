@@ -1264,6 +1264,144 @@
     .how-section .step p { color: rgba(232,237,245,0.78); }
     @media (hover: none), (pointer: coarse) { .how-section .step:hover { transform: none; } }
 
+    /* FEATURES-FX START: futuristic pass on the Features bento (24 Sep).
+       Bigger cards, a cursor spotlight + lit edge (--mx/--my from JS), a small
+       3D tilt, blur-in entrances, a laser sweep on the scan card and the
+       Schengen cells lighting up in order. Touch and reduced motion get the
+       static, still-bigger version. */
+    #features { position: relative; }
+    #features::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        linear-gradient(rgba(120,150,255,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(120,150,255,0.07) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent 75%);
+    }
+    #features > .section-inner { position: relative; z-index: 1; }
+    #features .section-title {
+      background: linear-gradient(100deg, #e8edf5 0%, #e8edf5 40%, #a78bfa 50%, #e8edf5 60%, #e8edf5 100%);
+      background-size: 250% 100%;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: fxShimmer 6s ease-in-out infinite;
+    }
+    @keyframes fxShimmer { 0%, 100% { background-position: 100% 0; } 50% { background-position: 0% 0; } }
+
+    #features .bento-grid { gap: 20px; margin-top: 72px; perspective: 1400px; }
+    #features .bento-card {
+      --mx: 50%; --my: 50%; --rx: 0deg; --ry: 0deg;
+      padding: 44px 40px; border-radius: 26px; min-height: 260px;
+      background:
+        radial-gradient(420px circle at var(--mx) var(--my), rgba(120,150,255,0.10), transparent 60%),
+        linear-gradient(160deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      transform: rotateX(var(--rx)) rotateY(var(--ry));
+      transform-style: preserve-3d;
+      transition: transform 0.5s cubic-bezier(.2,.8,.2,1), border-color 0.35s, box-shadow 0.35s;
+    }
+    /* Lit edge: a 1px ring that only glows near the cursor. */
+    #features .bento-card::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+      background: radial-gradient(260px circle at var(--mx) var(--my), rgba(167,139,250,0.9), rgba(79,142,247,0.5) 40%, transparent 70%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      opacity: 0; transition: opacity 0.35s;
+    }
+    #features .bento-card:hover::before { opacity: 1; }
+    #features .bento-card:hover { box-shadow: 0 30px 60px -20px rgba(6,10,24,0.7), 0 0 0 1px rgba(120,150,255,0.06); }
+    #features .bento-card h3 { font-size: 24px; letter-spacing: -0.02em; margin-bottom: 12px; }
+    #features .bento-card p { font-size: 15.5px; line-height: 1.7; max-width: 46ch; }
+    #features .bento-card .b-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 60px; height: 60px; border-radius: 18px; margin-bottom: 26px;
+      background: linear-gradient(135deg, rgba(79,142,247,0.22), rgba(123,47,190,0.22));
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 10px 24px -8px rgba(79,142,247,0.35);
+      color: var(--primary);
+      animation: fxFloat 5s ease-in-out infinite;
+    }
+    #features .bento-card:nth-child(2n) .b-icon { animation-delay: -2.5s; }
+    #features .bento-card .b-icon svg { width: 30px; height: 30px; }
+    @keyframes fxFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+    /* Entrance: blur + rise + slight scale, replaces the plain slide for these cards. */
+    #features .bento-card.reveal { opacity: 0; filter: blur(12px); transform: translateY(40px) scale(0.97); transition: opacity 0.9s cubic-bezier(.22,1,.36,1), filter 0.9s cubic-bezier(.22,1,.36,1), transform 0.9s cubic-bezier(.22,1,.36,1), border-color 0.35s, box-shadow 0.35s; }
+    #features .bento-card.reveal.visible { opacity: 1; filter: none; transform: rotateX(var(--rx)) rotateY(var(--ry)); }
+
+    /* Schengen cells light up left to right once the card is in (--i from JS). */
+    #features .schengen-day { width: 16px; height: 16px; border-radius: 4px; }
+    #features .fx-cells .schengen-day { opacity: 0; transform: scale(0.4); }
+    #features .fx-cells.fx-on .schengen-day { animation: fxCell 0.5s cubic-bezier(.2,.9,.25,1.3) forwards; animation-delay: calc(var(--i) * 12ms); }
+    @keyframes fxCell { to { opacity: 1; transform: none; } }
+
+    /* Scan card: a laser line sweeps the preview, rows resolve one by one. */
+    #features .scan-preview { position: relative; overflow: hidden; padding: 20px; gap: 14px; }
+    #features .scan-preview::after {
+      content: ''; position: absolute; left: 0; right: 0; top: 0; height: 40px; pointer-events: none;
+      background: linear-gradient(to bottom, transparent, rgba(79,142,247,0.22), transparent);
+      border-bottom: 1px solid rgba(120,170,255,0.8);
+      box-shadow: 0 6px 18px rgba(79,142,247,0.45);
+      transform: translateY(-50px);
+      animation: fxLaser 3.2s cubic-bezier(.45,0,.55,1) infinite;
+    }
+    @keyframes fxLaser { 0% { transform: translateY(-50px); } 55%, 100% { transform: translateY(260px); } }
+    #features .fx-rows .scan-row { opacity: 0; filter: blur(6px); transform: translateX(-8px); }
+    #features .fx-rows.fx-on .scan-row { animation: fxRow 0.6s ease-out forwards; }
+    #features .fx-rows.fx-on .scan-row:nth-child(2) { animation-delay: 0.35s; }
+    #features .fx-rows.fx-on .scan-row:nth-child(3) { animation-delay: 0.7s; }
+    #features .fx-rows.fx-on .scan-row:nth-child(4) { animation-delay: 1.05s; }
+    @keyframes fxRow { to { opacity: 1; filter: none; transform: none; } }
+
+    @media (hover: none), (pointer: coarse) {
+      #features .bento-card { transform: none !important; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #features .section-title, #features .b-icon, #features .scan-preview::after { animation: none; }
+      #features .bento-card.reveal { filter: none; }
+      #features .fx-cells .schengen-day, #features .fx-rows .scan-row { opacity: 1; transform: none; filter: none; animation: none; }
+    }
+    /* Bento placement by position, not by the reused bento-N classes: the last
+       row was 5+4+4 = 13 of 12 columns, so its third card fell onto its own
+       line. Medium screens go two-up with a lone card centred (Drew's rule). */
+    @media (min-width: 1101px) {
+      #features .bento-grid > :nth-child(8),
+      #features .bento-grid > :nth-child(9),
+      #features .bento-grid > :nth-child(10) { grid-column: span 4; }
+    }
+    @media (max-width: 1100px) and (min-width: 768px) {
+      #features .bento-grid > :nth-child(3),
+      #features .bento-grid > :nth-child(4),
+      #features .bento-grid > :nth-child(8),
+      #features .bento-grid > :nth-child(9) { grid-column: span 6; }
+      #features .bento-grid > :nth-child(5),
+      #features .bento-grid > :nth-child(10) { grid-column: 4 / span 6; }
+    }
+    #features .scan-row { gap: 12px; }
+    #features .scan-value { text-align: right; white-space: nowrap; }
+
+    /* PRICING: cards centre as a group (2 + 1 centred when they wrap), and the
+       lifetime deal becomes a full-width banner under them, with real air. */
+    #pricing .pricing-grid { display: flex; flex-wrap: wrap; justify-content: center; }
+    #pricing .pricing-card { flex: 1 1 290px; max-width: 340px; }
+    #pricing .ltd-wrap { max-width: 1040px; margin: 72px auto 0; }
+    #pricing .ltd-card {
+      display: grid; grid-template-columns: 1.1fr 1fr; column-gap: 48px; align-items: start;
+      padding: 40px 44px !important; border-radius: 24px !important;
+      box-shadow: 0 30px 60px -30px rgba(255,160,0,0.25);
+    }
+    #pricing .ltd-card > :nth-child(1) { grid-column: 1; grid-row: 1; }
+    #pricing .ltd-card > :nth-child(2) { grid-column: 1; grid-row: 2; font-size: 52px !important; margin-top: 12px !important; }
+    #pricing .ltd-card > :nth-child(3) { grid-column: 1; grid-row: 3; }
+    #pricing .ltd-card > :nth-child(4) { grid-column: 2; grid-row: 1 / span 2; margin-top: 6px !important; }
+    #pricing .ltd-card > :nth-child(5) { grid-column: 2; grid-row: 3; align-self: end; }
+    @media (max-width: 767px) {
+      #pricing .ltd-wrap { margin-top: 48px; }
+      #pricing .ltd-card { grid-template-columns: 1fr; padding: 28px 24px !important; }
+      #pricing .ltd-card > * { grid-column: 1 !important; grid-row: auto !important; }
+    }
+    /* FEATURES-FX END */
+
     /* PHONE-STORY START */
     /* ── PHONE STORY ──
        One 3D iPhone takes over from the hero globe. The default below is the
@@ -2428,8 +2566,8 @@
       </div>
 
       <!-- Lifetime Deal banner -->
-      <div class="reveal reveal-delay-4" style="max-width:480px;margin:32px auto 0;">
-        <div style="background:linear-gradient(135deg,rgba(255,200,50,0.10) 0%,rgba(255,140,0,0.07) 100%);border:1.5px solid rgba(255,200,50,0.35);border-radius:20px;padding:28px 28px 24px;">
+      <div class="reveal reveal-delay-4 ltd-wrap">
+        <div class="ltd-card" style="background:linear-gradient(135deg,rgba(255,200,50,0.10) 0%,rgba(255,140,0,0.07) 100%);border:1.5px solid rgba(255,200,50,0.35);border-radius:20px;padding:28px 28px 24px;">
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
             <span style="font-size:1.4rem;color:#ffc832;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6.08913 13.2799H9.17913V20.4799C9.17913 22.1599 10.0891 22.4999 11.1991 21.2399L18.7691 12.6399C19.6991 11.5899 19.3091 10.7199 17.8991 10.7199H14.8091V3.5199C14.8091 1.8399 13.8991 1.4999 12.7891 2.7599L5.21913 11.3599C4.29913 12.4199 4.68913 13.2799 6.08913 13.2799Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             <div style="flex:1;">
@@ -3980,6 +4118,44 @@
           drop.style.setProperty('--dy', '0px');
         });
       });
+    })();
+  </script>
+  <script>
+    /* FEATURES-FX: spotlight, tilt, and in-view triggers for the bento. */
+    (function () {
+      const cards = document.querySelectorAll('#features .bento-card');
+      const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      cards.forEach((c) => {
+        c.addEventListener('pointermove', (e) => {
+          const r = c.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+          c.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
+          c.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+          if (fine && !still) {
+            c.style.setProperty('--ry', ((px - 0.5) * 6).toFixed(2) + 'deg');
+            c.style.setProperty('--rx', ((0.5 - py) * 6).toFixed(2) + 'deg');
+          }
+        });
+        c.addEventListener('pointerleave', () => {
+          c.style.setProperty('--rx', '0deg');
+          c.style.setProperty('--ry', '0deg');
+        });
+      });
+
+      // Schengen cells get their order index once the bar has been built.
+      const bar = document.getElementById('schengen-bar');
+      const rows = document.querySelector('#features .scan-preview');
+      if (rows) rows.classList.add('fx-rows');
+      if (bar) bar.classList.add('fx-cells');
+      const index = () => bar && bar.querySelectorAll('.schengen-day').forEach((d, i) => d.style.setProperty('--i', i));
+      index();
+      if (bar) new MutationObserver(index).observe(bar, { childList: true });
+
+      const io = new IntersectionObserver((es) => es.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('fx-on'); io.unobserve(e.target); }
+      }), { threshold: 0.35 });
+      [bar, rows].forEach((el) => el && io.observe(el));
     })();
   </script>
 </body>
