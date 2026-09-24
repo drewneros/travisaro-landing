@@ -722,7 +722,7 @@
       z-index: 1;
       padding: 110px 48px;
     }
-    .section-inner { max-width: 1280px; margin: 0 auto; }
+    .section-inner { max-width: 1280px; margin: 0 auto; padding-inline: clamp(20px, 4vw, 40px); box-sizing: border-box; }
     .section-label {
       font-size: 11px;
       font-weight: 500;
@@ -1157,6 +1157,112 @@
       display: flex;
       align-items: center;
     }
+
+    /* How it works: steps restored, and the interactive gradient lives here now.
+       It runs past the section's bottom and fades out over "See it in action". */
+    .how-section { position: relative; }
+    .how-section > .section-inner { position: relative; z-index: 1; }
+    .how-section > .gradient-bg {
+      bottom: -55vh;
+      mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 50%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 50%, transparent 100%);
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0;
+      margin-top: 64px;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 44px; left: 18%; right: 18%;
+      height: 0.5px;
+      background: linear-gradient(90deg, transparent, var(--primary), var(--purple), transparent);
+      opacity: 0.35;
+    }
+    .step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 28px; }
+    .step-num {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(79,142,247,0.12), rgba(123,47,190,0.12));
+      border: 0.5px solid rgba(100,140,255,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; font-weight: 500; color: var(--primary);
+      margin-bottom: 28px;
+      position: relative; z-index: 1;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .step:hover .step-num {
+      transform: scale(1.08);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.40);
+    }
+    .step h3 { font-size: 16px; font-weight: 500; color: var(--text-primary); margin-bottom: 10px; }
+    .step p   { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
+
+    /* Steps as glass cards. Flex + centre so an odd last card sits in the
+       middle of its row instead of hanging off the left (Drew's rule). */
+    .how-section .steps {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: clamp(40px, 5vw, 64px) clamp(20px, 3vw, 32px); margin-top: 56px;
+    }
+    .how-section .steps::before { display: none; }
+    .how-section .step {
+      flex: 1 1 260px; max-width: 360px; padding: 8px 20px;
+      text-shadow: 0 2px 14px rgba(6,10,24,0.55);
+      transition: transform 0.35s cubic-bezier(.2,.8,.2,1);
+    }
+    .how-section .step:hover { transform: translateY(-4px); }
+    /* Step numbers as water drops: a clear glass bead with a specular
+       highlight. On hover it wobbles like liquid and leans toward the cursor
+       (the lean is set from JS through --dx/--dy). */
+    .how-section .step-num {
+      --dx: 0px; --dy: 0px;
+      position: relative; overflow: hidden;
+      width: 76px; height: 76px; margin-bottom: 24px;
+      border-radius: 50%;
+      font-size: 24px; font-weight: 500; color: rgba(255,255,255,0.88);
+      background:
+        radial-gradient(circle at 50% 110%, rgba(167,139,250,0.16), rgba(167,139,250,0) 60%),
+        radial-gradient(circle at 50% 45%, rgba(255,255,255,0.02), rgba(255,255,255,0.07) 100%);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,0.18),
+        inset 0 -10px 18px rgba(79,142,247,0.08),
+        0 8px 22px rgba(6,10,24,0.25);
+      backdrop-filter: blur(10px) saturate(130%);
+      -webkit-backdrop-filter: blur(10px) saturate(130%);
+      transform: translate(var(--dx), var(--dy));
+      transition: transform 0.5s cubic-bezier(.2,.9,.25,1.4), box-shadow 0.4s;
+    }
+    /* Soft gloss: a wide, blurred sheen across the top third, the way light
+       sits on a real bead, instead of a hard white dot. */
+    .how-section .step-num::before {
+      content: ''; position: absolute; pointer-events: none;
+      left: 16%; right: 16%; top: 6%; height: 38%;
+      border-radius: 50%;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.22), rgba(255,255,255,0));
+      filter: blur(2px);
+    }
+    .how-section .step:hover .step-num {
+      animation: dropWobble 1.6s ease-in-out infinite;
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,0.22),
+        inset 0 -10px 18px rgba(79,142,247,0.12),
+        0 12px 28px rgba(6,10,24,0.3);
+    }
+    @keyframes dropWobble {
+      0%, 100% { border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%; }
+      25%      { border-radius: 56% 44% 52% 48% / 46% 54% 46% 54%; }
+      50%      { border-radius: 46% 54% 44% 56% / 55% 45% 55% 45%; }
+      75%      { border-radius: 53% 47% 57% 43% / 48% 52% 50% 50%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .how-section .step:hover .step-num { animation: none; }
+    }
+    .how-section .step p { color: rgba(232,237,245,0.78); }
+    @media (hover: none), (pointer: coarse) { .how-section .step:hover { transform: none; } }
 
     /* PHONE-STORY START */
     /* ── PHONE STORY ──
@@ -2009,7 +2115,7 @@
     <div class="section-inner">
       <div class="section-label reveal">Features</div>
       <h2 class="section-title reveal reveal-delay-1">How do digital nomads avoid visa overstays?</h2>
-      <p class="section-sub reveal reveal-delay-2">Travisaro automatically calculates your remaining days, alerts you before every deadline, and validates trips before you book, so you never have to guess.</p>
+      <p class="section-sub reveal reveal-delay-2">Log a trip once and Travisaro keeps the count every day, for every passport you hold. It warns you before a deadline and shows what a flight will do to your days before you pay for it.</p>
 
       <div class="bento-grid">
 
@@ -2017,7 +2123,7 @@
         <div class="bento-card bento-1 reveal">
           <span class="b-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M22 9.00002V15C22 17.5 21.5 19.25 20.38 20.38L14 14L21.73 6.27002C21.91 7.06002 22 7.96002 22 9.00002Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.73 6.27L6.26999 21.73C3.25999 21.04 2 18.96 2 15V9C2 4 4 2 9 2H15C18.96 2 21.04 3.26 21.73 6.27Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.38 20.38C19.25 21.5 17.5 22 15 22H9.00003C7.96003 22 7.06002 21.91 6.27002 21.73L14 14L20.38 20.38Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.24002 7.97997C6.92002 5.04997 11.32 5.04997 12 7.97997C12.39 9.69997 11.31 11.16 10.36 12.06C9.67001 12.72 8.58003 12.72 7.88003 12.06C6.93003 11.16 5.84002 9.69997 6.24002 7.97997Z" stroke="currentColor" stroke-width="1.5"/><path d="M9.0946 8.69995H9.10359" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <h3>Schengen day tracker</h3>
-          <p>The 90/180 rule visualised. See exactly which days are used, how many you have left, and when your window resets.</p>
+          <p>See which days you have used, how many are left, and the date your window starts freeing up.</p>
           <div class="schengen-viz">
             <div class="schengen-bar-wrap" id="schengen-bar"></div>
             <div class="schengen-labels">
@@ -2036,7 +2142,7 @@
         <div class="bento-card bento-2 reveal reveal-delay-1">
           <span class="b-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M6.76005 22H17.24C20 22 21.1 20.31 21.23 18.25L21.75 9.99C21.89 7.83 20.17 6 18 6C17.39 6 16.83 5.65 16.55 5.11L15.83 3.66C15.37 2.75 14.17 2 13.15 2H10.86C9.83005 2 8.63005 2.75 8.17005 3.66L7.45005 5.11C7.17005 5.65 6.61005 6 6.00005 6C3.83005 6 2.11005 7.83 2.25005 9.99L2.77005 18.25C2.89005 20.31 4.00005 22 6.76005 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 8H13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 18C13.79 18 15.25 16.54 15.25 14.75C15.25 12.96 13.79 11.5 12 11.5C10.21 11.5 8.75 12.96 8.75 14.75C8.75 16.54 10.21 18 12 18Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <h3>Smart scan</h3>
-          <p>Point your camera at any visa or entry stamp. AI extracts everything in seconds.</p>
+          <p>Take a photo of a visa or an entry stamp. Travisaro reads the country, the entry date and the length of stay for you.</p>
           <div class="scan-preview">
             <div class="scan-row">
               <span class="scan-label">COUNTRY</span>
@@ -2061,7 +2167,7 @@
         <div class="bento-card bento-3 reveal">
           <span class="b-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M9.03023 21.6898L11.3602 19.7298C11.7102 19.4298 12.2902 19.4298 12.6402 19.7298L14.9702 21.6898C15.5102 21.9598 16.1702 21.6898 16.3702 21.1098L16.8102 19.7798C16.9202 19.4598 16.8102 18.9898 16.5702 18.7498L14.3002 16.4698C14.1302 16.3098 14.0002 15.9898 14.0002 15.7598V12.9098C14.0002 12.4898 14.3102 12.2898 14.7002 12.4498L19.6102 14.5698C20.3802 14.8998 21.0102 14.4898 21.0102 13.6498V12.3598C21.0102 11.6898 20.5102 10.9198 19.8902 10.6598L14.3002 8.24977C14.1402 8.17977 14.0002 7.96977 14.0002 7.78977V4.78977C14.0002 3.84977 13.3102 2.73977 12.4702 2.30977C12.1702 2.15977 11.8202 2.15977 11.5202 2.30977C10.6802 2.73977 9.99023 3.85977 9.99023 4.79977V7.79977C9.99023 7.97977 9.85023 8.18977 9.69023 8.25977L4.11023 10.6698C3.49023 10.9198 2.99023 11.6898 2.99023 12.3598V13.6498C2.99023 14.4898 3.62023 14.8998 4.39023 14.5698L9.30023 12.4498C9.68023 12.2798 10.0002 12.4898 10.0002 12.9098V15.7598C10.0002 15.9898 9.87023 16.3098 9.71023 16.4698L7.44023 18.7498C7.20023 18.9898 7.09023 19.4498 7.20023 19.7798L7.64023 21.1098C7.82023 21.6898 8.48023 21.9698 9.03023 21.6898Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <h3>AI trip validator</h3>
-          <p>Enter your planned dates before you book. Get an instant legal/safe/risky verdict for your visa rules.</p>
+          <p>Put in the dates you are thinking about before you book, and see straight away whether the trip is safe or risky under your visa rules.</p>
         </div>
 
         <!-- CARD 4: Calendar -->
@@ -2076,7 +2182,7 @@
         <div class="bento-card bento-5 reveal reveal-delay-2">
           <span class="b-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M8.25 14C8.25 11.929 9.92893 10.25 12 10.25C14.0711 10.25 15.75 11.929 15.75 14C15.75 16.0711 14.0711 17.75 12 17.75C9.92893 17.75 8.25 16.0711 8.25 14ZM12 11.75C10.7574 11.75 9.75 12.7574 9.75 14C9.75 15.2427 10.7574 16.25 12 16.25C13.2426 16.25 14.25 15.2427 14.25 14C14.25 12.7574 13.2426 11.75 12 11.75Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M18.75 4.30606C18.75 2.63255 17.2678 1.34703 15.6111 1.5837L4.81353 3.12621C3.91638 3.25437 3.25 4.02272 3.25 4.92897C3.25 4.95276 3.25046 4.97645 3.25136 5.00002H3.25V19C3.25 21.0711 4.92893 22.75 7 22.75H17C19.0711 22.75 20.75 21.0711 20.75 19V9.00002C20.75 7.561 19.9395 6.31129 18.75 5.68254V4.30606ZM5.06244 6.75002C5.06531 6.75003 5.06819 6.75004 5.07107 6.75004H17.0096C18.2478 6.75521 19.25 7.76058 19.25 9.00002V19C19.25 20.2427 18.2426 21.25 17 21.25H7C5.75736 21.25 4.75 20.2427 4.75 19V6.75002H5.06244ZM17.0125 5.25004H17.25V4.30606C17.25 3.54537 16.5763 2.96104 15.8232 3.06862L5.02566 4.61113C4.86749 4.63373 4.75 4.76919 4.75 4.92897C4.75 5.10507 4.89177 5.24805 5.0674 5.25002H17C17.0042 5.25002 17.0084 5.25003 17.0125 5.25004Z" fill="currentColor"/></svg></span>
           <h3>Multiple passports</h3>
-          <p>Hold dual citizenship? Track visas across every passport, separately and in sync.</p>
+          <p>Hold two passports? Each one gets its own history and its own count, so you know which one to travel on.</p>
         </div>
 
         <!-- CARD 6: Tax Days -->
@@ -2134,7 +2240,7 @@
         <div class="bento-card bento-2 reveal reveal-delay-2" style="position:relative;overflow:hidden;">
           <span class="b-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M9.03023 21.6898L11.3602 19.7298C11.7102 19.4298 12.2902 19.4298 12.6402 19.7298L14.9702 21.6898C15.5102 21.9598 16.1702 21.6898 16.3702 21.1098L16.8102 19.7798C16.9202 19.4598 16.8102 18.9898 16.5702 18.7498L14.3002 16.4698C14.1302 16.3098 14.0002 15.9898 14.0002 15.7598V12.9098C14.0002 12.4898 14.3102 12.2898 14.7002 12.4498L19.6102 14.5698C20.3802 14.8998 21.0102 14.4898 21.0102 13.6498V12.3598C21.0102 11.6898 20.5102 10.9198 19.8902 10.6598L14.3002 8.24977C14.1402 8.17977 14.0002 7.96977 14.0002 7.78977V4.78977C14.0002 3.84977 13.3102 2.73977 12.4702 2.30977C12.1702 2.15977 11.8202 2.15977 11.5202 2.30977C10.6802 2.73977 9.99023 3.85977 9.99023 4.79977V7.79977C9.99023 7.97977 9.85023 8.18977 9.69023 8.25977L4.11023 10.6698C3.49023 10.9198 2.99023 11.6898 2.99023 12.3598V13.6498C2.99023 14.4898 3.62023 14.8998 4.39023 14.5698L9.30023 12.4498C9.68023 12.2798 10.0002 12.4898 10.0002 12.9098V15.7598C10.0002 15.9898 9.87023 16.3098 9.71023 16.4698L7.44023 18.7498C7.20023 18.9898 7.09023 19.4498 7.20023 19.7798L7.64023 21.1098C7.82023 21.6898 8.48023 21.9698 9.03023 21.6898Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <h3>My Flights globe</h3>
-          <p>Every trip you log draws a glowing arc on an interactive 3D globe. Spin it, zoom in, toggle to 2D. Your travel footprint visualised in one view.</p>
+          <p>Every trip you log draws an arc on a 3D globe. Spin it, zoom in, or flip it to a flat map.</p>
           <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
             <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:rgba(255,255,255,0.55);">
               <span style="width:32px;height:2px;background:linear-gradient(90deg,rgba(56,189,248,0.2),#7DD3FC);border-radius:2px;box-shadow:0 0 6px #38BDF8;"></span>
@@ -2155,7 +2261,7 @@
         <div class="bento-card bento-3 reveal">
           <span class="b-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M16.9949 4H6.99488C3.16488 4 2.09488 4.92 2.00488 8.5C3.93488 8.5 5.49488 10.07 5.49488 12C5.49488 13.93 3.93488 15.49 2.00488 15.5C2.09488 19.08 3.16488 20 6.99488 20H16.9949C20.9949 20 21.9949 19 21.9949 15V9C21.9949 5 20.9949 4 16.9949 4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.99316 4V7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.99316 16.5V20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.025 9.32991L15.645 10.5799C15.705 10.6999 15.825 10.7899 15.955 10.8099L17.335 11.0099C17.675 11.0599 17.815 11.4799 17.565 11.7199L16.565 12.6899C16.465 12.7799 16.425 12.9199 16.445 13.0599L16.685 14.4299C16.745 14.7699 16.385 15.0299 16.085 14.8699L14.855 14.2199C14.735 14.1599 14.585 14.1599 14.465 14.2199L13.235 14.8699C12.925 15.0299 12.575 14.7699 12.635 14.4299L12.875 13.0599C12.895 12.9199 12.855 12.7899 12.755 12.6899L11.765 11.7199C11.515 11.4799 11.655 11.0599 11.995 11.0099L13.375 10.8099C13.515 10.7899 13.625 10.7099 13.685 10.5799L14.295 9.32991C14.435 9.01991 14.875 9.01991 15.025 9.32991Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <h3>Scan your boarding pass</h3>
-          <p>Snap a photo of any boarding pass or e-ticket. AI reads the destination and dates and adds the trip for you, feeding straight into your visa days and tax tracker.</p>
+          <p>Snap a photo of any boarding pass or e-ticket. Travisaro reads the destination and dates, adds the trip, and updates your visa days and tax count with it.</p>
           <div class="scan-preview" style="margin-top:14px;">
             <div class="scan-row">
               <span class="scan-label">DESTINATION</span>
@@ -2176,7 +2282,7 @@
         <div class="bento-card bento-3 reveal reveal-delay-1">
           <span class="b-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 3.25C12.4142 3.25 12.75 3.58579 12.75 4V6.4C12.75 6.81421 12.4142 7.15 12 7.15C11.5858 7.15 11.25 6.81421 11.25 6.4V4C11.25 3.58579 11.5858 3.25 12 3.25ZM18.1872 5.81282C18.4801 6.10571 18.4801 6.58058 18.1872 6.87348L16.4901 8.57053C16.1972 8.86343 15.7224 8.86343 15.4295 8.57053C15.1366 8.27764 15.1366 7.80277 15.4295 7.50987L17.1265 5.81282C17.4194 5.51992 17.8943 5.51992 18.1872 5.81282ZM5.8126 5.81299C6.1055 5.5201 6.58037 5.5201 6.87326 5.81299L8.57032 7.51005C8.86321 7.80294 8.86321 8.27782 8.57032 8.57071C8.27743 8.8636 7.80255 8.8636 7.50966 8.57071L5.8126 6.87365C5.51971 6.58076 5.51971 6.10589 5.8126 5.81299ZM3.25 12C3.25 11.5858 3.58579 11.25 4 11.25H6.4C6.81421 11.25 7.15 11.5858 7.15 12C7.15 12.4142 6.81421 12.75 6.4 12.75H4C3.58579 12.75 3.25 12.4142 3.25 12ZM16.85 12C16.85 11.5858 17.1858 11.25 17.6 11.25H20C20.4142 11.25 20.75 11.5858 20.75 12C20.75 12.4142 20.4142 12.75 20 12.75H17.6C17.1858 12.75 16.85 12.4142 16.85 12ZM8.57053 15.4295C8.86343 15.7224 8.86343 16.1972 8.57053 16.4901L6.87348 18.1872C6.58058 18.4801 6.10571 18.4801 5.81282 18.1872C5.51992 17.8943 5.51992 17.4194 5.81282 17.1265L7.50987 15.4295C7.80276 15.1366 8.27764 15.1366 8.57053 15.4295ZM15.4293 15.4296C15.7221 15.1368 16.197 15.1368 16.4899 15.4296L18.187 17.1267C18.4799 17.4196 18.4799 17.8945 18.187 18.1874C17.8941 18.4803 17.4192 18.4803 17.1263 18.1874L15.4293 16.4903C15.1364 16.1974 15.1364 15.7225 15.4293 15.4296ZM12 16.85C12.4142 16.85 12.75 17.1858 12.75 17.6V20C12.75 20.4142 12.4142 20.75 12 20.75C11.5858 20.75 11.25 20.4142 11.25 20V17.6C11.25 17.1858 11.5858 16.85 12 16.85Z" fill="currentColor"/></svg></span>
           <h3>Travel Wrapped & photo memories</h3>
-          <p>Every year, get a shareable Spotify-style recap: countries, days abroad, longest trip, your travel persona. Pin photos to the cities you've been for a map of memories worth sharing.</p>
+          <p>Once a year you get a Spotify-style recap of your countries, days abroad and longest trip, made to share. You can also pin photos to the cities you have been to.</p>
         </div>
 
       </div>
@@ -2193,6 +2299,16 @@
 
   <!-- HOW IT WORKS -->
   <section id="how" class="how-section">
+    <div class="gradient-bg" aria-hidden="true">
+      <div class="goo-layer">
+        <div class="g-blob g-1"></div>
+        <div class="g-blob g-2"></div>
+        <div class="g-blob g-3"></div>
+        <div class="g-blob g-4"></div>
+        <div class="g-blob g-5"></div>
+        <div class="g-interactive" id="gradientPointer"></div>
+      </div>
+    </div>
     <div class="section-inner">
       <div class="section-label reveal">How it works</div>
       <h2 class="section-title reveal reveal-delay-1">How do I start tracking my visa in Travisaro?</h2>
@@ -2235,16 +2351,6 @@
       </defs>
     </svg>
 
-    <div class="gradient-bg" aria-hidden="true">
-      <div class="goo-layer">
-        <div class="g-blob g-1"></div>
-        <div class="g-blob g-2"></div>
-        <div class="g-blob g-3"></div>
-        <div class="g-blob g-4"></div>
-        <div class="g-blob g-5"></div>
-        <div class="g-interactive" id="gradientPointer"></div>
-      </div>
-    </div>
 
     <div class="section-inner" style="position:relative;z-index:1;">
       <div class="section-label reveal">The app</div>
@@ -2983,7 +3089,7 @@
        writes. The loop idles when the section is off screen. */
     (function () {
       const blob = document.getElementById('gradientPointer');
-      const section = document.querySelector('.screenshots-section');
+      const section = document.getElementById('how');
       if (!blob || !section) return;
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
@@ -3856,5 +3962,25 @@
     }
   </script>
 
+  <script>
+    // Water-drop step numbers lean toward the cursor, then spring back.
+    (function () {
+      if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+      document.querySelectorAll('#how .step').forEach((step) => {
+        const drop = step.querySelector('.step-num');
+        step.addEventListener('mousemove', (e) => {
+          const r = drop.getBoundingClientRect();
+          const dx = (e.clientX - (r.left + r.width / 2)) * 0.18;
+          const dy = (e.clientY - (r.top + r.height / 2)) * 0.18;
+          drop.style.setProperty('--dx', Math.max(-14, Math.min(14, dx)) + 'px');
+          drop.style.setProperty('--dy', Math.max(-14, Math.min(14, dy)) + 'px');
+        });
+        step.addEventListener('mouseleave', () => {
+          drop.style.setProperty('--dx', '0px');
+          drop.style.setProperty('--dy', '0px');
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
