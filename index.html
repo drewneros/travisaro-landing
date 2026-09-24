@@ -3600,6 +3600,24 @@
         camera.updateMatrixWorld();
 
         const model = gltf.scene;
+        // The model ships as the burgundy edition. Repaint its COLOUR_ materials
+        // to a finish; ?phone=black|white previews the others, silver is default.
+        const FINISHES = {
+          silver: { body: 0xd6d7da, frame: 0xc4c6ca, metal: 0.85, rough: 0.28 },
+          black:  { body: 0x2a2b2e, frame: 0x3a3b3f, metal: 0.8,  rough: 0.32 },
+          white:  { body: 0xf1f1ef, frame: 0xdcdcda, metal: 0.6,  rough: 0.35 },
+        };
+        const finish = FINISHES[new URLSearchParams(location.search).get('phone')] || FINISHES.silver;
+        model.traverse((o) => {
+          if (!o.isMesh) return;
+          for (const m of [].concat(o.material)) {
+            if (!m?.name?.startsWith('COLOUR_') || m.name.includes('Screen')) continue;
+            const isFrame = /Side|Button|Screws|Antenna|Aniso/.test(m.name);
+            m.color.setHex(isFrame ? finish.frame : finish.body);
+            m.color.convertSRGBToLinear();
+            if ('metalness' in m) { m.metalness = finish.metal; m.roughness = finish.rough; }
+          }
+        });
         const box0 = new THREE.Box3().setFromObject(model);
         model.position.sub(box0.getCenter(new THREE.Vector3()));
         const box = new THREE.Box3().setFromObject(model);
