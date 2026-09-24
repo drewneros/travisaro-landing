@@ -240,7 +240,12 @@
       background: var(--bg-deep);
       color: var(--text-primary);
       line-height: 1.6;
-      overflow-x: hidden;
+      /* `clip`, not `hidden`: overflow-x:hidden computes overflow-y to `auto`,
+         which turns <body> into a scroll container. The pinned screenshot
+         scene's view-timeline then measures against <body> instead of the
+         document and never advances. `clip` suppresses the same horizontal
+         overflow without creating a scroll box. */
+      overflow-x: clip;
     }
 
     h1, h2, h3, h4, h5, h6,
@@ -428,9 +433,15 @@
       margin: 0 auto;
       gap: 48px;
     }
+    /* The copy sits above the globe in the stacking order. The globe is now
+       wider than its column and can bleed left on narrow desktops; in the
+       reference the headline is deliberately layered behind the planet, which
+       Drew does not want, so the text always wins. */
     .hero-left {
       flex: 0 0 44%;
       max-width: 540px;
+      position: relative;
+      z-index: 2;
     }
     .hero-badge {
       display: inline-flex;
@@ -501,45 +512,28 @@
       gap: 12px;
       flex-wrap: wrap;
     }
+    /* One badge style for both stores, in the shape people already recognise:
+       black, hairline border, real logo, two-line label. Neither app is live
+       yet, so the small line says so instead of a sticker on the corner. */
     .store-btn {
       display: flex;
       align-items: center;
-      gap: 11px;
-      padding: 12px 18px;
+      gap: 10px;
+      height: 50px;
+      padding: 0 18px 0 14px;
       border-radius: 12px;
-      text-decoration: none;
-      transition: transform 0.15s, opacity 0.2s, box-shadow 0.2s;
-      position: relative;
-      cursor: pointer;
-    }
-    .store-btn:hover { transform: scale(0.97); }
-    .store-btn.apple {
       background: #000;
       color: #fff;
-      border: 0.5px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      text-decoration: none;
+      transition: border-color 0.2s, background-color 0.2s;
+      cursor: pointer;
     }
-    .store-btn.apple:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
-    .store-btn.google {
-      background: rgba(255,255,255,0.07);
-      border: 0.5px solid rgba(255,255,255,0.14);
-      color: var(--text-primary);
-    }
-    .store-btn.google:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
-    .store-btn .store-icon { font-size: 24px; line-height: 1; }
-    .store-btn .store-text { display: flex; flex-direction: column; }
-    .store-btn .store-label { font-size: 10px; font-weight: 400; opacity: 0.65; }
-    .store-btn .store-name { font-size: 15px; font-weight: 500; }
-    .coming-soon-tag {
-      position: absolute;
-      top: -9px; right: -9px;
-      background: var(--warning);
-      color: #000;
-      font-size: 9px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 20px;
-      letter-spacing: 0.3px;
-    }
+    .store-btn:hover { border-color: rgba(255,255,255,0.4); background: #0b0b0b; }
+    .store-btn .store-icon { display: block; width: 24px; height: 24px; flex-shrink: 0; }
+    .store-btn .store-text { display: flex; flex-direction: column; line-height: 1.15; }
+    .store-btn .store-label { font-size: 10px; font-weight: 400; color: rgba(255,255,255,0.7); letter-spacing: 0.02em; }
+    .store-btn .store-name { font-size: 17px; font-weight: 500; letter-spacing: -0.01em; }
     .hero-note {
       font-size: 12px;
       color: var(--text-muted);
@@ -552,45 +546,132 @@
       justify-content: center;
       align-items: center;
       position: relative;
+      z-index: 1;
       overflow: visible;
       animation: fadeSlideUp 1s 0.15s cubic-bezier(0.22,1,0.36,1) both;
     }
-    .mockup-stack {
+    /* ── HERO GLOBE ──
+       Replaces the two floating phone mockups. three-globe drives a WebGL
+       sphere; the reviewer markers are HTML, positioned over the canvas from
+       the globe's own camera projection so they stay glued to their cities.
+       Doing the markers in HTML rather than as sprites keeps them crisp at any
+       DPR and lets them be styled with ordinary CSS. */
+    .globe-wrap {
       position: relative;
-      width: 600px;
-      height: 680px;
+      width: min(680px, 100%);
+      aspect-ratio: 1;
+      margin: 0 auto;
+      cursor: grab;
+      touch-action: pan-y;
     }
-    .mockup-stack .m1 {
+    .globe-wrap.is-dragging { cursor: grabbing; }
+    /* The finished globe fades and settles in over the skeleton instead of
+       replacing it in one frame. The skeleton fades out underneath. */
+    .globe-mount {
+      position: absolute; inset: 0;
+      opacity: 0; filter: blur(10px);
+      transition: opacity 1.6s cubic-bezier(0.4,0,0.2,1), filter 1.6s ease-out;
+    }
+    /* No scale: growing toward the viewer is what read as "jumping at you". */
+    .globe-wrap.is-ready .globe-mount { opacity: 1; filter: none; }
+    .globe-mount canvas { display: block; width: 100% !important; height: 100% !important; }
+
+    /* Skeleton: same circle, same centre, same size as the finished globe, so
+       the swap causes no layout shift and no visual jump. */
+    .globe-skeleton { position: absolute; inset: 0; transition: opacity 0.9s ease; }
+    .gs-sphere {
       position: absolute;
-      width: 460px;
-      left: 0; top: 0;
-      filter: drop-shadow(0 48px 100px rgba(79,142,247,0.40));
-      z-index: 2;
-      animation: floatA 6s ease-in-out infinite;
+      inset: 12%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 34% 30%, rgba(79,142,247,0.20), transparent 60%),
+        rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.07);
+      overflow: hidden;
     }
-    .mockup-stack .m2 {
+    .gs-sphere::after {
+      content: "";
       position: absolute;
-      width: 420px;
-      right: 0; top: 100px;
-      filter: drop-shadow(0 48px 100px rgba(123,47,190,0.35));
-      z-index: 1;
-      animation: floatB 7s ease-in-out infinite;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.09) 50%, transparent 65%);
+      transform: translateX(-100%);
+      animation: gsSweep 1.6s ease-in-out infinite;
     }
-    @keyframes floatA {
-      0%, 100% { transform: translateY(0px) rotate(-1deg); }
-      50%       { transform: translateY(-18px) rotate(-1deg); }
+    .gs-ring {
+      position: absolute;
+      inset: 4%;
+      border-radius: 50%;
+      border: 1px dashed rgba(79,142,247,0.16);
     }
-    @keyframes floatB {
-      0%, 100% { transform: translateY(0px) rotate(1.5deg); }
-      50%       { transform: translateY(-12px) rotate(1.5deg); }
+    @keyframes gsSweep {
+      to { transform: translateX(100%); }
     }
+    .globe-wrap.is-ready .globe-skeleton { opacity: 0; pointer-events: none; }
+
+    /* Markers: an avatar badge floating above a thin stalk that lands on the
+       city. The stalk is what sells the pin as standing ON the surface rather
+       than hovering somewhere in front of it. The container's origin is the
+       bottom of the stalk, so the projected surface point is where the stalk
+       touches down, not where the badge sits. */
+    .globe-pins { position: absolute; inset: 0; pointer-events: none; }
+    .g-pin {
+      position: absolute;
+      transform: translate(-50%, -100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.45s ease;
+      will-change: transform;
+    }
+    .globe-wrap.is-ready .g-pin { opacity: 1; transition-delay: 0.7s; }
+    /* Far-side markers disappear. Dimmed ones still drew on top of the sphere,
+       which read as seeing through the planet. The opacity transition above
+       fades them out as they cross the limb. Scoped under .is-ready
+       deliberately: `.g-pin.is-back` alone (0,2,0) loses to
+       `.globe-wrap.is-ready .g-pin` (0,3,0) and would never apply. */
+    .globe-wrap.is-ready .g-pin.is-back { opacity: 0; transition-delay: 0s; }
+    .g-pin-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.9);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.55);
+      background: #0d1526;
+    }
+    .g-pin-badge svg { display: block; width: 100%; height: 100%; }
+    .g-pin-stalk {
+      width: 2px;
+      height: 30px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.75), rgba(255,255,255,0.05));
+    }
+
+    /* Shown only when WebGL is unavailable or motion is reduced. */
+    .globe-fallback { display: none; text-align: center; padding: 40px 0; }
+    .gf-title { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+    .gf-list {
+      list-style: none; display: flex; flex-wrap: wrap;
+      justify-content: center; gap: 10px; padding: 0;
+    }
+    .gf-list li {
+      font-size: 12.5px; color: var(--text-primary);
+      padding: 7px 14px; border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+    .globe-wrap.no-webgl .globe-mount,
+    .globe-wrap.no-webgl .globe-skeleton,
+    .globe-wrap.no-webgl .globe-pins { display: none; }
+    .globe-wrap.no-webgl .globe-fallback { display: block; }
 
     /* ── STATS BAND ── */
     .stats-band {
       position: relative; z-index: 1;
-      border-top: 0.5px solid var(--divider);
+      /* No top border: the band grows out of the hero. Surface goes from fully
+         transparent at the top edge to solid at the bottom edge. */
       border-bottom: 0.5px solid var(--divider);
-      background: rgba(255,255,255,0.015);
+      background: linear-gradient(180deg, rgba(13,21,38,0) 0%, rgba(13,21,38,0.55) 55%, var(--bg-surface) 100%);
       padding: 36px 48px;
       overflow: hidden;
     }
@@ -668,12 +749,21 @@
     /* ── PAIN SECTION ── */
     .pain-section {
       position: relative; z-index: 1;
-      background: linear-gradient(135deg, rgba(232,69,69,0.05), rgba(239,159,39,0.03));
       border-top: 0.5px solid rgba(232,69,69,0.12);
-      border-bottom: 0.5px solid rgba(232,69,69,0.08);
       padding: 72px 48px;
     }
+    /* Mirror of the stats band seam: the surface is solid at the top and
+       fades to fully transparent at the bottom edge, so the section dissolves
+       into the page instead of ending on a line. Masked on a pseudo-element
+       so the text itself is never faded. */
+    .pain-section::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(135deg, rgba(232,69,69,0.05), rgba(239,159,39,0.03));
+      -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 100%);
+      mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 100%);
+    }
     .pain-inner {
+      position: relative;
       max-width: 1280px; margin: 0 auto;
       display: flex;
       align-items: center;
@@ -715,6 +805,33 @@
     .pain-text strong { display: block; font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; }
     .pain-text span { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
 
+    /* ALIVE START: scroll choreography for .stats-band and .pain-section.
+       Only transform, opacity, filter and clip-path are animated, so nothing
+       here changes layout (the phone story measures these sections). */
+    .alive-scan {
+      position: absolute; left: 0; right: 0; top: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(79,142,247,0.9), rgba(123,47,190,0.9), transparent);
+      opacity: 0; pointer-events: none; z-index: 2;
+    }
+    .alive-scan::after {
+      content: ''; position: absolute; left: 0; right: 0; top: -24px; height: 24px;
+      background: linear-gradient(180deg, transparent, rgba(79,142,247,0.08));
+    }
+    .alive-edge {
+      position: absolute; left: 0; right: 0; bottom: -0.5px; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(79,142,247,0.6) 30%, rgba(232,69,69,0.5) 70%, transparent);
+      transform-origin: 50% 50%; pointer-events: none;
+    }
+    .stat-num { font-variant-numeric: tabular-nums; }
+    .pain-item { position: relative; overflow: hidden; }
+    .pain-item .alive-beam {
+      position: absolute; top: 0; left: 0; width: 40%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(232,69,69,0.8), transparent);
+      opacity: 0; pointer-events: none;
+    }
+    .pain-desc .w { display: inline-block; white-space: pre; }
+    /* ALIVE END */
+
     /* ── BENTO FEATURES ── */
     .bento-grid {
       display: grid;
@@ -732,7 +849,7 @@
       overflow: hidden;
       transition: border-color 0.35s, box-shadow 0.35s;
     }
-    .bento-card:hover {
+    .review-card:hover {
       border-color: rgba(79,142,247,0.28);
       box-shadow: 0 8px 28px rgba(0,0,0,0.32);
     }
@@ -842,110 +959,330 @@
       font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
       color: var(--text-secondary); margin-bottom: 36px;
     }
-    .marquee-track {
-      display: flex; gap: 16px;
-      animation: marqueeScroll 35s linear infinite;
-      width: max-content;
+    /* ── BENTO REVIEW GRID ──
+       Replaces a 35s infinite marquee. The marquee looked alive but was
+       hostile to read: text slid away mid-sentence and the longest review was
+       never fully on screen. A grid lets every review be read at the reader's
+       own pace, and the uneven spans keep it from looking like a plain table.
+       The longest quote takes two columns because it needs the width. */
+    /* The reviews scroll past in one continuous line. Edges are masked rather
+       than hard-cut so cards fade in and out instead of popping at the border.
+       Hover and keyboard focus both pause the track, so a card can actually be
+       read, which is the failure mode a marquee usually has. */
+    .review-viewport {
+      overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+      -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
     }
-    /* Pause so the strip can actually be read. :hover covers pointers,
-       .is-held covers touch (which has no hover), :focus-within keeps it
-       stopped if a focusable element is ever added to a card. */
-    .marquee-track:hover,
-    .marquee-track:focus-within,
-    .marquee-track.is-held { animation-play-state: paused; }
-    @keyframes marqueeScroll {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-    .marquee-item {
-      flex-shrink: 0;
-      width: 320px;
-      background: rgba(255,255,255,0.04);
-      border: 0.5px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 22px 24px;
-    }
-    .marquee-stars { color: #f59e0b; font-size: 13px; margin-bottom: 10px; letter-spacing: 2px; }
-    .marquee-text { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 14px; }
-    .marquee-author { font-size: 13px; font-weight: 500; color: var(--text-primary); }
-    .marquee-role { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
-
-    /* ── HOW IT WORKS ── */
-    .how-section { background: rgba(255,255,255,0.008); }
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 0;
-      margin-top: 64px;
-      position: relative;
-    }
-    .steps::before {
-      content: '';
-      position: absolute;
-      top: 44px; left: 18%; right: 18%;
-      height: 0.5px;
-      background: linear-gradient(90deg, transparent, var(--primary), var(--purple), transparent);
-      opacity: 0.35;
-    }
-    .step { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 28px; }
-    .step-num {
-      width: 88px; height: 88px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(79,142,247,0.12), rgba(123,47,190,0.12));
-      border: 0.5px solid rgba(100,140,255,0.3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 26px; font-weight: 500; color: var(--primary);
-      margin-bottom: 28px;
-      position: relative; z-index: 1;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .step:hover .step-num {
-      transform: scale(1.08);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.40);
-    }
-    .step h3 { font-size: 16px; font-weight: 500; color: var(--text-primary); margin-bottom: 10px; }
-    .step p   { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
-
-    /* ── SCREENSHOTS ── */
-    .screenshots-section { overflow: visible; }
-    .screenshots-wrapper {
-      margin-top: 64px;
+    .review-track {
       display: flex;
-      gap: 60px;
-      justify-content: center;
-      align-items: flex-start;
-      flex-wrap: nowrap;
-      overflow: visible;
+      gap: 18px;
+      width: max-content;
+      padding: 4px;
+      animation: reviewScroll 60s linear infinite;
     }
-    .screenshot-frame {
+    .review-track:hover,
+    .review-track:focus-within,
+    .review-track.is-held { animation-play-state: paused; }
+    /* Translating by exactly one third matches the list being rendered three
+       times, so the loop point is invisible. Change one and you must change
+       the other. */
+    @keyframes reviewScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-33.3333%); }
+    }
+    .review-card {
+      position: relative;
+      flex: 0 0 auto;
+      width: 340px;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 26px 26px 22px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.22,1,0.36,1),
+                  border-color 0.35s, background 0.35s;
+    }
+    /* Pointer-following sheen, driven by two custom properties written by JS.
+       Kept on a pseudo-element so it never affects layout or hit testing. */
+    .review-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.35s;
+      background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%),
+                  rgba(79,142,247,0.16), transparent 60%);
+      pointer-events: none;
+    }
+    .review-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(79,142,247,0.35);
+      background: rgba(255,255,255,0.05);
+    }
+    .review-card:hover::before { opacity: 1; }
+    .review-card.wide { width: 460px; }
+    .review-stars { color: #f59e0b; font-size: 13px; letter-spacing: 2px; }
+    .review-text {
+      font-size: 14.5px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin: 0;
+      flex: 1;
+    }
+    .review-foot {
+      display: flex;
       align-items: center;
-      gap: 20px;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .review-author { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .review-city {
+      font-size: 11px;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .review-city::before {
+      content: "";
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #1ed28c;
       flex: 0 0 auto;
     }
-    .screenshot-frame img {
-      width: 680px;
-      height: auto;
-      display: block;
-      filter: drop-shadow(0 48px 96px rgba(0,0,0,0.65));
-      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), filter 0.4s;
-      animation: floatA 7s ease-in-out infinite;
+
+    /* ── INTERACTIVE GRADIENT BACKDROP ──
+       Five oversized radial blobs drifting on independent loops, fused into
+       one organic mass by an SVG gooey filter, plus a sixth blob that follows
+       the pointer. `mix-blend-mode: hard-light` is what makes overlaps bloom
+       instead of muddying, and the heavy blur is what makes the goo threshold
+       produce soft merging edges rather than hard circles.
+
+       Palette is Travisaro's own blue/violet/cyan/amber, not the reference's
+       purple, so this reads as the product rather than as a copied component. */
+    .gradient-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+      background: linear-gradient(40deg, #060a18 0%, #0b1430 55%, #0a0f26 100%);
+      /* Without this the section ends in a hard horizontal seam: the lit
+         gradient stops dead against the page's flat background, top and
+         bottom. Fading the layer's own alpha lets it dissolve into the
+         surrounding sections instead of being cropped by them. The fade is
+         generous (18%) because a short one still reads as a visible band. */
+      mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 82%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 82%, transparent 100%);
     }
-    .screenshot-frame.featured img {
-      width: 720px;
-      filter: drop-shadow(0 56px 112px rgba(79,142,247,0.45));
-      animation: floatB 8s ease-in-out infinite;
+    .gradient-bg .goo-layer {
+      position: absolute;
+      inset: 0;
+      filter: url(#goo) blur(48px);
     }
-    .screenshot-frame:hover img {
-      transform: translateY(-14px) scale(1.02);
-      filter: drop-shadow(0 56px 110px rgba(79,142,247,0.5));
+    .g-blob {
+      position: absolute;
+      width: 80%;
+      height: 80%;
+      top: 10%;
+      left: 10%;
+      mix-blend-mode: hard-light;
+      opacity: 0.85;
     }
-    .screenshot-label {
-      font-size: 13px;
-      color: var(--text-secondary);
-      font-weight: 400;
+    .g-1 {
+      background: radial-gradient(circle at center, rgba(79,142,247,0.8) 0, rgba(79,142,247,0) 52%);
+      animation: gMoveVertical 30s ease infinite;
     }
+    .g-2 {
+      background: radial-gradient(circle at center, rgba(123,63,190,0.8) 0, rgba(123,63,190,0) 52%);
+      transform-origin: calc(50% - 400px);
+      animation: gMoveCircle 20s reverse infinite;
+    }
+    .g-3 {
+      background: radial-gradient(circle at center, rgba(56,189,248,0.8) 0, rgba(56,189,248,0) 52%);
+      transform-origin: calc(50% + 400px);
+      animation: gMoveCircle 40s linear infinite;
+    }
+    .g-4 {
+      background: radial-gradient(circle at center, rgba(255,200,50,0.6) 0, rgba(255,200,50,0) 52%);
+      transform-origin: calc(50% - 200px);
+      animation: gMoveHorizontal 40s ease infinite;
+      opacity: 0.6;
+    }
+    .g-5 {
+      background: radial-gradient(circle at center, rgba(30,210,140,0.7) 0, rgba(30,210,140,0) 52%);
+      transform-origin: calc(50% - 800px) calc(50% + 200px);
+      animation: gMoveCircle 20s ease infinite;
+    }
+    .g-interactive {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: -50%;
+      left: -50%;
+      background: radial-gradient(circle at center, rgba(79,142,247,0.65) 0, rgba(79,142,247,0) 50%);
+      mix-blend-mode: hard-light;
+      opacity: 0.7;
+    }
+    @keyframes gMoveCircle {
+      0%   { transform: rotate(0deg); }
+      50%  { transform: rotate(180deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes gMoveVertical {
+      0%, 100% { transform: translateY(-50%); }
+      50%      { transform: translateY(50%); }
+    }
+    @keyframes gMoveHorizontal {
+      0%, 100% { transform: translateX(-50%) translateY(-10%); }
+      50%      { transform: translateX(50%) translateY(10%); }
+    }
+
+    /* ── SCREENSHOTS SECTION ──
+       Heading plus the interactive gradient. The pinned scroll phone that used
+       to live here is gone: the globe takes over that job in the hero, and Drew
+       is supplying app screens for this section. Left deliberately sparse
+       rather than padded with a placeholder. */
+    .screenshots-section {
+      overflow: hidden;
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+    }
+
+    /* PHONE-STORY START */
+    /* ── PHONE STORY ──
+       One 3D iPhone takes over from the hero globe. The default below is the
+       plain static layout: each panel's copy beside a real screenshot. That is
+       what narrow screens, reduced motion, no WebGL and a failed GLB all get.
+       The script adds .is-3d, which stacks the panels into one pinned
+       viewport and hides the screenshots but keeps each one as an invisible
+       slot: the phone is framed into those slots, so it always lands inside
+       its own column and can never sit on top of the copy beside it. */
+    .phone-story .ps-stage {
+      max-width: 1280px; margin: 0 auto;
+      display: grid; gap: 96px;
+    }
+    .ps-panel {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: center;
+    }
+    .ps-copy { grid-column: 1; grid-row: 1; max-width: 480px; }
+    .ps-shot { grid-column: 2; grid-row: 1; display: flex; justify-content: center; }
+    .ps-panel--flip .ps-copy { grid-column: 2; }
+    .ps-panel--flip .ps-shot { grid-column: 1; }
+    .ps-shot img {
+      display: block; width: min(280px, 100%); height: auto;
+      border-radius: 40px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+    }
+    .ps-copy .b-icon { display: block; margin-bottom: 20px; color: var(--primary); }
+    .ps-copy .b-icon svg { width: 40px; height: 40px; }
+    .ps-copy h3 {
+      font-size: clamp(26px, 2.6vw, 36px); font-weight: 500;
+      line-height: 1.15; letter-spacing: -0.02em;
+      color: var(--text-primary); margin-bottom: 14px;
+    }
+    .ps-copy h3 + p { font-size: 16px; line-height: 1.75; color: var(--text-secondary); }
+
+    .phone-story.is-3d { padding-top: 0; padding-bottom: 0; }
+    .phone-story.is-3d .ps-stage {
+      display: block; position: relative; height: 100vh;
+    }
+    /* Panels start below the fixed 58px nav so the optical centre of the
+       stage is the centre of what the visitor can actually see. */
+    .phone-story.is-3d .ps-panel {
+      position: absolute; left: 0; right: 0; top: 58px; bottom: 0;
+      pointer-events: none;
+    }
+    .phone-story.is-3d .ps-shot { visibility: hidden; height: min(70vh, 720px); }
+    .phone-story.is-3d .ps-shot img { width: auto; height: 100%; }
+
+    /* Above every section, below the nav (100). Never takes a click. */
+    .phone-canvas {
+      position: fixed; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 60; opacity: 0;
+    }
+
+    /* Beat 1 headline: each word carries the brand gradient, sized to the
+       whole line and offset by the word's own position (set in JS), so the
+       lit words read as one continuous gradient, not a gradient per word. */
+    .ps-copy .section-title .w {
+      display: inline-block; white-space: pre;
+      background: var(--gradient); background-repeat: no-repeat;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    /* Beat 1 live figure: the same number the phone's screen shows. */
+    .ps-live { margin-top: 28px; max-width: 360px; }
+    .ps-live-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--text-secondary);
+    }
+    .ps-live-num {
+      display: block; margin-top: 8px;
+      font-size: clamp(64px, 6.4vw, 96px); font-weight: 500; line-height: 1;
+      letter-spacing: -0.03em; color: #4ade80;
+      font-variant-numeric: tabular-nums;
+    }
+    .ps-live-unit { font-size: 0.28em; letter-spacing: 0; color: var(--text-secondary); margin-left: 10px; }
+    .ps-live-track {
+      height: 6px; margin-top: 18px; border-radius: 99px;
+      background: rgba(255,255,255,0.07); overflow: hidden;
+    }
+    .ps-live-fill {
+      height: 100%; width: 100%; border-radius: inherit; background: #4ade80;
+      transform-origin: left center; transform: scaleX(0.811);
+    }
+    .ps-live-cap { margin-top: 10px; font-size: 13px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+    /* Beat 2: a fortnight of days coloured by risk, under the calendar copy. */
+    .ps-days { display: grid; grid-template-columns: repeat(7, 22px); gap: 6px; margin-top: 22px; }
+    .ps-days i { display: block; width: 22px; height: 22px; border-radius: 6px; }
+    .ps-days .ok { background: rgba(74,222,128,0.85); }
+    .ps-days .warn { background: rgba(239,159,39,0.9); }
+    .ps-days .risk { background: rgba(232,69,69,0.9); }
+    .ps-days .off { background: rgba(255,255,255,0.07); }
+
+    /* Beat 3: phone in the middle column, one short block either side. The
+       centre column is sized by the hidden screenshot, so the side copy can
+       never reach under the phone. */
+    .ps-panel--centre { grid-template-columns: 1fr auto 1fr; gap: clamp(56px, 5vw, 110px); }
+    .ps-panel--centre .ps-copy { grid-column: 1; max-width: 340px; justify-self: end; text-align: right; }
+    .ps-panel--centre .ps-shot { grid-column: 2; }
+    .ps-panel--centre .ps-copy--right { grid-column: 3; justify-self: start; text-align: left; }
+    /* Beat 3 headlines: words light up purple one after another, on a loop,
+       while the beat is on screen. Static layouts just show them lit. */
+    .ps-panel--centre h3 .w { display: inline-block; white-space: pre; color: #a78bfa; }
+    .phone-story.is-3d .ps-panel--centre h3 .w { color: #3a4258; }
+    .phone-story.is-3d .ps-panel--centre.is-lit h3 .w {
+      animation: psLit 4s infinite; animation-delay: calc(var(--i) * 0.18s);
+    }
+    @keyframes psLit { 0%, 20% { color: #3a4258; } 45%, 100% { color: #a78bfa; } }
+    .ps-kicker {
+      display: block; margin-bottom: 12px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--primary);
+    }
+
+    @media (max-width: 767px) {
+      .phone-story .ps-stage { gap: 72px; }
+      .ps-panel--centre .ps-copy, .ps-panel--centre .ps-copy--right, .ps-panel--centre .ps-shot {
+        grid-column: 1; grid-row: auto; justify-self: stretch; text-align: left;
+      }
+      .ps-panel { grid-template-columns: 1fr; gap: 32px; }
+      .ps-copy, .ps-shot,
+      .ps-panel--flip .ps-copy, .ps-panel--flip .ps-shot { grid-column: 1; grid-row: auto; }
+    }
+    /* PHONE-STORY END */
 
     /* ── PRICING ── */
     .pricing-grid {
@@ -1061,6 +1398,45 @@
       from { transform: rotate(0deg); }
       to   { transform: rotate(360deg); }
     }
+    /* A quieter cousin of the section gradient: two blobs instead of five, no
+       goo filter, no pointer tracking. The card is a call to action, so the
+       motion has to stay under the text rather than compete with it. */
+    .cta-glow {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+    .cta-glow span {
+      position: absolute;
+      width: 70%;
+      height: 140%;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.5;
+      mix-blend-mode: screen;
+    }
+    .cta-glow .cg-1 {
+      left: -10%; top: -30%;
+      background: radial-gradient(circle, rgba(79,142,247,0.75), transparent 65%);
+      animation: ctaDriftA 26s ease-in-out infinite;
+    }
+    .cta-glow .cg-2 {
+      right: -10%; bottom: -30%;
+      background: radial-gradient(circle, rgba(123,63,190,0.7), transparent 65%);
+      animation: ctaDriftB 32s ease-in-out infinite;
+    }
+    @keyframes ctaDriftA {
+      0%, 100% { transform: translate(0, 0); }
+      50%      { transform: translate(18%, 10%); }
+    }
+    @keyframes ctaDriftB {
+      0%, 100% { transform: translate(0, 0); }
+      50%      { transform: translate(-16%, -12%); }
+    }
+
     .cta-card > * { position: relative; z-index: 1; }
     .cta-card h2 { font-size: 34px; font-weight: 500; letter-spacing: -0.6px; color: var(--text-primary); margin-bottom: 14px; }
     .cta-card p  { font-size: 15px; color: var(--text-secondary); margin-bottom: 38px; line-height: 1.75; }
@@ -1179,9 +1555,7 @@
       .store-buttons { justify-content: center; }
       .hero-cta-signup { display: none !important; }
       .hero-right { width: 100%; }
-      .mockup-stack { width: 340px; height: 460px; margin: 0 auto; }
-      .mockup-stack .m1 { width: 280px; }
-      .mockup-stack .m2 { width: 260px; }
+      .globe-wrap { width: min(460px, 94%); }
       section { padding: 72px 20px; }
       .pain-section { padding: 56px 20px; }
       .pain-inner { flex-direction: column; gap: 36px; }
@@ -1195,12 +1569,10 @@
       .cta-card { padding: 44px 24px; }
       footer { padding: 36px 20px; }
       .footer-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
-      .screenshots-wrapper { flex-direction: column; align-items: center; }
-      .screenshot-frame img,
-      .screenshot-frame.featured img { width: 320px; }
       .pricing-grid { gap: 16px; }
       .pricing-card { padding: 28px 22px; }
-      .marquee-item { width: 280px; }
+      .review-card { width: 300px; }
+      .review-card.wide { width: 380px; }
     }
 
     @media (max-width: 480px) {
@@ -1208,9 +1580,9 @@
       nav a[href*="/login"] { display: none; }
       .nav-cta { padding: 9px 16px !important; font-size: 13px !important; white-space: nowrap; }
       .hero { padding: 80px 16px 48px; gap: 36px; }
-      .mockup-stack { width: 280px; height: 380px; }
-      .mockup-stack .m1 { width: 230px; }
-      .mockup-stack .m2 { width: 210px; }
+      .globe-wrap { width: min(330px, 96%); }
+      .g-pin-badge { width: 34px; height: 34px; }
+      .g-pin-stalk { height: 22px; }
       .pain-number { font-size: 44px; }
       .stat-num { font-size: 32px !important; }
       .stats-band { padding: 20px 16px; gap: 16px; }
@@ -1220,7 +1592,8 @@
       .pricing-grid { gap: 12px; }
       .pricing-card { padding: 24px 18px; border-radius: 18px; }
       .pricing-price { font-size: 38px !important; }
-      .marquee-item { width: 260px; padding: 18px 18px; }
+      .review-card { width: 264px; padding: 22px 18px; }
+      .review-card.wide { width: 300px; }
       .bento-card { padding: 24px 18px; }
       footer { padding: 28px 16px; }
       .footer-links { flex-wrap: wrap; gap: 12px; }
@@ -1265,25 +1638,36 @@
     @media (prefers-reduced-motion: reduce) {
       .glow-1, .glow-2,
       .hero-badge .dot,
-      .mockup-stack .m1, .mockup-stack .m2,
       .stats-band::before,
-      .screenshot-frame img, .screenshot-frame.featured img,
+      .g-blob,
+      .cta-glow span,
+      .gs-sphere::after,
       .cta-card::before {
         animation: none !important;
       }
 
-      .marquee-track {
+      /* The globe is a spinning WebGL sphere; there is no meaningful reduced
+         version of it, so it is not started at all (guarded in JS) and the
+         hero shows the plain city list instead of an empty box. */
+      .globe-mount, .globe-skeleton, .globe-pins { display: none; }
+      .globe-fallback { display: block; }
+
+      /* The blobs stop drifting but the gradient itself stays: it is the
+         section's background, not decoration, and removing it would leave a
+         flat panel. The pointer blob never starts (guarded in JS). */
+      .g-interactive { display: none; }
+
+      /* The review strip cannot simply freeze: the track is wider than the
+         screen and the viewport clips it, so a stopped animation would hide
+         most of the reviews permanently. It becomes a normal horizontal
+         scroller instead, and the edge mask goes with it, since that mask
+         exists to fade cards sliding past and would otherwise just grey out
+         the first and last review. */
+      .review-track {
         animation: none !important;
         transform: none !important;
       }
-      /* The element that actually clips is the unclassed wrapper inside the
-         section, and it carries overflow:hidden as an inline style, so this has
-         to be specific enough and marked important to beat it. Targeting
-         .marquee-section instead looks right and does nothing, because the
-         section is not the scroll container. The edge mask goes too: it exists
-         to fade content sliding past, and with manual scrolling it would just
-         grey out the first and last testimonial. */
-      .marquee-section > div[style] {
+      .review-viewport {
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch;
         mask-image: none !important;
@@ -1430,31 +1814,51 @@
       <div class="hero-ctas">
         <div class="store-buttons">
           <a href="#" class="store-btn apple">
-            <span class="store-icon">🍎</span>
+            <svg class="store-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
             <span class="store-text">
-              <span class="store-label">Download on the</span>
+              <span class="store-label">Coming soon on the</span>
               <span class="store-name">App Store</span>
             </span>
-            <span class="coming-soon-tag">Soon</span>
           </a>
           <a href="#" class="store-btn google">
-            <span class="store-icon">▶</span>
+            <svg class="store-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="#00d7fe" d="M1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924z"/><path fill="#ffce00" d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594z"/><path fill="#00f076" d="M13.544 10.989l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973z"/><path fill="#ff3a44" d="M13.544 13.056l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"/></svg>
             <span class="store-text">
-              <span class="store-label">Get it on</span>
+              <span class="store-label">Coming soon on</span>
               <span class="store-name">Google Play</span>
             </span>
-            <span class="coming-soon-tag">Soon</span>
           </a>
         </div>
-        <a href="https://online.travisaro.app/signup" class="hero-note hero-cta-signup" style="display:inline-flex;align-items:center;gap:8px;margin-top:4px;padding:10px 20px;background:linear-gradient(135deg,#4F8EF7,#7B3FBE);color:#fff;font-weight:600;font-size:13px;border-radius:10px;text-decoration:none;transition:opacity 0.2s;align-self:flex-start;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Start tracking free →</a>
+        <a href="https://online.travisaro.app/signup" class="hero-note hero-cta-signup" style="display:inline-flex;align-items:center;gap:8px;margin-top:4px;height:50px;padding:0 24px;background:linear-gradient(135deg,#4F8EF7,#7B3FBE);color:#fff;font-weight:500;font-size:15px;border-radius:12px;text-decoration:none;transition:opacity 0.2s;align-self:flex-start;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Start tracking free →</a>
         <a href="https://online.travisaro.app/schengen-calculator" class="hero-note" style="display:inline-flex;align-items:center;gap:6px;color:#4F8EF7;font-weight:500;font-size:13px;text-decoration:none;align-self:flex-start;">Or try the free Schengen calculator, no signup</a>
         <a href="#newsletter" class="hero-note" style="color:var(--text-muted);text-decoration:none;">Get visa tips & travel news ↓</a>
       </div>
     </div>
     <div class="hero-right">
-      <div class="mockup-stack">
-        <img class="m1" src="mockup1.png" alt="Add visa screen" />
-        <img class="m2" src="mockup2.png" alt="Trip validation screen" />
+      <div class="globe-wrap" id="globe-wrap">
+        <!-- Shown until the globe is ready, then removed. Deliberately the
+             same diameter and centre as the real globe so the hero does not
+             reflow when it swaps in, which is the whole point of a skeleton
+             and the thing a generic shimmer block gets wrong. -->
+        <div class="globe-skeleton" id="globe-skeleton" aria-hidden="true">
+          <div class="gs-sphere"></div>
+          <div class="gs-ring"></div>
+        </div>
+
+        <div id="globe-mount" class="globe-mount"></div>
+
+        <!-- Reviewer markers. Positioned over the canvas from the globe's own
+             projection each frame, so they track the sphere instead of being
+             pinned to fixed screen coordinates. -->
+        <div class="globe-pins" id="globe-pins" aria-hidden="true"></div>
+
+        <!-- Real content, not decoration: this is the list a screen reader and
+             a no-WebGL browser both get instead of the canvas. -->
+        <div class="globe-fallback" id="globe-fallback">
+          <p class="gf-title">Travisaro users are tracking visas from</p>
+          <ul class="gf-list">
+            <li>Istanbul</li><li>Kuala Lumpur</li><li>Manila</li><li>Bali</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -1462,22 +1866,22 @@
   <!-- STATS -->
   <div class="stats-band">
     <div class="stats-inner">
-      <div class="stat-item reveal">
+      <div class="stat-item">
         <span class="stat-num" data-target="43" data-suffix="M+">43M+</span>
         <div class="stat-label">Digital nomads worldwide in 2026</div>
       </div>
       <div class="stat-divider"></div>
-      <div class="stat-item reveal reveal-delay-1">
+      <div class="stat-item">
         <span class="stat-num" data-target="7000" data-suffix="">7,000</span>
         <div class="stat-label">Overstays the EU's biometric system caught in six months</div>
       </div>
       <div class="stat-divider"></div>
-      <div class="stat-item reveal reveal-delay-2">
+      <div class="stat-item">
         <span class="stat-num">90/180</span>
         <div class="stat-label">Schengen days: the rule that moves every single day</div>
       </div>
       <div class="stat-divider"></div>
-      <div class="stat-item reveal reveal-delay-3">
+      <div class="stat-item">
         <span class="stat-num">€0</span>
         <div class="stat-label">Cost of knowing exactly where you stand</div>
       </div>
@@ -1487,28 +1891,28 @@
   <!-- PAIN POINTS -->
   <div class="pain-section">
     <div class="pain-inner">
-      <div class="pain-left reveal">
+      <div class="pain-left">
         <div class="pain-number">2 years</div>
         <p class="pain-desc">
           The re-entry ban a single overstay can carry. Your flat, your desk, your people, all on the far side of a border you can no longer cross.
         </p>
       </div>
       <div class="pain-right">
-        <div class="pain-item reveal reveal-delay-1">
+        <div class="pain-item">
           <div class="pain-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M20 8.25V18C20 21 18.21 22 16 22H8C5.79 22 4 21 4 18V8.25C4 5 5.79 4.25 8 4.25C8 4.87 8.24997 5.43 8.65997 5.84C9.06997 6.25 9.63 6.5 10.25 6.5H13.75C14.99 6.5 16 5.49 16 4.25C18.21 4.25 20 5 20 8.25Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 4.25C16 5.49 14.99 6.5 13.75 6.5H10.25C9.63 6.5 9.06997 6.25 8.65997 5.84C8.24997 5.43 8 4.87 8 4.25C8 3.01 9.01 2 10.25 2H13.75C14.37 2 14.93 2.25 15.34 2.66C15.75 3.07 16 3.63 16 4.25Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 13H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 17H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="pain-text">
             <strong>You counted it three times and got three answers</strong>
             <span>The 180-day window rolls forward every day, so a trip you took in March quietly changes what you are allowed in September. That is why your spreadsheet and the calculator never quite agree, and why you keep redoing the math instead of trusting it.</span>
           </div>
         </div>
-        <div class="pain-item reveal reveal-delay-2">
+        <div class="pain-item">
           <div class="pain-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M8.25 14C8.25 11.929 9.92893 10.25 12 10.25C14.0711 10.25 15.75 11.929 15.75 14C15.75 16.0711 14.0711 17.75 12 17.75C9.92893 17.75 8.25 16.0711 8.25 14ZM12 11.75C10.7574 11.75 9.75 12.7574 9.75 14C9.75 15.2427 10.7574 16.25 12 16.25C13.2426 16.25 14.25 15.2427 14.25 14C14.25 12.7574 13.2426 11.75 12 11.75Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M18.75 4.30606C18.75 2.63255 17.2678 1.34703 15.6111 1.5837L4.81353 3.12621C3.91638 3.25437 3.25 4.02272 3.25 4.92897C3.25 4.95276 3.25046 4.97645 3.25136 5.00002H3.25V19C3.25 21.0711 4.92893 22.75 7 22.75H17C19.0711 22.75 20.75 21.0711 20.75 19V9.00002C20.75 7.561 19.9395 6.31129 18.75 5.68254V4.30606ZM5.06244 6.75002C5.06531 6.75003 5.06819 6.75004 5.07107 6.75004H17.0096C18.2478 6.75521 19.25 7.76058 19.25 9.00002V19C19.25 20.2427 18.2426 21.25 17 21.25H7C5.75736 21.25 4.75 20.2427 4.75 19V6.75002H5.06244ZM17.0125 5.25004H17.25V4.30606C17.25 3.54537 16.5763 2.96104 15.8232 3.06862L5.02566 4.61113C4.86749 4.63373 4.75 4.76919 4.75 4.92897C4.75 5.10507 4.89177 5.24805 5.0674 5.25002H17C17.0042 5.25002 17.0084 5.25003 17.0125 5.25004Z" fill="currentColor"/></svg></div>
           <div class="pain-text">
             <strong>You book first and do the math after</strong>
             <span>The fare is good and the dates work, so you take it. The visa question gets answered later, on your phone, somewhere over the Atlantic, when the ticket is already non-refundable.</span>
           </div>
         </div>
-        <div class="pain-item reveal reveal-delay-3">
+        <div class="pain-item">
           <div class="pain-icon">🇪🇺</div>
           <div class="pain-text">
             <strong>The machine already knows</strong>
@@ -1518,6 +1922,50 @@
       </div>
     </div>
   </div>
+
+  <!-- PHONE-STORY START -->
+  <!-- PHONE STORY: where the 3D phone arrives. Copy is reused word for word
+       from the #features cards whose screens the phone shows. The intro title
+       is a <p> so the page does not carry the same h2 twice. -->
+  <section id="phone-story" class="phone-story">
+    <div class="ps-stage">
+      <div class="ps-panel" data-screen="A">
+        <div class="ps-copy">
+          <p class="section-title">How do digital nomads avoid visa overstays?</p>
+          <div class="ps-live" role="img" aria-label="17 days left in Türkiye, 73 of 90 days used">
+            <div class="ps-live-label" aria-hidden="true">Days left in Türkiye</div>
+            <span class="ps-live-num" aria-hidden="true"><span class="ps-live-n">17</span><span class="ps-live-unit">days</span></span>
+            <div class="ps-live-track" aria-hidden="true"><div class="ps-live-fill"></div></div>
+            <div class="ps-live-cap" aria-hidden="true"><span class="ps-live-used">73</span> of 90 used</div>
+          </div>
+        </div>
+        <div class="ps-shot"><img src="assets/phone/screen-01.jpg" width="552" height="1200" loading="lazy" decoding="async" alt="Travisaro home screen showing 17 days left on a Türkiye visa and the date to exit by"></div>
+      </div>
+      <div class="ps-panel ps-panel--flip" data-screen="B">
+        <div class="ps-copy">
+          <span class="b-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M8 2V5" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 2V5" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 9.08997H20.5" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.6947 13.7H15.7037" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.6947 16.7H15.7037" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.9955 13.7H12.0045" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.9955 16.7H12.0045" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.29431 13.7H8.30329" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.29431 16.7H8.30329" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <h3>Calendar view</h3>
+          <p>Your trips, colour-coded by risk level. Green, yellow, red, at a glance.</p>
+          <div class="ps-days" aria-hidden="true"><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="warn"></i><i class="ok"></i><i class="off"></i><i class="ok"></i><i class="ok"></i><i class="warn"></i><i class="warn"></i><i class="risk"></i><i class="off"></i><i class="off"></i></div>
+        </div>
+        <div class="ps-shot"><img src="assets/phone/screen-05.jpg" width="552" height="1200" loading="lazy" decoding="async" alt="Travisaro timeline calendar for September 2026 with a days-left pill on each trip day"></div>
+      </div>
+      <div class="ps-panel ps-panel--centre" data-screen="C">
+        <div class="ps-copy">
+          <span class="ps-kicker">Alerts</span>
+          <h3>Before every deadline</h3>
+          <p>A warning while there is still time to change the plan, not the morning you have to leave.</p>
+        </div>
+        <div class="ps-shot"><img src="assets/phone/screen-02.jpg" width="552" height="1200" loading="lazy" decoding="async" alt="Travisaro explore map showing where your passport lets you travel"></div>
+        <div class="ps-copy ps-copy--right">
+          <span class="ps-kicker">Trip check</span>
+          <h3>Before you book</h3>
+          <p>Add a flight you are thinking about and see what it does to your days before you pay for it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- PHONE-STORY END -->
 
   <!-- FEATURES BENTO -->
   <section id="features">
@@ -1698,11 +2146,11 @@
     </div>
   </section>
 
-  <!-- MARQUEE TESTIMONIALS -->
+  <!-- BENTO TESTIMONIALS -->
   <div class="marquee-section">
     <p class="marquee-label">What travellers are saying</p>
-    <div style="overflow:hidden; mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);">
-      <div class="marquee-track" id="marquee-track"></div>
+    <div class="review-viewport">
+      <div class="review-track" id="review-track"></div>
     </div>
   </div>
 
@@ -1734,19 +2182,39 @@
 
   <!-- SCREENSHOTS -->
   <section class="screenshots-section">
-    <div class="section-inner">
+    <!-- Gooey filter: blur the layer, then push alpha through a steep curve so
+         the blurred edges snap back to a hard boundary. That threshold is what
+         makes separate blobs merge like liquid instead of overlapping like
+         circles. Kept inline because it is referenced by CSS url(#goo). -->
+    <svg class="goo-defs" aria-hidden="true" focusable="false"
+         style="position:absolute;width:0;height:0;pointer-events:none;">
+      <defs>
+        <filter id="goo">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur" />
+          <feColorMatrix in="blur" mode="matrix"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" result="goo" />
+          <feBlend in="SourceGraphic" in2="goo" />
+        </filter>
+      </defs>
+    </svg>
+
+    <div class="gradient-bg" aria-hidden="true">
+      <div class="goo-layer">
+        <div class="g-blob g-1"></div>
+        <div class="g-blob g-2"></div>
+        <div class="g-blob g-3"></div>
+        <div class="g-blob g-4"></div>
+        <div class="g-blob g-5"></div>
+        <div class="g-interactive" id="gradientPointer"></div>
+      </div>
+    </div>
+
+    <div class="section-inner" style="position:relative;z-index:1;">
       <div class="section-label reveal">The app</div>
       <h2 class="section-title reveal reveal-delay-1">See it in action.</h2>
-      <div class="screenshots-wrapper">
-        <div class="screenshot-frame reveal reveal-delay-1">
-          <img src="mockup1.png" alt="Add new visa screen" />
-          <div class="screenshot-label">Add a visa in seconds</div>
-        </div>
-        <div class="screenshot-frame featured reveal reveal-delay-2">
-          <img src="mockup2.png" alt="Trip validation screen" />
-          <div class="screenshot-label">Validate your trip before you go</div>
-        </div>
-      </div>
+      <!-- App screens go here. Drew is supplying images; until then the
+           section is heading + gradient only, deliberately empty rather than
+           padded with a placeholder. -->
     </div>
   </section>
 
@@ -2035,6 +2503,7 @@
   <!-- NEWSLETTER -->
   <section class="cta-section" id="newsletter">
     <div class="cta-card reveal">
+      <div class="cta-glow" aria-hidden="true"><span class="cg-1"></span><span class="cg-2"></span></div>
       <h2>Travel smarter. Stay legal.</h2>
       <p>Visa rule changes, border tips, and nomad news, straight to your inbox. No fluff.</p>
       <script src="https://f.convertkit.com/ckjs/ck.5.js"></script>
@@ -2127,15 +2596,382 @@
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    /* ── MOUSE PARALLAX ON HERO MOCKUPS ── */
-    const stack = document.querySelector('.mockup-stack');
-    if (stack) {
-      document.addEventListener('mousemove', e => {
-        const mx = (e.clientX / window.innerWidth  - 0.5) * 12;
-        const my = (e.clientY / window.innerHeight - 0.5) * 8;
-        stack.style.transform = `perspective(1000px) rotateY(${mx}deg) rotateX(${-my}deg)`;
+    /* ── HERO GLOBE ──
+       three-globe on raw three.js. Aceternity's Globe3D is a React wrapper
+       around the same library; this page has no bundler and no React, so the
+       library is driven directly.
+
+       The earth is a photoreal texture with a real day/night terminator, not
+       the hex-dot country style: a custom ShaderMaterial mixes a daylight and
+       a city-lights texture by the angle between each fragment's world normal
+       and a fixed sun direction. Because the sun is fixed in world space and
+       the globe spins underneath it, the terminator stays put and the surface
+       rotates through it, which is what makes it read as a real planet rather
+       than a spinning picture.
+
+       Everything is loaded only when the hero is near the viewport: the two
+       modules plus three textures are by a wide margin the heaviest thing on
+       this page and must never sit in the critical path of first paint. */
+    (function () {
+      const wrap = document.getElementById('globe-wrap');
+      if (!wrap) return;
+
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // A real context test, not a UA sniff, released immediately so it does
+      // not hold a GPU slot.
+      function hasWebGL() {
+        try {
+          const c = document.createElement('canvas');
+          const gl = c.getContext('webgl2') || c.getContext('webgl');
+          if (!gl) return false;
+          gl.getExtension('WEBGL_lose_context')?.loseContext();
+          return true;
+        } catch (e) { return false; }
+      }
+
+      if (reduced || !hasWebGL()) { wrap.classList.add('no-webgl'); return; }
+
+      /* Reviewer cities, confirmed by Drew. Avatars are drawn from `av`.
+         They are illustrations on purpose: a photoreal face next to a real
+         Instagram handle implies it is that person's photo, and it is not. */
+      const GLOBE_PINS = [
+        { handle: '@itsaozz',           city: 'Istanbul',     lat: 41.01, lng:  28.98, av: 'a' },
+        { handle: '@banswave',          city: 'Kuala Lumpur', lat:  3.14, lng: 101.69, av: 'b' },
+        { handle: '@itsvictoria_santy', city: 'Manila',       lat: 14.60, lng: 120.98, av: 'c' },
+        { handle: '@tellwe',            city: 'Bali',         lat: -8.65, lng: 115.22, av: 'd' },
+      ];
+
+      const AVATARS = {
+        a: '<defs><linearGradient id="ava" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7aa2ff"/><stop offset="1" stop-color="#4666c9"/></linearGradient></defs><circle cx="20" cy="20" r="20" fill="url(#ava)"/><circle cx="20" cy="16.5" r="6.6" fill="#ffe0c2"/><path d="M13 12.5a7 7 0 0 1 14 0c0 1-1.2 1-2 .4-2-1.6-8-1.6-10 .4-.9.9-2 .3-2-.8z" fill="#3a2a1c"/><path d="M6.5 38a13.5 13.5 0 0 1 27 0z" fill="#eaf0ff"/>',
+        b: '<defs><linearGradient id="avb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9a4ff"/><stop offset="1" stop-color="#7b4fd0"/></linearGradient></defs><circle cx="20" cy="20" r="20" fill="url(#avb)"/><circle cx="20" cy="16.5" r="6.6" fill="#f7d3b4"/><path d="M12.6 17c-.6-5 2.6-8 7.4-8s8 3 7.4 8c-.3 2.4-1.6.4-2.6-1.6-3 2.2-7.4 2.4-9.6.6-.8 1.6-2.4 3.4-2.6 1z" fill="#241633"/><path d="M6.5 38a13.5 13.5 0 0 1 27 0z" fill="#f3ecff"/>',
+        c: '<defs><linearGradient id="avc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fe3d4"/><stop offset="1" stop-color="#2b9c9c"/></linearGradient></defs><circle cx="20" cy="20" r="20" fill="url(#avc)"/><circle cx="20" cy="16.5" r="6.6" fill="#f3c9a6"/><path d="M12.8 15.5c1-4.4 4-6 7.2-6s6.2 1.6 7.2 6c.5 2.2.3 6-1 6.6.4-2.8-.4-4.6-1.4-5.4-3 1.4-8.4 1-9.8-.6-.8 1.2-1.2 3.4-.8 6-1.4-.6-1.9-4.4-1.4-6.6z" fill="#2b1a10"/><path d="M6.5 38a13.5 13.5 0 0 1 27 0z" fill="#e6fffa"/>',
+        d: '<defs><linearGradient id="avd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd489"/><stop offset="1" stop-color="#d18c2e"/></linearGradient></defs><circle cx="20" cy="20" r="20" fill="url(#avd)"/><circle cx="20" cy="16.5" r="6.6" fill="#ffdcbc"/><path d="M13.2 14c1.6-3.4 4.2-4.6 6.8-4.6s5.2 1.2 6.8 4.6c.8 1.8-1.4 1.2-2.6.4-2.6 2-6.6 2.2-8.6.6-1 1-3.2 1-2.4-1z" fill="#4a2c12"/><path d="M6.5 38a13.5 13.5 0 0 1 27 0z" fill="#fff4e2"/>',
+      };
+
+      /* Rect measurement rather than an IntersectionObserver: IO callbacks are
+         throttled or suspended outright in backgrounded and non-compositing
+         contexts, and when that happens the globe never loads and the hero
+         keeps its skeleton forever. A measured check cannot be starved. */
+      let started = false;
+      function nearViewport() {
+        const r = wrap.getBoundingClientRect();
+        return r.top < innerHeight + 300 && r.bottom > -300;
+      }
+      function maybeBoot() {
+        if (started || !nearViewport()) return;
+        started = true;
+        removeEventListener('scroll', onScroll);
+        removeEventListener('resize', onScroll);
+        boot().catch(err => {
+          console.error('globe failed to start:', err);
+          wrap.classList.add('no-webgl');
+        });
+      }
+      let queued = false;
+      function onScroll() {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => { queued = false; maybeBoot(); });
+      }
+      addEventListener('scroll', onScroll, { passive: true });
+      addEventListener('resize', onScroll);
+      maybeBoot();
+
+      async function boot() {
+        const [THREE, ThreeGlobeMod] = await Promise.all([
+          import('https://esm.sh/three@0.169.0'),
+          import('https://esm.sh/three-globe@2.45.2?deps=three@0.169.0'),
+        ]);
+        const ThreeGlobe = ThreeGlobeMod.default;
+
+        // Textures are decoded before the first frame so the globe never
+        // appears as a black sphere that pops into detail a moment later.
+        const loader = new THREE.TextureLoader();
+        const load = url => new Promise((res, rej) =>
+          loader.load(url, res, undefined, () => rej(new Error('texture ' + url))));
+        const [dayTex, nightTex, bumpTex] = await Promise.all([
+          load('globe/earth-blue-marble.jpg'),
+          load('globe/earth-night.jpg'),
+          load('globe/earth-topology.png'),
+        ]);
+        [dayTex, nightTex].forEach(t => { t.colorSpace = THREE.SRGBColorSpace; });
+
+        const mount = document.getElementById('globe-mount');
+        const pinLayer = document.getElementById('globe-pins');
+
+        const globe = new ThreeGlobe()
+          .showAtmosphere(true)
+          .atmosphereColor('#4da6ff')
+          .atmosphereAltitude(0.18);
+
+        /* Day/night terminator. The normal is taken into world space so the
+           sun stays fixed while the planet turns through it. smoothstep gives
+           the soft dusk band; a hard step would look like a paper cut-out. */
+        const sunDirection = new THREE.Vector3(-0.7, 0.25, 0.65).normalize();
+        const earthMat = new THREE.ShaderMaterial({
+          uniforms: {
+            dayTexture:   { value: dayTex },
+            nightTexture: { value: nightTex },
+            bumpTexture:  { value: bumpTex },
+            sunDirection: { value: sunDirection },
+            bumpScale:    { value: 0.035 },
+          },
+          vertexShader: `
+            varying vec2 vUv;
+            varying vec3 vNormalW;
+            varying vec3 vWorldPos;
+            void main() {
+              vUv = uv;
+              vNormalW = normalize(mat3(modelMatrix) * normal);
+              vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }`,
+          fragmentShader: `
+            uniform sampler2D dayTexture;
+            uniform sampler2D nightTexture;
+            uniform sampler2D bumpTexture;
+            uniform vec3 sunDirection;
+            uniform float bumpScale;
+            varying vec2 vUv;
+            varying vec3 vNormalW;
+            varying vec3 vWorldPos;
+            void main() {
+              vec3 day   = texture2D(dayTexture, vUv).rgb;
+              vec3 night = texture2D(nightTexture, vUv).rgb;
+              vec3 n = normalize(vNormalW);
+              vec3 v = normalize(cameraPosition - vWorldPos);
+
+              // Cheap relief: nudge the lit term by the height map so
+              // mountains and trenches catch the light near the terminator.
+              float h = texture2D(bumpTexture, vUv).r;
+              float lit = dot(n, sunDirection) + (h - 0.5) * bumpScale;
+
+              // Widened dusk band. Real terminators are soft, and a soft one
+              // also hides the seam where the two textures disagree.
+              float t = smoothstep(-0.18, 0.30, lit);
+
+              // Blue Marble deserts run orange once output is sRGB-correct.
+              // Pull saturation back a touch and cool the grade slightly.
+              float lum = dot(day, vec3(0.2126, 0.7152, 0.0722));
+              day = mix(vec3(lum), day, 0.88) * vec3(0.96, 1.0, 1.07);
+
+              // Day side gets a diffuse falloff so the sphere has form
+              // instead of reading as a flat printed disc.
+              vec3 daySide = day * (0.45 + 0.75 * clamp(lit, 0.0, 1.0));
+
+              // Earthshine: a faint cool trace of the day map under the city
+              // lights keeps continents legible, so the night side reads as
+              // solid ground rather than a hole into the page background.
+              vec3 nightSide = night * 1.6 + day * vec3(0.05, 0.07, 0.12);
+              vec3 col = mix(nightSide, daySide, t);
+
+              // Warm band right on the terminator.
+              float dusk = smoothstep(-0.14, 0.04, lit) * (1.0 - smoothstep(0.04, 0.26, lit));
+              col += vec3(1.0, 0.42, 0.18) * dusk * 0.06;
+
+              // Sun glint on water only. Oceans are where blue dominates red.
+              float ocean = smoothstep(0.015, 0.08, day.b - day.r);
+              vec3 hv = normalize(sunDirection + v);
+              col += vec3(1.0, 0.95, 0.85) * pow(max(dot(n, hv), 0.0), 90.0) * ocean * t * 0.35;
+
+              // Atmospheric rim on the surface itself, strongest on the lit
+              // limb but never zero, so the edge holds against a dark page.
+              float fres = pow(1.0 - max(dot(n, v), 0.0), 3.0);
+              col += vec3(0.30, 0.58, 1.0) * fres * (0.18 + 0.6 * t);
+
+              gl_FragColor = vec4(col, 1.0);
+              // Textures are decoded to linear on sampling; without this the
+              // linear result went to the canvas unencoded and every midtone
+              // came out murky, which is most of why the globe looked hollow.
+              #include <tonemapping_fragment>
+              #include <colorspace_fragment>
+            }`,
+        });
+        globe.globeMaterial(earthMat);
+
+        const scene = new THREE.Scene();
+        scene.add(globe);
+        // The shader is unlit, so these exist only for the atmosphere mesh.
+        scene.add(new THREE.AmbientLight(0xffffff, 1.0));
+
+        const camera = new THREE.PerspectiveCamera(45, 1, 100, 2000);
+        camera.position.z = 300;
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        // Capped at 2: beyond that pixel cost doubles again for no visible gain.
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        mount.appendChild(renderer.domElement);
+
+        const pins = GLOBE_PINS.map(p => {
+          const el = document.createElement('div');
+          el.className = 'g-pin';
+          el.innerHTML =
+            '<div class="g-pin-badge"><svg viewBox="0 0 40 40">' + AVATARS[p.av] + '</svg></div>' +
+            '<div class="g-pin-stalk"></div>';
+          el.title = p.city;
+          pinLayer.appendChild(el);
+          return { data: p, el, vec: new THREE.Vector3() };
+        });
+
+        const R = globe.getGlobeRadius();
+        let spin = 0, tilt = 0, velX = 0, velY = 0, dragging = false, lastX = 0, lastY = 0;
+        const AUTO = 0.0016;
+        // Short of the pole: past 90 degrees a horizontal drag would spin the
+        // planet the opposite way to the hand.
+        const MAX_TILT = 1.2;
+
+        /* Drag in any direction, with inertia. Horizontal turns the planet on
+           its axis, vertical tilts it toward or away from the viewer. Pointer
+           events cover mouse, pen and touch in one path, and capture means a
+           fast drag that leaves the canvas still ends cleanly. On touch,
+           `touch-action: pan-y` keeps vertical swipes scrolling the page. */
+        wrap.addEventListener('pointerdown', e => {
+          dragging = true; lastX = e.clientX; lastY = e.clientY; velX = 0; velY = 0;
+          wrap.setPointerCapture(e.pointerId);
+          wrap.classList.add('is-dragging');
+        });
+        wrap.addEventListener('pointermove', e => {
+          if (!dragging) return;
+          velX = (e.clientX - lastX) * 0.005;
+          velY = (e.clientY - lastY) * 0.005;
+          lastX = e.clientX; lastY = e.clientY;
+          spin += velX;
+          tilt = Math.max(-MAX_TILT, Math.min(MAX_TILT, tilt + velY));
+        });
+        function endDrag(e) {
+          if (!dragging) return;
+          dragging = false;
+          try { wrap.releasePointerCapture(e.pointerId); } catch (_) {}
+          wrap.classList.remove('is-dragging');
+        }
+        wrap.addEventListener('pointerup', endDrag);
+        wrap.addEventListener('pointercancel', endDrag);
+
+        function latLngToVec3(lat, lng, r) {
+          const phi = (90 - lat) * Math.PI / 180;
+          const theta = (90 + lng) * Math.PI / 180;
+          return new THREE.Vector3(
+            -r * Math.sin(phi) * Math.cos(theta),
+             r * Math.cos(phi),
+             r * Math.sin(phi) * Math.sin(theta)
+          );
+        }
+
+        const toCam = new THREE.Vector3();
+        function updatePins() {
+          const w = renderer.domElement.clientWidth;
+          const h = renderer.domElement.clientHeight;
+          for (const pin of pins) {
+            // Same Euler as the globe, so pins follow tilt as well as spin.
+            pin.vec.copy(latLngToVec3(pin.data.lat, pin.data.lng, R * 1.01))
+                   .applyEuler(globe.rotation);
+            // Behind the visible limb, not just behind z = 0. With a
+            // perspective camera the visible cap is smaller than a hemisphere,
+            // so a z test left pins standing on the far side of the edge.
+            const isBack = pin.vec.dot(toCam.copy(camera.position).sub(pin.vec)) < 0;
+            const proj = pin.vec.clone().project(camera);
+            pin.el.style.left = ( proj.x * w / 2 + w / 2) + 'px';
+            pin.el.style.top  = (-proj.y * h / 2 + h / 2) + 'px';
+            pin.el.classList.toggle('is-back', isBack);
+          }
+        }
+
+        function draw() {
+          globe.rotation.x = tilt;
+          globe.rotation.y = spin;
+          renderer.render(scene, camera);
+          updatePins();
+        }
+
+        /* Paused while the hero is fully off screen, so the page never draws
+           the globe and the scroll phone at the same time. Scrolling back
+           into view restarts it. */
+        let looping = true;
+        window.__globeLoop = 'running';
+        const onScreen = () => {
+          const r = wrap.getBoundingClientRect();
+          return r.bottom > 0 && r.top < innerHeight;
+        };
+        addEventListener('scroll', () => {
+          if (looping || !onScreen()) return;
+          looping = true;
+          window.__globeLoop = 'running';
+          requestAnimationFrame(frame);
+        }, { passive: true });
+
+        function frame() {
+          if (!onScreen()) { looping = false; window.__globeLoop = 'paused'; return; }
+          if (!dragging) {
+            // Never pauses on hover: the idle drift always runs, and a throw
+            // rides on top of it, bleeding off instead of stopping dead.
+            spin += AUTO + velX;
+            tilt = Math.max(-MAX_TILT, Math.min(MAX_TILT, tilt + velY));
+            velX *= 0.94;
+            velY *= 0.94;
+            // Once the throw has died, tilt settles back upright slowly, so
+            // the hero never rests on a pole view.
+            if (Math.abs(velY) < 0.0004) tilt *= 0.985;
+          }
+          draw();
+          requestAnimationFrame(frame);
+        }
+
+        function resize() {
+          const n = wrap.clientWidth;
+          if (!n) return;
+          renderer.setSize(n, n);
+          camera.aspect = 1;
+          camera.updateProjectionMatrix();
+          draw();
+        }
+        addEventListener('resize', resize);
+        resize();
+
+        /* First paint is synchronous on purpose. Handing over on the first rAF
+           looks equivalent but is not: rAF is suspended in backgrounded tabs,
+           so a page opened in the background would sit on its skeleton until
+           focused, then snap. */
+        draw();
+        wrap.classList.add('is-ready');
+        requestAnimationFrame(frame);
+      }
+    })();
+
+    /* ── INTERACTIVE GRADIENT POINTER ──
+       The blob eases toward the pointer instead of snapping to it, which is
+       what makes it feel like a fluid being dragged rather than a cursor
+       attachment. Position is written once per frame inside rAF; mousemove
+       only records coordinates, so a fast pointer cannot queue up layout
+       writes. The loop idles when the section is off screen. */
+    (function () {
+      const blob = document.getElementById('gradientPointer');
+      const section = document.querySelector('.screenshots-section');
+      if (!blob || !section) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      let targetX = 0, targetY = 0, curX = 0, curY = 0, active = false, running = false;
+
+      new IntersectionObserver(entries => {
+        active = entries[0].isIntersecting;
+        if (active && !running) { running = true; requestAnimationFrame(tick); }
+      }, { threshold: 0 }).observe(section);
+
+      section.addEventListener('mousemove', e => {
+        const r = section.getBoundingClientRect();
+        targetX = e.clientX - r.left;
+        targetY = e.clientY - r.top;
       });
-    }
+
+      function tick() {
+        if (!active) { running = false; return; }
+        curX += (targetX - curX) / 18;
+        curY += (targetY - curY) / 18;
+        blob.style.transform =
+          'translate(' + Math.round(curX) + 'px, ' + Math.round(curY) + 'px)';
+        requestAnimationFrame(tick);
+      }
+    })();
 
     /* ── NAV SCROLL TINT ── */
     window.addEventListener('scroll', () => {
@@ -2179,64 +3015,54 @@
 
     /* ── MARQUEE ── */
     (function() {
-      const track = document.getElementById('marquee-track');
-      if (!track) return;
+      const track = document.getElementById('review-track');
+
+      /* 4 real reviews from real friends who actually used the app, replacing
+         6 fabricated ones. Cities are Drew's, confirmed 30 Aug 2026, and are
+         the same coordinates the hero globe will pin. Add real entries here as
+         they arrive, do not pad with made-up ones. */
       const reviews = [
-        { text: "This app has been a lifesaver. No more calculating visa days every time I travel, and tracking my travel history is incredibly easy. Managing my trips is finally simple, stress-free, and enjoyable.", name: "@itsaozz", role: "Travisaro user" },
-        { text: "Everything's organized in one place instead of switching between apps. Clean interface, easy to navigate, saves a lot of time. A great app that makes everyday tasks so much simpler.", name: "@banswave", role: "Travisaro user" },
-        { text: "Honestly a lifesaver for travel. I usually hate dealing with visa stuff because it's always a total nightmare trying to figure out what paperwork I actually need. Registering in travisaro made things so much easier. It's super handy having all my travel info and document dates in one place instead of buried in my email. Plus, the travel map feature is just fun to look at.", name: "@itsvictoria_santy", role: "Travisaro user" },
-        { text: "Love the app! Makes my life so much easier now that I don't have to calculate everything myself and constantly keep the dates in my mind! Super convenient and useful for people that travel a lot 💙", name: "@tellwe", role: "Travisaro user" },
+        { text: "This app has been a lifesaver. No more calculating visa days every time I travel, and tracking my travel history is incredibly easy. Managing my trips is finally simple, stress-free, and enjoyable.", name: "@itsaozz", city: "Istanbul" },
+        { text: "Everything's organized in one place instead of switching between apps. Clean interface, easy to navigate, saves a lot of time. A great app that makes everyday tasks so much simpler.", name: "@banswave", city: "Kuala Lumpur" },
+        { text: "Honestly a lifesaver for travel. I usually hate dealing with visa stuff because it's always a total nightmare trying to figure out what paperwork I actually need. Registering in travisaro made things so much easier. It's super handy having all my travel info and document dates in one place instead of buried in my email. Plus, the travel map feature is just fun to look at.", name: "@itsvictoria_santy", city: "Manila" },
+        { text: "Love the app! Makes my life so much easier now that I don't have to calculate everything myself and constantly keep the dates in my mind! Super convenient and useful for people that travel a lot 💙", name: "@tellwe", city: "Bali" },
       ];
-      // Duplicate for seamless loop. 4 real reviews so far (real
-      // friends who actually used the app, replacing 6 fabricated ones) --
-      // tripled instead of doubled so the strip doesn't feel sparse. Add
-      // more real entries here as they come in, do not pad with made-up
-      // ones.
+
+      /* The longest quote gets two columns so it is not a narrow wall of text.
+         Measured from the copy rather than hardcoded to an index, so adding a
+         review cannot silently produce a cramped card. */
+      const longest = reviews.reduce((a, b) => (b.text.length > a.text.length ? b : a));
+
+      /* Rendered three times so the strip is never sparse and the 33.3333%
+         keyframe loops seamlessly. Keep the multiplier and the keyframe in
+         sync. */
       [...reviews, ...reviews, ...reviews].forEach(r => {
-        const item = document.createElement('div');
-        item.className = 'marquee-item';
-        item.innerHTML = `
-          <div class="marquee-stars">★★★★★</div>
-          <p class="marquee-text">"${r.text}"</p>
-          <div class="marquee-author">${r.name}</div>
-          <div class="marquee-role">${r.role}</div>`;
-        track.appendChild(item);
+        const card = document.createElement('div');
+        card.className = 'review-card' + (r === longest ? ' wide' : '');
+        card.innerHTML = `
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"${r.text}"</p>
+          <div class="review-foot">
+            <span class="review-author">${r.name}</span>
+            <span class="review-city">${r.city}</span>
+          </div>`;
+        card.addEventListener('pointermove', e => {
+          const b = card.getBoundingClientRect();
+          card.style.setProperty('--mx', (e.clientX - b.left) + 'px');
+          card.style.setProperty('--my', (e.clientY - b.top) + 'px');
+        });
+        track.appendChild(card);
       });
 
-      // Hold to read. Touch fires no hover, so without this the strip cannot
-      // be stopped on a phone. Bound on the clipping wrapper so a finger
-      // anywhere over the strip counts, and released on cancel/leave too so it
-      // can never stick paused.
-      const wrap = track.parentElement;
-      const hold = (on) => track.classList.toggle('is-held', on);
-      wrap.addEventListener('pointerdown', () => hold(true));
-      ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) =>
-        wrap.addEventListener(ev, () => hold(false)));
+      /* Touch fires no hover, so without this the strip cannot be stopped on a
+         phone. Bound on the viewport so a finger anywhere over the strip
+         counts, and released on cancel and leave too so it can never stick. */
+      const viewport = track.parentElement;
+      const hold = on => track.classList.toggle('is-held', on);
+      viewport.addEventListener('pointerdown', () => hold(true));
+      ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev =>
+        viewport.addEventListener(ev, () => hold(false)));
     })();
-
-    /* ── COUNTER ANIMATION ── */
-    function animateCount(el, target, suffix) {
-      let start = 0;
-      const dur = 1800;
-      const step = timestamp => {
-        if (!start) start = timestamp;
-        const progress = Math.min((timestamp - start) / dur, 1);
-        const ease = 1 - Math.pow(1 - progress, 3);
-        el.textContent = Math.floor(ease * target).toLocaleString() + suffix;
-        if (progress < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    }
-    const counterObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          const el = e.target;
-          animateCount(el, parseInt(el.dataset.target), el.dataset.suffix || '');
-          counterObs.unobserve(el);
-        }
-      });
-    }, { threshold: 0.5 });
-    document.querySelectorAll('[data-target]').forEach(el => counterObs.observe(el));
 
     /* ── BILLING TOGGLE ── */
     let isAnnual = false;
@@ -2340,10 +3166,640 @@
 
   </script>
 
+  <!-- PHONE-STORY START -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script type="module">
+    /* ── FLYING PHONE ──
+       Scroll drives every pose. One paused GSAP timeline holds the whole
+       choreography in "screens of scroll" (1 second of timeline = one
+       viewport height of scrolling), and each beat is anchored to its real
+       section by its own ScrollTrigger, so a layout shift above cannot
+       desync the phone from the copy it belongs to. The timeline is then
+       scrubbed toward the mapped time with a short ease, which is what makes
+       the motion feel weighted instead of glued to the wheel.
+
+       The phone is rendered by three.js into one fixed, click-through canvas,
+       loaded only after the hero globe is up, and its loop runs only while
+       the phone is actually on screen. */
+    const section = document.getElementById('phone-story');
+    const { gsap, ScrollTrigger } = window;
+
+    const SCREENS = ['assets/phone/screen-01.jpg', 'assets/phone/screen-05.jpg', 'assets/phone/screen-02.jpg'];
+    const SCREEN_NAMES = ['A', 'B', 'C'];
+
+    // Timeline layout, in viewport heights of scroll.
+    const T_ARRIVE = 1;       // section top travels from viewport bottom to top
+    const T_FLIGHT_1 = 1.35;  // a short hold on the intro before it moves
+    const T_FLIGHT_2 = 2.8;   // Beat 3: to the centre, once Beat 2's squares are in
+    const PIN_VH = 3;         // pinned scroll
+    const T_EXIT = 0.6;       // after the pin releases: the phone fades as the page moves on
+
+    const FOV = 22;           // narrow lens: product-shot perspective, little distortion
+    const CAM_Z = 1;
+    const SCRUB = 0.9;
+
+    const narrow = matchMedia('(max-width: 767px)');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+
+    // Timeline-owned pose. side: +1 right slot, -1 left slot. Angles in degrees.
+    const pose = { arrive: 0, side: 1, rotX: 0, rotY: -15, rotZ: 0, scale: 1, dip: 0, opacity: 0, screen: 0 };
+    window.__phone = { beat: 0, x: 0, y: 0, rotY: 0, rotZ: 0, screen: 'A', visible: false };
+
+    let gl = null;            // three.js objects once loaded
+    let active = false, failed = false, loading = false, running = false;
+    let tl = null, triggers = [], anchors = [];
+    const slot = { xR: 0, xL: 0, y: 0, w: 0, h: 0 };
+    let webglOk = null;
+
+    function hasWebGL() {
+      if (webglOk !== null) return webglOk;
+      try {
+        const c = document.createElement('canvas');
+        const ctx = c.getContext('webgl2') || c.getContext('webgl');
+        webglOk = !!ctx;
+        ctx?.getExtension('WEBGL_lose_context')?.loseContext();
+      } catch (e) { webglOk = false; }
+      return webglOk;
+    }
+    const canRun = () => section && gsap && ScrollTrigger && !failed &&
+      !narrow.matches && !reduced.matches && hasWebGL();
+
+    /* ── Timeline ── */
+    function buildTimeline() {
+      const [copyA, copyB, copyL, copyR] = section.querySelectorAll('.ps-copy');
+      tl = gsap.timeline({ paused: true, defaults: { ease: 'none' }, onUpdate: onPose });
+
+      // Beat 1 copy. The headline lights word by word while the section rises,
+      // then the live figure counts down to the 17 the phone's screen shows
+      // and the used-days bar fills with it, both finished before the flight.
+      tl.fromTo(copyA.querySelectorAll('.section-title .w'), { opacity: 0.16 },
+                { opacity: 1, duration: 0.2, stagger: 0.07 }, 0.15)
+        .fromTo(live, { left: 90 }, { left: 17, duration: 0.85, ease: 'power2.out', onUpdate: writeLive }, 0.45);
+
+      // Beat 2 copy. The calendar icon's strokes draw on after the copy lands,
+      // then the fortnight of days pops in square by square.
+      const iconPaths = copyB.querySelectorAll('.b-icon path');
+      iconPaths.forEach(el => { el.setAttribute('pathLength', '1'); el.style.strokeDasharray = '1'; });
+      tl.fromTo(iconPaths, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.4, stagger: 0.03, ease: 'power1.inOut' }, T_FLIGHT_1 + 0.6)
+        .fromTo(copyB.querySelectorAll('.ps-days i'), { scale: 0, opacity: 0 },
+                { scale: 1, opacity: 1, duration: 0.12, stagger: 0.02, ease: 'back.out(2)' }, T_FLIGHT_1 + 0.8);
+
+      // Beat 1, arrival. `arrive` is linear here and shaped in place(), so the
+      // rise can be clamped against the live section edge.
+      tl.fromTo(pose, { arrive: 0 }, { arrive: 1, duration: T_ARRIVE }, 0)
+        .fromTo(pose, { rotY: -42, rotX: 14, scale: 0.9 },
+                      { rotY: -15, rotX: 0, scale: 1, duration: T_ARRIVE, ease: 'power2.out' }, 0)
+        .fromTo(pose, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power1.out' }, 0.3);
+
+      // Beat 2, first flight: right to left. x eases in and out so it leaves
+      // and lands with weight; the yaw sweeps through 0 and ends turned toward
+      // the copy; the lean and the dip peak mid-flight, when it moves fastest,
+      // so it banks and arcs instead of sliding. The screen changes while it
+      // is in the air.
+      const F = T_FLIGHT_1;
+      tl.to(pose, { side: -1, duration: 1, ease: 'power2.inOut' }, F)
+        .to(pose, { rotY: 18, duration: 1, ease: 'power2.inOut' }, F)
+        .to(pose, { rotZ: 7, dip: 1, scale: 0.94, duration: 0.5, ease: 'sine.inOut' }, F)
+        .to(pose, { rotZ: 0, dip: 0, scale: 1, duration: 0.5, ease: 'sine.inOut' }, F + 0.5)
+        .to(pose, { screen: 1, duration: 0.2, ease: 'power1.inOut' }, F + 0.4)
+        .to(copyA, { opacity: 0, y: -24, duration: 0.28, ease: 'power2.in' }, F)
+        .fromTo(copyB, { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }, F + 0.7);
+
+      // Beat 3, second flight: left to the centre, banking the other way, and
+      // squaring up to face the viewer. The two side blocks slide in from the
+      // outer edges toward the phone once it has nearly landed.
+      const G = T_FLIGHT_2;
+      tl.to(pose, { side: 0, duration: 0.75, ease: 'power2.inOut' }, G)
+        .to(pose, { rotY: 0, duration: 0.75, ease: 'power2.inOut' }, G)
+        .to(pose, { rotZ: -6, dip: 1, scale: 0.94, duration: 0.375, ease: 'sine.inOut' }, G)
+        .to(pose, { rotZ: 0, dip: 0, scale: 1.04, duration: 0.375, ease: 'sine.inOut' }, G + 0.375)
+        .to(pose, { screen: 2, duration: 0.2, ease: 'power1.inOut' }, G + 0.3)
+        .to(copyB, { opacity: 0, y: -24, duration: 0.25, ease: 'power2.in' }, G)
+        .fromTo(copyL, { opacity: 0, x: -64 }, { opacity: 1, x: 0, duration: 0.3, ease: 'power3.out' }, G + 0.5)
+        .fromTo(copyR, { opacity: 0, x: 64 }, { opacity: 1, x: 0, duration: 0.3, ease: 'power3.out' }, G + 0.6);
+
+      // Exit, after the pin: the section scrolls away and the phone goes with
+      // it, shrinking back and fading so it never reaches the next section.
+      const X = T_ARRIVE + PIN_VH;
+      tl.to(pose, { opacity: 0, scale: 0.86, rotX: -10, duration: T_EXIT, ease: 'power1.in' }, X)
+        .to([copyL, copyR], { opacity: 0, duration: T_EXIT * 0.8, ease: 'power1.in' }, X)
+        .set({}, {}, X + T_EXIT);
+    }
+
+    /* Beat 1 live figure. `left` is days left; the bar and caption follow it. */
+    const live = { left: 17 };
+    const centrePanel = section?.querySelector('.ps-panel--centre');
+    const liveEls = section ? {
+      n: section.querySelector('.ps-live-n'),
+      used: section.querySelector('.ps-live-used'),
+      fill: section.querySelector('.ps-live-fill'),
+    } : null;
+    function writeLive() {
+      const left = Math.round(live.left);
+      liveEls.n.textContent = left;
+      liveEls.used.textContent = 90 - left;
+      liveEls.fill.style.transform = 'scaleX(' + ((90 - left) / 90).toFixed(3) + ')';
+    }
+
+    /* Split the Beat 1 headline into words, and give each word the gradient
+       at the size of its whole line, shifted by the word's own offset, so the
+       lit headline reads as one gradient. Re-run on every layout change. */
+    function splitTitle() {
+      const title = section?.querySelector('.ps-panel[data-screen="A"] .section-title');
+      if (!title) return;
+      if (!title.querySelector('.w')) {
+        title.innerHTML = title.textContent.trim().split(/(\s+)/)
+          .map(w => /^\s+$/.test(w) ? w : '<span class="w">' + w + '</span>').join('');
+      }
+      const tr = title.getBoundingClientRect();
+      title.querySelectorAll('.w').forEach(w => {
+        const r = w.getBoundingClientRect();
+        w.style.backgroundSize = Math.round(tr.width) + 'px 100%';
+        w.style.backgroundPosition = Math.round(tr.left - r.left) + 'px 0';
+      });
+    }
+
+    function beatAt(t) {
+      if (t <= 0.0005) return 0;
+      if (t < T_FLIGHT_1) return 1;
+      if (t < T_FLIGHT_2) return 2;
+      return t < T_ARRIVE + PIN_VH ? 3 : 4;
+    }
+
+    /* Map the page's scroll position to timeline time through each beat's
+       anchor. Between anchors the time holds at the last beat's end. */
+    function targetTime() {
+      const s = scrollY;
+      let t = 0;
+      for (const a of anchors) {
+        if (s <= a.st.start) break;
+        t = a.t0 + (a.t1 - a.t0) * Math.min(1, (s - a.st.start) / Math.max(1, a.st.end - a.st.start));
+      }
+      return t;
+    }
+
+    function measure() {
+      const slots = section.querySelectorAll('.ps-shot');
+      const st = section.getBoundingClientRect();
+      const right = slots[0].getBoundingClientRect();
+      const left = slots[1].getBoundingClientRect();
+      slot.xR = right.left + right.width / 2;
+      slot.xL = left.left + left.width / 2;
+      slot.y = right.top - st.top + right.height / 2;
+      slot.w = Math.min(right.width, left.width);
+      slot.h = right.height;
+    }
+
+    function enable() {
+      if (active || !canRun()) return;
+      active = true;
+      gsap.registerPlugin(ScrollTrigger);
+      section.classList.add('is-3d');
+      buildTimeline();
+
+      // Pin first, so every trigger created after it measures with the spacer.
+      const pin = ScrollTrigger.create({
+        trigger: section, start: 'top top', end: () => '+=' + innerHeight * PIN_VH,
+        pin: true, anticipatePin: 1,
+      });
+      const arrival = ScrollTrigger.create({ trigger: section, start: 'top bottom', end: 'top top' });
+      const exit = ScrollTrigger.create({
+        start: () => pin.end, end: () => pin.end + innerHeight * T_EXIT,
+      });
+      anchors = [
+        { st: arrival, t0: 0, t1: T_ARRIVE },
+        { st: pin, t0: T_ARRIVE, t1: T_ARRIVE + PIN_VH },
+        { st: exit, t0: T_ARRIVE + PIN_VH, t1: T_ARRIVE + PIN_VH + T_EXIT },
+      ];
+      const driver = ScrollTrigger.create({
+        start: 0, end: 'max',
+        onUpdate: () => {
+          gsap.to(tl, { time: targetTime(), duration: SCRUB, ease: 'power3.out', overwrite: true });
+          kick();
+        },
+        onRefresh: () => { measure(); splitTitle(); gsap.killTweensOf(tl); tl.time(targetTime()); onPose(); },
+      });
+      triggers = [pin, arrival, exit, driver];
+      if (gl) gl.renderer.domElement.style.display = '';
+      ScrollTrigger.refresh();
+    }
+
+    function disable() {
+      if (!active) return;
+      active = false;
+      triggers.forEach(t => t.kill());
+      triggers = []; anchors = [];
+      gsap.killTweensOf(tl);
+      tl.kill();
+      gsap.set(section.querySelectorAll('.ps-copy'), { clearProps: 'opacity,transform' });
+      gsap.set(section.querySelectorAll('.ps-copy .w, .ps-days i, .b-icon path'), { clearProps: 'opacity,transform,strokeDashoffset' });
+      live.left = 17; writeLive();
+      section.classList.remove('is-3d');
+      centrePanel?.classList.remove('is-lit');
+      if (gl) { gl.renderer.domElement.style.opacity = 0; gl.renderer.domElement.style.display = 'none'; }
+      window.__phone.visible = false;
+      ScrollTrigger.refresh();
+    }
+
+    function sync() {
+      if (canRun()) { enable(); loadWhenHeroIsUp(); } else disable();
+    }
+
+    /* ── Pose → screen ── */
+    // Where the phone's centre sits in viewport pixels, and whether it is shown.
+    function place() {
+      const vh = innerHeight;
+      const stageTop = section.getBoundingClientRect().top;
+      const x = slot.xL + (slot.xR - slot.xL) * (pose.side + 1) / 2;
+
+      // Rises in faster than the page scrolls, then settles into its slot.
+      // Clamped so it is never above its own slot's live position: while the
+      // section is still coming up, the phone cannot reach the block above.
+      const a = 1 - pose.arrive;
+      const rise = (a + 0.6 * a * a) * vh;
+      let y = stageTop < 0 ? stageTop + slot.y : Math.max(slot.y + rise, stageTop + slot.y);
+      y += pose.dip * 0.045 * vh;
+      return { x, y };
+    }
+
+    function onScreenNow() {
+      const r = section.getBoundingClientRect();
+      return r.bottom > 0 && r.top < innerHeight;
+    }
+    const wanted = () => active && gl && pose.opacity > 0.002 && onScreenNow();
+
+    function onPose() {
+      const t = tl ? tl.time() : 0;
+      const { x, y } = place();
+      const p = window.__phone;
+      p.beat = beatAt(t);
+      p.x = +((x - innerWidth / 2) / (innerWidth / 2)).toFixed(3);
+      p.y = +((y - innerHeight / 2) / (innerHeight / 2)).toFixed(3);
+      p.rotY = +pose.rotY.toFixed(1);
+      p.rotZ = +pose.rotZ.toFixed(1);
+      p.screen = SCREEN_NAMES[Math.round(pose.screen)];
+      p.mix = +pose.screen.toFixed(3);
+      p.opacity = +pose.opacity.toFixed(3);
+      p.visible = !!wanted() && pose.opacity > 0.01;
+      centrePanel?.classList.toggle('is-lit', t >= T_FLIGHT_2 + 0.5 && t < T_ARRIVE + PIN_VH + T_EXIT);
+      if (gl) layout(x, y);
+      kick();
+    }
+
+    function kick() {
+      if (running || !wanted()) return;
+      running = true;
+      requestAnimationFrame(frame);
+    }
+
+    let lastKey = '';
+    function frame() {
+      if (!wanted()) {
+        running = false;
+        if (gl) gl.renderer.domElement.style.opacity = 0;
+        window.__phone.visible = false;
+        return;
+      }
+      render();
+      requestAnimationFrame(frame);
+    }
+
+    function render(force) {
+      const { x, y } = place();
+      const key = [x, y, pose.rotX, pose.rotY, pose.rotZ, pose.scale, pose.screen, pose.opacity, innerWidth, innerHeight].map(v => v.toFixed(3)).join();
+      if (key === lastKey && !force) return;
+      lastKey = key;
+      drawScreen(pose.screen);
+      layout(x, y);
+      gl.renderer.domElement.style.opacity = pose.opacity;
+      gl.renderer.render(gl.scene, gl.camera);
+    }
+
+    function layout(x, y) {
+      const { THREE, camera, pivot, size, box } = gl;
+      // Frame the model from its bounding box: its height fills the slot, or
+      // its width fills the column on narrow desktops, whichever is smaller.
+      const k = 2 * CAM_Z * Math.tan(THREE.MathUtils.degToRad(FOV / 2)) / innerHeight; // world units per px
+      const phonePx = Math.min(slot.h, slot.w * size.y / size.x);
+      pivot.scale.setScalar(phonePx * k / size.y * pose.scale);
+      pivot.position.set((x - innerWidth / 2) * k, -(y - innerHeight / 2) * k, 0);
+      const d = THREE.MathUtils.degToRad;
+      pivot.rotation.set(d(pose.rotX), d(pose.rotY), d(pose.rotZ));
+
+      // Projected bounding box, for the overlap gate.
+      pivot.updateMatrixWorld();
+      let l = Infinity, tp = Infinity, r = -Infinity, b = -Infinity;
+      for (let i = 0; i < 8; i++) {
+        const v = new THREE.Vector3(
+          i & 1 ? box.max.x : box.min.x, i & 2 ? box.max.y : box.min.y, i & 4 ? box.max.z : box.min.z
+        ).applyMatrix4(pivot.matrixWorld).project(camera);
+        const px = (v.x + 1) / 2 * innerWidth, py = (1 - v.y) / 2 * innerHeight;
+        l = Math.min(l, px); r = Math.max(r, px); tp = Math.min(tp, py); b = Math.max(b, py);
+      }
+      window.__phone.bbox = { l: Math.round(l), t: Math.round(tp), r: Math.round(r), b: Math.round(b) };
+    }
+
+    let drawnScreen = -1;
+    function drawScreen(v) {
+      if (Math.abs(v - drawnScreen) < 0.004) return;
+      drawnScreen = v;
+      const { ctx, images, tex } = gl;
+      const i = Math.min(Math.floor(v), images.length - 1);
+      const f = v - i;
+      const { width, height } = ctx.canvas;
+      ctx.globalAlpha = 1;
+      ctx.drawImage(images[i], 0, 0, width, height);
+      if (f > 0.001 && images[i + 1]) {
+        ctx.globalAlpha = f;
+        ctx.drawImage(images[i + 1], 0, 0, width, height);
+      }
+      tex.needsUpdate = true;
+    }
+
+    /* ── Loading ── */
+    async function loadPhone() {
+      if (gl || loading || failed) return;
+      loading = true;
+      try {
+        const [THREE, { GLTFLoader }, { RoomEnvironment }] = await Promise.all([
+          import('https://esm.sh/three@0.169.0'),
+          import('https://esm.sh/three@0.169.0/examples/jsm/loaders/GLTFLoader.js'),
+          import('https://esm.sh/three@0.169.0/examples/jsm/environments/RoomEnvironment.js'),
+        ]);
+        // onload, not img.decode(): decode() never settles in a background tab.
+        const [images, gltf] = await Promise.all([
+          Promise.all(SCREENS.map(src => new Promise((res, rej) => {
+            const img = new Image();
+            img.onload = () => res(img);
+            img.onerror = () => rej(new Error('screen image ' + src));
+            img.src = src;
+          }))),
+          new Promise((onLoad, onError) =>
+            new GLTFLoader().load('assets/phone/iphone.glb', onLoad, undefined, onError)),
+        ]);
+
+        const canvas = document.createElement('canvas');
+        canvas.className = 'phone-canvas';
+        canvas.setAttribute('aria-hidden', 'true');
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        renderer.setSize(innerWidth, innerHeight, false);
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
+        const scene = new THREE.Scene();
+        const pmrem = new THREE.PMREMGenerator(renderer);
+        scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+        pmrem.dispose();
+        // Key light from the upper left, where the page's own light sits, so
+        // the frame's edge catches a highlight the room alone leaves flat.
+        const key = new THREE.DirectionalLight(0xffffff, 1.4);
+        key.position.set(-1.2, 1.6, 2);
+        scene.add(key);
+
+        const camera = new THREE.PerspectiveCamera(FOV, innerWidth / innerHeight, 0.01, 10);
+        camera.position.z = CAM_Z;
+        // Normally done inside render(); the bbox projection can run first.
+        camera.updateMatrixWorld();
+
+        const model = gltf.scene;
+        const box0 = new THREE.Box3().setFromObject(model);
+        model.position.sub(box0.getCenter(new THREE.Vector3()));
+        const box = new THREE.Box3().setFromObject(model);
+        const size = box.getSize(new THREE.Vector3());
+        const pivot = new THREE.Group();
+        pivot.add(model);
+        scene.add(pivot);
+
+        const screenMesh = model.getObjectByName('Front_Screen');
+        if (!screenMesh) throw new Error('Front_Screen mesh not found in iphone.glb');
+        const sc = document.createElement('canvas');
+        sc.width = images[0].naturalWidth;
+        sc.height = images[0].naturalHeight;
+        const tex = new THREE.CanvasTexture(sc);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        // glTF UVs put v = 0 at the top of the image, and this model's u runs
+        // left to right when seen from the front, so no mirror is needed.
+        tex.flipY = false;
+        tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+        // Unlit and untonemapped: a screen emits its own light, and tone
+        // mapping would grey out the app's real colours.
+        screenMesh.material = new THREE.MeshBasicMaterial({
+          map: tex, toneMapped: false,
+          polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1,
+        });
+
+        document.body.appendChild(canvas);
+        gl = { THREE, renderer, scene, camera, pivot, size, box, tex, images, ctx: sc.getContext('2d') };
+        if (!active) canvas.style.display = 'none';
+
+        addEventListener('resize', () => {
+          renderer.setSize(innerWidth, innerHeight, false);
+          camera.aspect = innerWidth / innerHeight;
+          camera.updateProjectionMatrix();
+          if (running) render(true);
+        });
+
+        // Compile shaders now, off screen, so the first visible frame of the
+        // arrival does not stall.
+        renderer.compile(scene, camera);
+        document.fonts.ready.then(() => ScrollTrigger.refresh());
+        ScrollTrigger.refresh();
+        onPose();
+      } catch (err) {
+        console.error('Phone story fell back to static screenshots:', err);
+        failed = true;
+        disable();
+        gl?.renderer.domElement.remove();
+      } finally {
+        loading = false;
+      }
+    }
+
+    // After the hero globe is up (or has given up), so the hero never waits
+    // on a 3.8MB model. Starts early if the visitor is already heading there.
+    let loadQueued = false;
+    function loadWhenHeroIsUp() {
+      if (loadQueued) return;
+      loadQueued = true;
+      // No timeout fallback on purpose: on a slow connection a timer fires
+      // while the globe is still downloading and the two fight for bandwidth.
+      // The globe always ends in .is-ready or .no-webgl, and a visitor who
+      // scrolls toward the story starts the load anyway.
+      const wrap = document.getElementById('globe-wrap');
+      let mo = null;
+      const go = () => {
+        mo?.disconnect();
+        removeEventListener('scroll', near);
+        setTimeout(loadPhone, 0);
+      };
+      function near() {
+        if (section.getBoundingClientRect().top < innerHeight * 1.25) go();
+      }
+      const settled = () => !wrap || wrap.matches('.is-ready, .no-webgl');
+      // A timer, not rAF: rAF never fires in a background tab.
+      if (settled()) return void setTimeout(go, 50);
+      mo = new MutationObserver(() => settled() && go());
+      mo.observe(wrap, { attributes: true, attributeFilter: ['class'] });
+      addEventListener('scroll', near, { passive: true });
+      near();
+    }
+
+    if (section) {
+      splitTitle();
+      // One running index across both headlines, so the light travels from
+      // the left block into the right one instead of both flashing together.
+      let i = 0;
+      section.querySelectorAll('.ps-panel--centre h3').forEach(h => {
+        h.innerHTML = h.textContent.trim().split(/(\s+)/)
+          .map(w => /^\s+$/.test(w) ? w : '<span class="w" style="--i:' + (i++) + '">' + w + '</span>').join('');
+      });
+      addEventListener('resize', () => { if (!active) splitTitle(); });
+      narrow.addEventListener('change', sync);
+      reduced.addEventListener('change', sync);
+      sync();
+    }
+  </script>
+  <!-- PHONE-STORY END -->
+
+  <!-- ALIVE START -->
+  <script type="module">
+    /* ── ALIVE: stats band + pain section ──
+       Module scripts run after the deferred GSAP files, so gsap is ready.
+       Stats band: a scan line sweeps down, the bottom edge draws out from the
+       centre, numbers decode from random glyphs into their real value and the
+       labels come out of a blur. Pain section: "2 years" sharpens with the
+       scroll, the sentence under it lights up word by word as it is read,
+       and the cards wipe in from the left with a beam across their top edge.
+       Without GSAP or with reduced motion nothing runs and the content is
+       simply there. */
+    (function () {
+      const band = document.querySelector('.stats-band');
+      const pain = document.querySelector('.pain-section');
+      if (!band || !pain || !window.gsap || !window.ScrollTrigger) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      const scan = document.createElement('div');
+      scan.className = 'alive-scan';
+      const edge = document.createElement('div');
+      edge.className = 'alive-edge';
+      band.append(scan, edge);
+
+      // Every digit cycles through random digits and locks left to right;
+      // separators (",", "/", "M+", "€") stay put so the shape never jumps.
+      function decode(el, dur) {
+        const final = el.textContent;
+        const o = { p: 0 };
+        return gsap.to(o, {
+          p: 1, duration: dur, ease: 'none',
+          onUpdate() {
+            const lock = Math.floor(o.p * final.length);
+            el.textContent = [...final].map((c, i) =>
+              i < lock || !/\d/.test(c) ? c : String(Math.floor(Math.random() * 10))).join('');
+          },
+          onComplete() { el.textContent = final; },
+        });
+      }
+
+      const items = band.querySelectorAll('.stat-item');
+      gsap.set(scan, { opacity: 0 });
+      gsap.set(edge, { scaleX: 0 });
+      gsap.set(band.querySelectorAll('.stat-num'), { opacity: 0, y: 14 });
+      gsap.set(band.querySelectorAll('.stat-label'), { opacity: 0, y: 8, filter: 'blur(6px)' });
+      gsap.set(band.querySelectorAll('.stat-divider'), { scaleY: 0 });
+
+      ScrollTrigger.create({
+        trigger: band, start: 'top 82%', once: true,
+        onEnter() {
+          const tl = gsap.timeline();
+          tl.fromTo(scan, { y: 0, opacity: 0 }, { opacity: 1, duration: 0.15 })
+            .to(scan, { y: () => band.offsetHeight, duration: 0.9, ease: 'power2.inOut' }, '<')
+            .to(scan, { opacity: 0, duration: 0.25 }, '-=0.2')
+            .to(edge, { scaleX: 1, duration: 1.1, ease: 'expo.out' }, 0.5)
+            .to(band.querySelectorAll('.stat-divider'), { scaleY: 1, duration: 0.6, ease: 'power3.out', stagger: 0.1 }, 0.3);
+          items.forEach((it, i) => {
+            const num = it.querySelector('.stat-num');
+            const at = 0.15 + i * 0.14;
+            tl.to(num, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, at)
+              .add(decode(num, 0.9), at)
+              .to(it.querySelector('.stat-label'), { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.7, ease: 'power2.out' }, at + 0.25);
+          });
+        },
+      });
+
+      /* Pain: the big number is scrubbed, so it sharpens exactly as fast as
+         the reader scrolls, and un-sharpens if they scroll back up. */
+      const big = pain.querySelector('.pain-number');
+      gsap.fromTo(big,
+        { opacity: 0, scale: 1.12, filter: 'blur(14px)', letterSpacing: '0.08em' },
+        { opacity: 1, scale: 1, filter: 'blur(0px)', letterSpacing: '-0.025em', ease: 'none',
+          scrollTrigger: { trigger: pain, start: 'top 85%', end: 'top 35%', scrub: 0.6 } });
+
+      const desc = pain.querySelector('.pain-desc');
+      desc.innerHTML = desc.textContent.trim().split(/(\s+)/)
+        .map(w => /^\s+$/.test(w) ? w : '<span class="w">' + w + '</span>').join('');
+      gsap.fromTo(desc.querySelectorAll('.w'), { opacity: 0.12 },
+        { opacity: 1, ease: 'none', stagger: 0.1,
+          scrollTrigger: { trigger: desc, start: 'top 80%', end: 'bottom 45%', scrub: 0.4 } });
+
+      pain.querySelectorAll('.pain-item').forEach((card, i) => {
+        const beam = document.createElement('div');
+        beam.className = 'alive-beam';
+        card.prepend(beam);
+        gsap.set(card, { opacity: 0, x: -24, clipPath: 'inset(0 100% 0 0 round 16px)' });
+        ScrollTrigger.create({
+          trigger: card, start: 'top 88%', once: true,
+          onEnter() {
+            gsap.timeline({ delay: i * 0.08 })
+              .to(card, { opacity: 1, x: 0, clipPath: 'inset(0 0% 0 0 round 16px)', duration: 0.9, ease: 'expo.out' })
+              .fromTo(beam, { xPercent: -100, opacity: 1 }, { xPercent: 260, duration: 1.1, ease: 'power2.inOut' }, 0.2)
+              .to(beam, { opacity: 0, duration: 0.3 }, '-=0.3')
+              .fromTo(card.querySelector('.pain-icon'), { scale: 0.6, rotate: -12 }, { scale: 1, rotate: 0, duration: 0.7, ease: 'back.out(2.2)' }, 0.25)
+              // Leave nothing inline that would fight the CSS hover state.
+              .add(() => gsap.set(card, { clearProps: 'clipPath,transform' }));
+          },
+        });
+      });
+    })();
+  </script>
+  <!-- ALIVE END -->
+
   <!-- MOBILE STICKY CTA -->
   <div class="mobile-sticky-cta">
     <a href="https://online.travisaro.app/signup" class="nav-cta">Start tracking free</a>
   </div>
+
+  <!-- ─────────────────────────────────────────────────────────────────────
+       AGENTATION, LOCAL DEV ONLY. Visual feedback toolbar: Drew clicks an
+       element on the page and it copies the selector plus his note, so the
+       agent can grep for the exact code instead of guessing from a
+       description.
+
+       Loaded from a CDN as ESM because this page is a single static file with
+       no bundler and Agentation ships React-only ESM/CJS with a react >=18
+       peer dependency. Adding a build step just to host a dev toolbar is not
+       worth it.
+
+       The hostname guard is the safety mechanism, not the comment: on any
+       non-local host nothing is fetched and nothing is injected, so this
+       cannot reach production even if it is committed by accident.
+       Licence: PolyForm Shield 1.0.0 (source-available, no competing use).
+       ───────────────────────────────────────────────────────────────────── -->
+  <script type="module">
+    const local = ['localhost', '127.0.0.1', '[::1]', '0.0.0.0'];
+    if (local.includes(location.hostname)) {
+      const [{ default: React }, { createRoot }, { Agentation }] = await Promise.all([
+        import('https://esm.sh/react@18'),
+        import('https://esm.sh/react-dom@18/client'),
+        import('https://esm.sh/agentation@3.0.2?deps=react@18,react-dom@18'),
+      ]);
+      const host = document.createElement('div');
+      host.id = 'agentation-dev-root';
+      document.body.appendChild(host);
+      createRoot(host).render(React.createElement(Agentation));
+    }
+  </script>
 
 </body>
 </html>
