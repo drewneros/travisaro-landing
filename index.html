@@ -49,7 +49,7 @@
     "@type": "SoftwareApplication",
     "name": "Travisaro",
     "applicationCategory": "TravelApplication",
-    "operatingSystem": "Web, iOS, Android",
+    "operatingSystem": "Web, iOS",
     "description": "Travisaro is a visa tracking app for digital nomads that automatically calculates Schengen days, tracks multiple visas and passports, and sends expiry alerts before deadlines.",
     "url": "https://travisaro.app",
     "offers": [
@@ -72,7 +72,7 @@
         "name": "Pro",
         "price": "19.99",
         "priceCurrency": "USD",
-        "description": "Everything in Traveler plus tax-residency day counter and tax calendar. $19.99/month or $179/year"
+        "description": "Everything in Traveler plus tax-residency day counter, history export and CSV import. $19.99/month or $179/year"
       },
       {
         "@type": "Offer",
@@ -91,7 +91,7 @@
       "Flight tracker with globe map",
       "Passport rankings and world map",
       "Year-in-Review Travel Wrapped",
-      "Tax Days tracker: 183-day threshold per country",
+      "Tax Days tracker: each country's own threshold and tax year",
       "City-level travel tracking with photo memories"
     ],
     "audience": {
@@ -111,7 +111,7 @@
         "name": "What is the Schengen 90/180 rule?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "You get 90 days inside the Schengen Area in any 180 day stretch. The 180 days are not a fixed half year, they roll forward with today's date, so a week you spent in Lisbon in March can move back inside the window in September and change what you are allowed. Travisaro recalculates that window every day from your travel history."
+          "text": "You get 90 days inside the Schengen Area in any 180 day stretch. The 180 days are not a fixed half year, they roll forward with today's date, so a week you spent in Lisbon in March still counts in August, then drops out of the window in September, which changes what you are allowed. Travisaro recalculates that window every day from your travel history."
         }
       },
       {
@@ -159,7 +159,7 @@
         "name": "Does Travisaro track tax residency days?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. Travisaro includes a Tax Days tracker that shows how many days you have spent in each country this calendar year, measured against the real threshold and tax year for each of 45 countries, not a flat 183 days. Switzerland can trigger at 90 days, Thailand at 180, and the UK counts from 6 April. Countries are colour-coded as you approach the limit. This helps digital nomads and expats avoid accidentally triggering tax residency."
+          "text": "Yes. Travisaro includes a Tax Days tracker that shows how many days you have spent in each country, measured against the real threshold and tax year for each of 51 countries, not a flat 183 days. Switzerland can trigger at 90 days, Thailand at 180, and the UK counts from 6 April. Countries are colour-coded as you approach the limit. This helps digital nomads and expats avoid accidentally triggering tax residency."
         }
       }
     ]
@@ -2319,7 +2319,7 @@
         </div>
         <a href="https://online.travisaro.app/signup" class="hero-note hero-cta-signup" style="display:inline-flex;align-items:center;gap:8px;margin-top:4px;height:50px;padding:0 24px;background:linear-gradient(135deg,#4F8EF7,#7B3FBE);color:#fff;font-weight:500;font-size:15px;border-radius:12px;text-decoration:none;transition:opacity 0.2s;align-self:flex-start;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Start tracking free →</a>
         <a href="https://online.travisaro.app/schengen-calculator" class="hero-note" style="display:inline-flex;align-items:center;gap:6px;color:#4F8EF7;font-weight:500;font-size:13px;text-decoration:none;align-self:flex-start;">Or try the free Schengen calculator, no signup</a>
-        <a href="#newsletter" class="hero-note" style="color:var(--text-muted);text-decoration:none;">Get visa tips & travel news ↓</a>
+        <a href="#newsletter" class="hero-note" style="color:var(--text-muted);text-decoration:none;">Join the email list ↓</a>
       </div>
     </div>
     <div class="hero-right">
@@ -2362,7 +2362,7 @@
       <div class="stat-divider"></div>
       <div class="stat-item">
         <span class="stat-num" data-target="7000" data-suffix="">7,000</span>
-        <div class="stat-label">People refused entry for past overstays in the EES's first six months</div>
+        <div class="stat-label">Travellers refused entry for past overstays, EES launch to 20 April 2026 (EU figure: almost 7,000)</div>
       </div>
       <div class="stat-divider"></div>
       <div class="stat-item">
@@ -2535,7 +2535,7 @@
         <div class="bento-card bento-6 reveal reveal-delay-3">
           <span class="b-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12.37 2.15009L21.37 5.75006C21.72 5.89006 22 6.31006 22 6.68006V10.0001C22 10.5501 21.55 11.0001 21 11.0001H3C2.45 11.0001 2 10.5501 2 10.0001V6.68006C2 6.31006 2.28 5.89006 2.63 5.75006L11.63 2.15009C11.83 2.07009 12.17 2.07009 12.37 2.15009Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 22H2V19C2 18.45 2.45 18 3 18H21C21.55 18 22 18.45 22 19V22Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 18V11" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 18V11" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 18V11" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 18V11" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 18V11" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 22H23" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8.5C12.8284 8.5 13.5 7.82843 13.5 7C13.5 6.17157 12.8284 5.5 12 5.5C11.1716 5.5 10.5 6.17157 10.5 7C10.5 7.82843 11.1716 8.5 12 8.5Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <h3>Tax Days: real legal data, per country</h3>
-          <p>Not every country uses 183 days. Switzerland triggers at 90 days. Thailand at 180. The UK counts from 6 April, not January. Travisaro uses the legally correct threshold and tax year for each country, sourced from official tax authority data, covering 45 countries.</p>
+          <p>Not every country uses 183 days. Switzerland can trigger at 90 days, or 30 if you work there. Thailand at 180. The UK counts from 6 April, not January. Travisaro uses the legally correct threshold and tax year for each country, sourced from official tax authority data, covering 51 countries.</p>
           <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;">
             <div>
               <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;color:rgba(255,255,255,0.5);">
@@ -2565,7 +2565,7 @@
               <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;">Counted Apr 6 to Apr 5, UK Finance Act 2013 (SRT)</div>
             </div>
           </div>
-          <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:14px;font-style:italic;">45 countries. Sources: official tax authority data. Not legal advice. Always consult a qualified tax professional for your specific situation.</p>
+          <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:14px;font-style:italic;">51 countries. Sources: official tax authority data. Not legal advice. Always consult a qualified tax professional for your specific situation.</p>
         </div>
 
         <!-- CARD 7: Explore, Passport Intelligence Hub -->
@@ -2659,7 +2659,7 @@
     <div class="section-inner">
       <div class="section-label reveal">How it works</div>
       <h2 class="section-title reveal reveal-delay-1">How do I start tracking my visa in Travisaro?</h2>
-      <p class="section-sub reveal reveal-delay-2">Add your visa once. Travisaro handles all calculations automatically from that point on. No spreadsheets, no mental math. Setup takes under 2 minutes.</p>
+      <p class="section-sub reveal reveal-delay-2">Add your visa once. Travisaro handles all calculations automatically from that point on. No spreadsheets, no mental math.</p>
       <div class="steps">
         <div class="step reveal reveal-delay-1">
           <div class="step-num">1</div>
@@ -2818,7 +2818,7 @@
               <td style="text-align:center;padding:14px 20px;background:rgba(99,102,241,0.05);color:var(--success);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
             </tr>
             <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-              <td style="padding:14px 20px;color:var(--text-secondary);">Alerts before expiry (30d, 14d, 7d)</td>
+              <td style="padding:14px 20px;color:var(--text-secondary);">Alerts before expiry (from 20 days out)</td>
               <td style="text-align:center;padding:14px 20px;color:var(--danger);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
               <td style="text-align:center;padding:14px 20px;color:var(--warning);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px;"><path d="M12 7.75V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.08 8.58003V15.42C21.08 16.54 20.48 17.58 19.51 18.15L13.57 21.58C12.6 22.14 11.4 22.14 10.42 21.58L4.47998 18.15C3.50998 17.59 2.90997 16.55 2.90997 15.42V8.58003C2.90997 7.46003 3.50998 6.41999 4.47998 5.84999L10.42 2.42C11.39 1.86 12.59 1.86 13.57 2.42L19.51 5.84999C20.48 6.41999 21.08 7.45003 21.08 8.58003Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 16.2V16.2999" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Manual</td>
               <td style="text-align:center;padding:14px 20px;background:rgba(99,102,241,0.05);color:var(--success);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px;"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg> Automatic</td>
@@ -2842,10 +2842,10 @@
               <td style="text-align:center;padding:14px 20px;background:rgba(99,102,241,0.05);color:var(--success);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-3px;"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg> Traveler+</td>
             </tr>
             <tr>
-              <td style="padding:14px 20px;color:var(--text-secondary);">Setup time</td>
-              <td style="text-align:center;padding:14px 20px;color:var(--text-muted);">1–2 hours</td>
-              <td style="text-align:center;padding:14px 20px;color:var(--text-muted);">30 min</td>
-              <td style="text-align:center;padding:14px 20px;background:rgba(99,102,241,0.05);border-radius:0 0 12px 12px;color:#1ed28c;font-weight:600;">Under 2 min</td>
+              <td style="padding:14px 20px;color:var(--text-secondary);">Setup</td>
+              <td style="text-align:center;padding:14px 20px;color:var(--text-muted);">Build it yourself</td>
+              <td style="text-align:center;padding:14px 20px;color:var(--text-muted);">One by one</td>
+              <td style="text-align:center;padding:14px 20px;background:rgba(99,102,241,0.05);border-radius:0 0 12px 12px;color:#1ed28c;font-weight:600;">Add a visa once</td>
             </tr>
           </tbody>
         </table>
@@ -2865,7 +2865,7 @@
             What is the Schengen 90/180 rule?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">You get 90 days inside the Schengen Area in any 180 day stretch. The word doing the damage is rolling: the 180 days are not a fixed half year, they slide forward with today's date. A week you spent in Lisbon in March can move back inside the window in September and change what you are allowed. Counting once is never enough, and that is the part that catches people.</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">You get 90 days inside the Schengen Area in any 180 day stretch. The word doing the damage is rolling: the 180 days are not a fixed half year, they slide forward with today's date. A week you spent in Lisbon in March still counts in August, then drops out of the window in September, which changes what you are allowed. Counting once is never enough, and that is the part that catches people.</p>
         </details>
 
         <details style="border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 0;cursor:pointer;">
@@ -2905,7 +2905,7 @@
             Does Travisaro track tax residency days?
             <span style="color:var(--text-muted);font-size:20px;font-weight:300;">+</span>
           </summary>
-          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes, and not against a flat 183 days, because that number is not universal. Switzerland can trigger at 90 days, Thailand at 180, and the UK counts its year from 6 April rather than 1 January. Travisaro uses the real threshold and the real tax year for each of 45 countries, sourced from the tax authorities, and colours each one as you get closer. It is a day count, not tax advice. Take it to someone qualified before you act on it.</p>
+          <p style="margin-top:12px;color:var(--text-secondary);line-height:1.7;font-size:15px;">Yes, and not against a flat 183 days, because that number is not universal. Switzerland can trigger at 90 days, Thailand at 180, and the UK counts its year from 6 April rather than 1 January. Travisaro uses the real threshold and the real tax year for each of 51 countries, sourced from the tax authorities, and colours each one as you get closer. It is a day count, not tax advice. Take it to someone qualified before you act on it.</p>
         </details>
 
         <details style="padding:20px 0;cursor:pointer;">
