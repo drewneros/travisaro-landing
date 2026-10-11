@@ -3187,9 +3187,9 @@
         const load = url => new Promise((res, rej) =>
           loader.load(url, res, undefined, () => rej(new Error('texture ' + url))));
         const [dayTex, nightTex, bumpTex] = await Promise.all([
-          load('globe/earth-blue-marble.jpg'),
-          load('globe/earth-night.jpg'),
-          load('globe/earth-topology.png'),
+          load('globe/earth-blue-marble.webp'),
+          load('globe/earth-night.webp'),
+          load('globe/earth-topology.webp'),
         ]);
         [dayTex, nightTex].forEach(t => { t.colorSpace = THREE.SRGBColorSpace; });
 
